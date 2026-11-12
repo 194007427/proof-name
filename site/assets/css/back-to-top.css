@@ -1,0 +1,21 @@
+/* A quiet reading control, using the existing paper and accent palette. */
+.back-to-top{
+  position:fixed;left:calc(50% + 24rem);top:50%;transform:translateY(-50%);z-index:20;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  width:48px;height:54px;padding:6px;border:1px solid var(--rule2,#cec7b7);border-radius:10px;
+  background:var(--paper,#fbfaf6);color:var(--muted,#78726a);
+  box-shadow:0 3px 14px rgba(26,25,23,.08);cursor:pointer;
+  transition:color .18s,border-color .18s,box-shadow .18s;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
+.back-to-top[hidden]{display:none}
+.back-to-top svg{width:19px;height:19px;flex:none}
+.back-to-top span{font:600 9px/1 system-ui,sans-serif;letter-spacing:.12em}
+.back-to-top:focus-visible{outline:2px solid var(--accent,#9a3b2c);outline-offset:4px}
+@media(hover:hover){.back-to-top:hover{color:var(--accent,#9a3b2c);border-color:var(--accent,#9a3b2c);box-shadow:0 4px 16px rgba(26,25,23,.12)}}
+@media(max-width:960px){
+  .back-to-top{left:auto;right:.75rem;top:.15rem;transform:none;width:44px;height:44px;border-color:transparent;box-shadow:none;background:transparent}
+  .back-to-top span{display:none}
+  body.back-to-top-active .topnav nav{padding-right:48px}
+}
+@media(prefers-reduced-motion:reduce){.back-to-top{transition:none}}
