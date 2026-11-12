@@ -98,353 +98,63 @@ h5.subsubsectionHead{font-size:1.05rem;margin:1.8rem 0 .6rem;font-weight:600;col
 @media(max-width:760px){.pdf-view{height:65vh}}
 @media(max-width:640px){.topnav{padding:.9rem 1.2rem}.topnav nav{gap:.9rem;font-size:.68rem}
 .hero{padding:3.4rem 0 2.4rem}.row .meta{display:none}}
-</style></head><body>
+</style><link rel="stylesheet" href="../assets/katex/katex.min.css"></head><body>
 <header class="topnav"><nav><a href="../index.html#note">Notes</a><button id="egg" type="button" title="彩蛋" aria-label="彩蛋">???</button></nav></header>
-<main class="article"><p class="crumb"><a href="../index.html">NOTE</a><span>/</span>Birational Geometry</p><h1 id="statement">Negativity Lemma</h1>
+<main class="article"><p class="crumb"><a href="../index.html">NOTE</a><span>/</span>Algebraic Geometry</p><h1>Negativity Lemma</h1><p><strong>Theorem</strong> Let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo>:</mo><mi>X</mi><mo>→</mo><mi>Y</mi></mrow><annotation encoding="application/x-tex">f:X\to Y</annotation></semantics></math> be a proper birational morphism between normal varieties. Let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>D</mi><annotation encoding="application/x-tex">D</annotation></semantics></math> be a <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="double-struck">ℝ</mi><annotation encoding="application/x-tex">\mathbb R</annotation></semantics></math>-Cartier divisor on <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> such that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mi>D</mi></mrow><annotation encoding="application/x-tex">-D</annotation></semantics></math> is nef over <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics></math>. Then:</p>
 
-<p><strong>Theorem.</strong> Let
+<ol>
 
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo>:</mo><mi>X</mi><mo>→</mo><mi>Y</mi></mrow><annotation encoding="application/x-tex">f:X\to Y</annotation></semantics></math>
+<li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>D</mi><annotation encoding="application/x-tex">D</annotation></semantics></math> is effective if and only if <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mo>*</mo></msub><mi>D</mi></mrow><annotation encoding="application/x-tex">f_*D</annotation></semantics></math> is effective.</p></li>
 
-be a proper birational morphism between normal varieties. Let
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>D</mi><annotation encoding="application/x-tex">D</annotation></semantics></math>
-
-be a
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="double-struck">ℝ</mi><annotation encoding="application/x-tex">\mathbb R</annotation></semantics></math>-Cartier
-
-divisor on
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>
-
-such that
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mi>D</mi></mrow><annotation encoding="application/x-tex">-D</annotation></semantics></math>
-
-is nef over
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics></math>.
-
-Then:</p>
-
-<ol type="1">
-
-<li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>D</mi><annotation encoding="application/x-tex">D</annotation></semantics></math>
-
-is effective if and only if
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mo>*</mo></msub><mi>D</mi></mrow><annotation encoding="application/x-tex">f_*D</annotation></semantics></math>
-
-is effective.</p></li>
-
-<li><p>Assume that
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>D</mi><annotation encoding="application/x-tex">D</annotation></semantics></math>
-
-is effective. Then for every
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>∈</mo><mi>Y</mi></mrow><annotation encoding="application/x-tex">y\in Y</annotation></semantics></math>,
-
-either
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo><mo>∩</mo><mrow><mi mathvariant="normal">Supp</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>D</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>∅</mi></mrow><annotation encoding="application/x-tex">f^{-1}(y)\cap \operatorname{Supp}(D)=\emptyset</annotation></semantics></math>
-
-or
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo><mo>⊂</mo><mrow><mi mathvariant="normal">Supp</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>D</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">f^{-1}(y)\subset \operatorname{Supp}(D)</annotation></semantics></math>.</p></li>
+<li><p>Assume that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>D</mi><annotation encoding="application/x-tex">D</annotation></semantics></math> is effective. Then for every <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>∈</mo><mi>Y</mi></mrow><annotation encoding="application/x-tex">y\in Y</annotation></semantics></math>, either <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo><mo>∩</mo><mrow><mi mathvariant="normal">Supp</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>D</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>∅</mi></mrow><annotation encoding="application/x-tex">f^{-1}(y)\cap \operatorname{Supp}(D)=\emptyset</annotation></semantics></math> or <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo><mo>⊂</mo><mrow><mi mathvariant="normal">Supp</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>D</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">f^{-1}(y)\subset \operatorname{Supp}(D)</annotation></semantics></math>.</p></li>
 
 </ol>
 
-<p id="proof1">
+<p><span id="proof1" data-label="proof1"></span></p>
 
-<strong>Proof of (1)</strong>
-
-</p>
+<p>Proof of (1)</p>
 
 <p>It suffices to prove the “only if” part.</p>
 
-<p><a href="#step-assume">Step 1.</a>We may assume that
+<p><a href="#step-assume">Step 1.</a>We may assume that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math> is projective and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mo>,</mo><mi>Y</mi></mrow><annotation encoding="application/x-tex">X,Y</annotation></semantics></math> are quasi-projective.</p>
 
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>
+<p><a href="#step-antiample">Step 2.</a>Then there exists an effective divisor <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>E</mi><annotation encoding="application/x-tex">E</annotation></semantics></math> on <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> which is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>-antiample and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>E</mi><annotation encoding="application/x-tex">E</annotation></semantics></math> contains each exceptional divisor.</p>
 
-is projective and
+<p><a href="#step-curve">Step 3.</a> Note that the negative part of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>D</mi><annotation encoding="application/x-tex">D</annotation></semantics></math> is exceptional. Let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>e</mi><annotation encoding="application/x-tex">e</annotation></semantics></math> be the minimal non-negative number such that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi><mo>+</mo><mi>e</mi><mi>E</mi></mrow><annotation encoding="application/x-tex">D+eE</annotation></semantics></math> is effective then there exists a curve <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math> contracted by <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math> such that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>D</mi><mo>+</mo><mi>e</mi><mi>E</mi><mo stretchy="false" form="postfix">)</mo><mo>⋅</mo><mi>C</mi><mo>≥</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">(D+eE)\cdot C\ge 0</annotation></semantics></math>. But note that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mi>D</mi></mrow><annotation encoding="application/x-tex">-D</annotation></semantics></math> is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>-nef and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mi>E</mi></mrow><annotation encoding="application/x-tex">-E</annotation></semantics></math> is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>-ample and hence we get a contradiction.</p>
 
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mo>,</mo><mi>Y</mi></mrow><annotation encoding="application/x-tex">X,Y</annotation></semantics></math>
+<p>□</p>
 
-are quasi-projective.</p>
+<p><span id="proof2" data-label="proof2"></span></p>
 
-<p><a href="#step-antiample">Step 2.</a>Then there exists an effective
+<p>Proof of (2)</p>
 
-divisor
+<p>If there exists a fiber <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">f^{-1}(y)</annotation></semantics></math> such that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo><mo>∩</mo><mrow><mi mathvariant="normal">Supp</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>D</mi><mo stretchy="false" form="postfix">)</mo><mo>≠</mo><mi>∅</mi></mrow><annotation encoding="application/x-tex">f^{-1}(y)\cap \operatorname{Supp}(D)\not=\emptyset</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo><mo>⊄</mo><mrow><mi mathvariant="normal">Supp</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>D</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">f^{-1}(y)\not\subset \operatorname{Supp}(D)</annotation></semantics></math>, then we can find a curve <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math> in the fiber that intersects the support of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>D</mi><annotation encoding="application/x-tex">D</annotation></semantics></math> but is not contained in it. Then we have <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi><mo>⋅</mo><mi>C</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">D\cdot C&gt;0</annotation></semantics></math> Contradiction.</p>
 
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>E</mi><annotation encoding="application/x-tex">E</annotation></semantics></math>
-
-which is
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>-antiample
-
-and
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>E</mi><annotation encoding="application/x-tex">E</annotation></semantics></math>
-
-contains each exceptional divisor.</p>
-
-<p><a href="#step-curve">Step 3.</a> Note that the negative part of
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>D</mi><annotation encoding="application/x-tex">D</annotation></semantics></math>
-
-is exceptional. Let
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>e</mi><annotation encoding="application/x-tex">e</annotation></semantics></math>
-
-be the minimal non-negative number such that
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi><mo>+</mo><mi>e</mi><mi>E</mi></mrow><annotation encoding="application/x-tex">D+eE</annotation></semantics></math>
-
-is effective then there exists a curve
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math>
-
-contracted by
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>
-
-such that
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>D</mi><mo>+</mo><mi>e</mi><mi>E</mi><mo stretchy="false" form="postfix">)</mo><mo>⋅</mo><mi>C</mi><mo>≥</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">(D+eE)\cdot C\ge 0</annotation></semantics></math>.
-
-But note that
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mi>D</mi></mrow><annotation encoding="application/x-tex">-D</annotation></semantics></math>
-
-is
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>-nef
-
-and
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mi>E</mi></mrow><annotation encoding="application/x-tex">-E</annotation></semantics></math>
-
-is
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>-ample
-
-and hence we get a contradiction.</p>
-
-<p id="proof2">
-
-<strong>Proof of (2)</strong>
-
-</p>
-
-<p>If there exists a fiber
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">f^{-1}(y)</annotation></semantics></math>
-
-such that
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo><mo>∩</mo><mrow><mi mathvariant="normal">Supp</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>D</mi><mo stretchy="false" form="postfix">)</mo><mo>≠</mo><mi>∅</mi></mrow><annotation encoding="application/x-tex">f^{-1}(y)\cap \operatorname{Supp}(D)\not=\emptyset</annotation></semantics></math>
-
-and
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo><mo>⊄</mo><mrow><mi mathvariant="normal">Supp</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>D</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">f^{-1}(y)\not\subset \operatorname{Supp}(D)</annotation></semantics></math>,
-
-then we can find a curve
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math>
-
-in the fiber that intersects the support of
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>D</mi><annotation encoding="application/x-tex">D</annotation></semantics></math>
-
-but is not contained in it. Then we have
-
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi><mo>⋅</mo><mi>C</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">D\cdot C&gt;0</annotation></semantics></math>
-
-Contradiction.</p>
+<p>□</p>
 
 <h2 id="details-of-proof-of-1">Details of proof of (1)</h2>
 
-<h4 id="step-assume">Step 1.</h4>
+<h4 class="unnumbered" id="section"></h4>
 
-<p>By <a href="https://stacks.math.columbia.edu/tag/0203" title="Stacks Project, Lemma 32.12.3 (0203)">Chow’s lemma</a>, we
+<p><span>Step 1.</span><span id="step-assume" data-label="step-assume"></span></p>
 
-obtain a projective birational morphisms
+<p>By <a href="Chow&#39;s_Lemma.qmd#statement">Chow’s lemma</a>, we obtain a projective birational morphisms <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>π</mi><mo>:</mo><msup><mi>X</mi><mo>′</mo></msup><mo>→</mo><mi>X</mi></mrow><annotation encoding="application/x-tex">\pi:X&#39;\to X</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mo>′</mo></msup><mo>:</mo><msup><mi>X</mi><mo>′</mo></msup><mo>→</mo><mi>Y</mi></mrow><annotation encoding="application/x-tex">f&#39;:X&#39;\to Y</annotation></semantics></math>. Let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math> be an effective divisor on <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>X</mi><mo>′</mo></msup><annotation encoding="application/x-tex">X&#39;</annotation></semantics></math>, then <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>π</mi><mo>*</mo></msub><mi>B</mi></mrow><annotation encoding="application/x-tex">\pi_*B</annotation></semantics></math> is again effective. So we may assume that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math> is projective. Let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>U</mi><mo>⊂</mo><mi>Y</mi></mrow><annotation encoding="application/x-tex">U\subset Y</annotation></semantics></math> be an affine open subset which meets each component of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mo>*</mo></msub><mi>D</mi></mrow><annotation encoding="application/x-tex">f_*D</annotation></semantics></math>. Replacing <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics></math> by <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>U</mi><annotation encoding="application/x-tex">U</annotation></semantics></math> we may assume that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics></math> is affine. Then <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mo>,</mo><mi>Y</mi></mrow><annotation encoding="application/x-tex">X,Y</annotation></semantics></math> are quasi-projective.</p>
 
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>π</mi><mo>:</mo><msup><mi>X</mi><mo>′</mo></msup><mo>→</mo><mi>X</mi></mrow><annotation encoding="application/x-tex">\pi:X&#39;\to X</annotation></semantics></math>
+<p><a href="#proof1">↑ Back to the proof of (1)</a></p>
 
-and
+<h4 class="unnumbered" id="section-1"></h4>
 
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mo>′</mo></msup><mo>:</mo><msup><mi>X</mi><mo>′</mo></msup><mo>→</mo><mi>Y</mi></mrow><annotation encoding="application/x-tex">f&#39;:X&#39;\to Y</annotation></semantics></math>.
+<p><span>Step 2.</span><span id="step-antiample" data-label="step-antiample"></span></p>
 
-Let
+<p>Let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="script">ℒ</mi><annotation encoding="application/x-tex">\mathcal{L}</annotation></semantics></math> be an <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>-ample line bundle on <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>. Since <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics></math> is affine by assumption, there exists a nonzero element <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math> in <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>H</mi><mn>0</mn></msup><mo stretchy="false" form="prefix">(</mo><mi>Y</mi><mo>,</mo><msub><mi>f</mi><mo>*</mo></msub><msup><mi mathvariant="script">ℒ</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msup><mi>H</mi><mn>0</mn></msup><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo>,</mo><msup><mi mathvariant="script">ℒ</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">H^0(Y,f_*\mathcal{L}^{-1})=H^0(X,\mathcal{L}^{-1})</annotation></semantics></math>. Let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo>:=</mo><mrow><mi mathvariant="normal">div</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">E:=\operatorname{div}(s)</annotation></semantics></math>, we see that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mi>E</mi></mrow><annotation encoding="application/x-tex">-E</annotation></semantics></math> is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>-ample. To show that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>E</mi><annotation encoding="application/x-tex">E</annotation></semantics></math> contains each exceptional divisor, note that each exceptional divisor is covered by curves contracted by <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>. Let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math> be such a curve. If <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mo>⊄</mo><mrow><mi mathvariant="normal">Supp</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>E</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">C\not\subset \operatorname{Supp}(E)</annotation></semantics></math>, the intersection number <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo>⋅</mo><mi>C</mi></mrow><annotation encoding="application/x-tex">E\cdot C</annotation></semantics></math> must be non-negative. But <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mi>E</mi></mrow><annotation encoding="application/x-tex">-E</annotation></semantics></math> is relatively ample over <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics></math> and hence we have <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo>⋅</mo><mi>C</mi><mo>&lt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">E\cdot C&lt;0</annotation></semantics></math>, a contradiction. So we have <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mo>⊂</mo><mrow><mi mathvariant="normal">Supp</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>E</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">C\subset \operatorname{Supp}(E)</annotation></semantics></math> and therefore <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>E</mi><annotation encoding="application/x-tex">E</annotation></semantics></math> contains each exceptional divisor.</p>
 
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>
+<p><a href="#proof1">↑ Back to the proof of (1)</a></p>
 
-be an effective divisor on
+<h4 class="unnumbered" id="section-2"></h4>
 
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>X</mi><mo>′</mo></msup><annotation encoding="application/x-tex">X&#39;</annotation></semantics></math>,
+<p><span>Step 3.</span><span id="step-curve" data-label="step-curve"></span></p>
 
-then
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>π</mi><mo>*</mo></msub><mi>B</mi></mrow><annotation encoding="application/x-tex">\pi_*B</annotation></semantics></math>
-
-is again effective. So we may assume that
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>
-
-is projective. Let
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>U</mi><mo>⊂</mo><mi>Y</mi></mrow><annotation encoding="application/x-tex">U\subset Y</annotation></semantics></math>
-
-be an affine open subset which meets each component of
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mo>*</mo></msub><mi>D</mi></mrow><annotation encoding="application/x-tex">f_*D</annotation></semantics></math>.
-
-Replacing
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics></math>
-
-by
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>U</mi><annotation encoding="application/x-tex">U</annotation></semantics></math>
-
-we may assume that
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics></math>
-
-is affine. Then
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mo>,</mo><mi>Y</mi></mrow><annotation encoding="application/x-tex">X,Y</annotation></semantics></math>
-
-are quasi-projective.</p>
-
-<p><a href="#proof1">↑ Back to the proof of (1)</a>
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mspace width="1.0em"></mspace><annotation encoding="application/x-tex">\quad</annotation></semantics></math>
-
-<a href="#step-antiample">↓ Next step</a></p>
-
-<h4 id="step-antiample">Step 2.</h4>
-
-<p>Let
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math>
-
-be an ample divisor on
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics></math>
-
-which contains each center of exceptional divisors. Then we have
-
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mo>*</mo></msup><mi>H</mi><mo>=</mo><mover><mi>H</mi><mo accent="true">̃</mo></mover><mo>+</mo><mi>E</mi></mrow><annotation encoding="application/x-tex">f^*H=\widetilde{H}+E</annotation></semantics></math>
-
-Where
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>H</mi><mo accent="true">̃</mo></mover><annotation encoding="application/x-tex">\widetilde{H}</annotation></semantics></math>
-
-is the birational transform of
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math>
-
-and
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>E</mi><annotation encoding="application/x-tex">E</annotation></semantics></math>
-
-contains each exceptional divisor. We see that
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><msub><mo>∼</mo><mi>f</mi></msub><mo>−</mo><mover><mi>H</mi><mo accent="true">̃</mo></mover></mrow><annotation encoding="application/x-tex">E\sim_{f} -\widetilde{H}</annotation></semantics></math>
-
-and hence
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mi>E</mi></mrow><annotation encoding="application/x-tex">-E</annotation></semantics></math>
-
-is
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>-ample.</p>
-
-<p><a href="#proof1">↑ Back to the proof of (1)</a>
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mspace width="1.0em"></mspace><annotation encoding="application/x-tex">\quad</annotation></semantics></math>
-
-<a href="#step-curve">↓ Next step</a></p>
-
-<h4 id="step-curve">Step 3.</h4>
-
-<p>Let
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi><mo>=</mo><msup><mi>D</mi><mo>+</mo></msup><mo>−</mo><msup><mi>D</mi><mo>−</mo></msup></mrow><annotation encoding="application/x-tex">D=D^+-D^-</annotation></semantics></math>
-
-where
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>D</mi><mo>+</mo></msup><mo>,</mo><msup><mi>D</mi><mo>−</mo></msup></mrow><annotation encoding="application/x-tex">D^+,D^-</annotation></semantics></math>
-
-are effective. We see that
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>D</mi><mo>−</mo></msup><annotation encoding="application/x-tex">D^-</annotation></semantics></math>
-
-is exceptional since
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mo>*</mo></msub><mi>D</mi></mrow><annotation encoding="application/x-tex">f_*D</annotation></semantics></math>
-
-is effective. Let
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>e</mi><annotation encoding="application/x-tex">e</annotation></semantics></math>
-
-be the minimal non-negative number such that
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi><mo>+</mo><mi>e</mi><mi>E</mi></mrow><annotation encoding="application/x-tex">D+eE</annotation></semantics></math>
-
-is effective. Then there exists an prime divisor
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>F</mi><annotation encoding="application/x-tex">F</annotation></semantics></math>
-
-whose coefficient is positive in
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>D</mi><annotation encoding="application/x-tex">D</annotation></semantics></math>
-
-but is zero in
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi><mo>+</mo><mi>e</mi><mi>E</mi></mrow><annotation encoding="application/x-tex">D+eE</annotation></semantics></math>.
-
-Then there exists a curve
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mo>⊂</mo><mi>F</mi></mrow><annotation encoding="application/x-tex">C\subset F</annotation></semantics></math>
-
-which is contracted by
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>
-
-and not contained in the support of
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi><mo>+</mo><mi>e</mi><mi>E</mi></mrow><annotation encoding="application/x-tex">D+eE</annotation></semantics></math>.
-
-Hecne we have
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>D</mi><mo>+</mo><mi>e</mi><mi>E</mi><mo stretchy="false" form="postfix">)</mo><mo>⋅</mo><mi>C</mi><mo>≥</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">(D+eE)\cdot C\ge 0</annotation></semantics></math>.
-
-But
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mi>D</mi></mrow><annotation encoding="application/x-tex">-D</annotation></semantics></math>
-
-is
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>-nef
-
-and
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mi>E</mi></mrow><annotation encoding="application/x-tex">-E</annotation></semantics></math>
-
-is
-
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>-ample,
-
-we obtain that
-
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>D</mi><mo>+</mo><mi>e</mi><mi>E</mi><mo stretchy="false" form="postfix">)</mo><mo>⋅</mo><mi>C</mi><mo>&lt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">(D+eE)\cdot C&lt;0</annotation></semantics></math>
-
-a contradiction. <a href="#proof1">↑ Back to the proof of (1)</a></p>
+<p>Let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi><mo>=</mo><msup><mi>D</mi><mo>+</mo></msup><mo>−</mo><msup><mi>D</mi><mo>−</mo></msup></mrow><annotation encoding="application/x-tex">D=D^+-D^-</annotation></semantics></math> where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>D</mi><mo>+</mo></msup><mo>,</mo><msup><mi>D</mi><mo>−</mo></msup></mrow><annotation encoding="application/x-tex">D^+,D^-</annotation></semantics></math> are effective. We see that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>D</mi><mo>−</mo></msup><annotation encoding="application/x-tex">D^-</annotation></semantics></math> is exceptional since <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mo>*</mo></msub><mi>D</mi></mrow><annotation encoding="application/x-tex">f_*D</annotation></semantics></math> is effective. Let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>e</mi><annotation encoding="application/x-tex">e</annotation></semantics></math> be the minimal non-negative number such that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi><mo>+</mo><mi>e</mi><mi>E</mi></mrow><annotation encoding="application/x-tex">D+eE</annotation></semantics></math> is effective. Then there exists an prime divisor <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>F</mi><annotation encoding="application/x-tex">F</annotation></semantics></math> whose coefficient is positive in <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>D</mi><annotation encoding="application/x-tex">D</annotation></semantics></math> but is zero in <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi><mo>+</mo><mi>e</mi><mi>E</mi></mrow><annotation encoding="application/x-tex">D+eE</annotation></semantics></math>. Then there exists a curve <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mo>⊂</mo><mi>F</mi></mrow><annotation encoding="application/x-tex">C\subset F</annotation></semantics></math> which is contracted by <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math> and not contained in the support of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi><mo>+</mo><mi>e</mi><mi>E</mi></mrow><annotation encoding="application/x-tex">D+eE</annotation></semantics></math>. Hecne we have <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>D</mi><mo>+</mo><mi>e</mi><mi>E</mi><mo stretchy="false" form="postfix">)</mo><mo>⋅</mo><mi>C</mi><mo>≥</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">(D+eE)\cdot C\ge 0</annotation></semantics></math>. But <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mi>D</mi></mrow><annotation encoding="application/x-tex">-D</annotation></semantics></math> is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>-nef and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mi>E</mi></mrow><annotation encoding="application/x-tex">-E</annotation></semantics></math> is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>-ample, we obtain that <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>D</mi><mo>+</mo><mi>e</mi><mi>E</mi><mo stretchy="false" form="postfix">)</mo><mo>⋅</mo><mi>C</mi><mo>&lt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">(D+eE)\cdot C&lt;0</annotation></semantics></math> a contradiction. <a href="#proof1">↑ Back to the proof of (1)</a></p>
 
 </main>
 <canvas id="fx" style="position:fixed;inset:0;pointer-events:none;z-index:9998"></canvas>
@@ -598,4 +308,4 @@ a contradiction. <a href="#proof1">↑ Back to the proof of (1)</a></p>
 })();
 </script>
 
-</body></html>
+<script src="../assets/katex/katex.min.js" defer></script><script src="../assets/js/math-katex.js" defer></script></body></html>
