@@ -92,6 +92,21 @@ h5.subsubsectionHead{font-size:1.05rem;margin:1.8rem 0 .6rem;font-weight:600;col
 .article img{max-width:100%;height:auto;display:block;margin:1.4rem auto}
 .article .newtheorem p:last-child{margin-bottom:0}
 
+.article h4{font-size:1rem;margin:1.5rem 0 .5rem;font-weight:600;color:var(--ink)}
+.article h5{font-size:.96rem;margin:1.2rem 0 .4rem;font-weight:600;color:var(--ink)}
+.notelayout{max-width:64rem;margin:0 auto;padding:0 1.8rem;display:grid;
+grid-template-columns:minmax(0,1fr) 13rem;gap:2.5rem;align-items:start}
+.notelayout main.article{max-width:none;margin:0;padding:0 0 6rem}
+.notetoc{position:sticky;top:4.2rem;padding-top:3.4rem;font-family:system-ui,sans-serif;font-size:.78rem;line-height:1.55}
+.notetoc .side-label{margin:0 0 .7rem;font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--faint)}
+.notetoc ul{list-style:none;margin:0;padding:0}
+.notetoc ul ul{padding-left:.85rem}
+.notetoc li{margin:0}
+.notetoc a{display:block;padding:.22rem 0 .22rem .75rem;border-left:1px solid var(--rule);
+color:var(--muted);text-decoration:none}
+.notetoc a:hover{color:var(--ink)}
+@media(max-width:1000px){.notelayout{grid-template-columns:1fr;padding:0 1.2rem}.notetoc{display:none}
+.notelayout main.article{padding:0 0 4rem}}
 .pdf-meta{font-family:system-ui,sans-serif;font-size:.78rem;color:var(--muted);margin:0 0 1rem}
 .pdf-view{width:100%;height:78vh;border:1px solid var(--rule);border-radius:6px;background:var(--paper2)}
 .pdf-fallback{font-size:.9rem;color:var(--muted);padding:1rem}

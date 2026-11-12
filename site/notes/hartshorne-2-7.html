@@ -45,7 +45,7 @@ footer{max-width:46rem;margin:0 auto;padding:2.6rem 1.8rem 4rem;color:var(--fain
 font-family:system-ui,sans-serif;font-size:.72rem;letter-spacing:.06em}
 .crumb{font-family:system-ui,sans-serif;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
 color:var(--faint);margin:2.6rem 0 1.4rem}
-.crumb a{color:var(--muted);text-decoration:none;text-transform:none}
+.crumb a{color:var(--muted);text-decoration:none}
 .crumb span{margin:0 .55rem;color:var(--rule2)}
 main.article{max-width:44rem;margin:0 auto;padding:0 1.8rem 6rem}
 .article h1{font-size:2rem;margin:.4rem 0 1.2rem;line-height:1.25;color:var(--ink)}
@@ -92,6 +92,21 @@ h5.subsubsectionHead{font-size:1.05rem;margin:1.8rem 0 .6rem;font-weight:600;col
 .article img{max-width:100%;height:auto;display:block;margin:1.4rem auto}
 .article .newtheorem p:last-child{margin-bottom:0}
 
+.article h4{font-size:1rem;margin:1.5rem 0 .5rem;font-weight:600;color:var(--ink)}
+.article h5{font-size:.96rem;margin:1.2rem 0 .4rem;font-weight:600;color:var(--ink)}
+.notelayout{max-width:64rem;margin:0 auto;padding:0 1.8rem;display:grid;
+grid-template-columns:minmax(0,1fr) 13rem;gap:2.5rem;align-items:start}
+.notelayout main.article{max-width:none;margin:0;padding:0 0 6rem}
+.notetoc{position:sticky;top:4.2rem;padding-top:3.4rem;font-family:system-ui,sans-serif;font-size:.78rem;line-height:1.55}
+.notetoc .side-label{margin:0 0 .7rem;font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--faint)}
+.notetoc ul{list-style:none;margin:0;padding:0}
+.notetoc ul ul{padding-left:.85rem}
+.notetoc li{margin:0}
+.notetoc a{display:block;padding:.22rem 0 .22rem .75rem;border-left:1px solid var(--rule);
+color:var(--muted);text-decoration:none}
+.notetoc a:hover{color:var(--ink)}
+@media(max-width:1000px){.notelayout{grid-template-columns:1fr;padding:0 1.2rem}.notetoc{display:none}
+.notelayout main.article{padding:0 0 4rem}}
 .pdf-meta{font-family:system-ui,sans-serif;font-size:.78rem;color:var(--muted);margin:0 0 1rem}
 .pdf-view{width:100%;height:78vh;border:1px solid var(--rule);border-radius:6px;background:var(--paper2)}
 .pdf-fallback{font-size:.9rem;color:var(--muted);padding:1rem}
@@ -100,7 +115,7 @@ h5.subsubsectionHead{font-size:1.05rem;margin:1.8rem 0 .6rem;font-weight:600;col
 .hero{padding:3.4rem 0 2.4rem}.row .meta{display:none}}
 </style><link rel="stylesheet" href="../assets/katex/katex.min.css"></head><body>
 <header class="topnav"><nav><a href="../index.html#note">Notes</a><button id="egg" type="button" title="彩蛋" aria-label="彩蛋">???</button></nav></header>
-<main class="article"><p class="crumb"><a href="../index.html">Notes</a><span>/</span>Algebraic Geometry</p><h1>Hartshorne 2.7</h1><h2 id="determining-rational-maps-from-divisors">Determining rational maps from divisors</h2>
+<div class="notelayout"><main class="article"><p class="crumb"><a href="../index.html">Notes</a><span>/</span>Algebraic Geometry</p><h1>Hartshorne 2.7</h1><h2 id="determining-rational-maps-from-divisors">Determining rational maps from divisors</h2>
 
 <h3 id="weil-divisor">Weil divisor</h3>
 
@@ -451,7 +466,7 @@ Hartshorne, Robin. 1977. <em>Algebraic Geometry</em>. Vol. 52. Graduate Texts in
 
 </div>
 
-</main>
+</main><aside class="notetoc"><p class="side-label">Contents</p><ul><li><a href="#determining-rational-maps-from-divisors">Determining rational maps from divisors</a><ul><li><a href="#weil-divisor">Weil divisor</a></li><li><a href="#cartier-divisor">Cartier divisor</a></li></ul></li><li><a href="#spectrum-and-projective-spectrum-of-quasi-coherent-algebras">Spectrum and projective spectrum of quasi-coherent algebras</a><ul><li><a href="#the-symmetric-algebra-of-an-mathcalo_x-module">The symmetric algebra of an 𝒪X\mathcal{O}_X-module</a></li><li><a href="#mathopmathrmspec-and-mathopmathrmproj">Spec\mathop{\mathrm{Spec}} and Proj\mathop{\mathrm{Proj}}</a></li></ul></li><li><a href="#blowing-up">Blowing-up</a></li></ul></aside></div>
 <canvas id="fx" style="position:fixed;inset:0;pointer-events:none;z-index:9998"></canvas>
 <div id="fx-flash" style="position:fixed;inset:0;pointer-events:none;z-index:9997;opacity:0;
   background:radial-gradient(circle at 50% 42%, rgba(255,246,214,.95) 0%, rgba(255,214,140,.45) 22%,
