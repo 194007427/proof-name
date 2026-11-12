@@ -66,7 +66,7 @@ main.article{max-width:44rem;margin:0 auto;padding:0 1.8rem 6rem}
 .eq{text-align:center;margin:1.4rem 0}.eq p{text-align:center;margin:0}
 a.xref{text-decoration:none;border-bottom:1px solid rgba(154,59,44,.3)}
 .math-source{margin:0 .05em}
-.math-source.katex-display{margin:1.4rem 0;overflow-x:auto;overflow-y:hidden}
+.math-source > .katex-display{margin:1.4rem 0;overflow-x:auto;overflow-y:hidden}
 .katex{font-size:1.04em}
 
 /* make4ht 输出的排版映射 */
@@ -98,9 +98,17 @@ h5.subsubsectionHead{font-size:1.05rem;margin:1.8rem 0 .6rem;font-weight:600;col
 @media(max-width:760px){.pdf-view{height:65vh}}
 @media(max-width:640px){.topnav{padding:.9rem 1.2rem}.topnav nav{gap:.9rem;font-size:.68rem}
 .hero{padding:3.4rem 0 2.4rem}.row .meta{display:none}}
+
+.article-toc{margin:1.4rem 0 2rem;padding:.65rem 1rem;border:1px solid var(--rule);border-radius:4px}
+.article-toc summary{cursor:pointer;font-family:system-ui,sans-serif;font-size:.85rem;color:var(--muted)}
+.article-toc ol{list-style:none;padding:0;margin:.65rem 0 .2rem}
+.article-toc li{margin:.2rem 0;line-height:1.5}
+.article-toc a{text-decoration:none}
+.article :is(h1,h2,h3,h4,[id]){scroll-margin-top:5rem}
 </style><link rel="stylesheet" href="../assets/katex/katex.min.css"></head><body>
 <header class="topnav"><nav><a href="../index.html#note">NOTE</a><button id="egg" type="button" title="彩蛋" aria-label="彩蛋">???</button></nav></header>
-<main class="article"><p class="crumb"><a href="../index.html">NOTE</a><span>/</span>Algebraic Geometry</p><h1>Nonvanishing and bpf</h1><h1 id="nonvanishing">Nonvanishing</h1>
+<main class="article"><p class="crumb"><a href="../index.html">NOTE</a><span>/</span>Birational Geometry</p><h1>Nonvanishing and bpf</h1>
+<details class="article-toc"><summary>Contents</summary><nav aria-label="Article contents"><ol><li><a href="#nonvanishing">Nonvanishing</a></li><li><a href="#basepoint-free">Basepoint-free</a></li></ol></nav></details><h2 id="nonvanishing">Nonvanishing</h2>
 
 <p>This section proves the following theorem</p>
 
@@ -182,7 +190,7 @@ h5.subsubsectionHead{font-size:1.05rem;margin:1.8rem 0 .6rem;font-weight:600;col
 
 <div class="proof">
 
-<p><em><span class="nodecor"><strong>Proof of Lemma 1.3</strong></span>.</em> Take a log resolution <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo>:</mo><mi>Y</mi><mo>→</mo><mi>X</mi></mrow><annotation encoding="application/x-tex">f:Y\to X</annotation></semantics></math> such that <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>f</mi><mo>*</mo><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mrow><mi mathvariant="normal">supp</mi><mo>&#8289;</mo></mrow><mi mathvariant="normal">Θ</mi><mo>+</mo><msubsup><mi>f</mi><mo>*</mo><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mrow><mi mathvariant="normal">supp</mi><mo>&#8289;</mo></mrow><mi>G</mi><mo>+</mo><mi>E</mi><mi>x</mi><mi>c</mi><mo stretchy="false" form="prefix">(</mo><mi>f</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">f_*^{-1}\operatorname{supp}\Theta+f_*^{-1}\operatorname{supp}G+Exc(f)</annotation></semantics></math> is SNC. Write <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><msup><mi>f</mi><mo>*</mo></msup><mo stretchy="false" form="prefix">(</mo><msub><mi>K</mi><mi>X</mi></msub><mo>+</mo><mi mathvariant="normal">Θ</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><msub><mi>K</mi><mi>Y</mi></msub><mo>=</mo><munder><mo>∑</mo><mi>i</mi></munder><msub><mi>a</mi><mi>i</mi></msub><msub><mi>E</mi><mi>i</mi></msub><mo>,</mo><mspace width="0.222em"></mspace><msup><mi>f</mi><mo>*</mo></msup><mi>G</mi><mo>=</mo><munder><mo>∑</mo><mi>i</mi></munder><msub><mi>b</mi><mi>i</mi></msub><msub><mi>E</mi><mi>i</mi></msub><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align*}
+<p><em><span class="nodecor"><strong>Proof of <a class="xref" href="#222">Lemma 3</a></strong></span>.</em> Take a log resolution <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo>:</mo><mi>Y</mi><mo>→</mo><mi>X</mi></mrow><annotation encoding="application/x-tex">f:Y\to X</annotation></semantics></math> such that <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>f</mi><mo>*</mo><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mrow><mi mathvariant="normal">supp</mi><mo>&#8289;</mo></mrow><mi mathvariant="normal">Θ</mi><mo>+</mo><msubsup><mi>f</mi><mo>*</mo><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mrow><mi mathvariant="normal">supp</mi><mo>&#8289;</mo></mrow><mi>G</mi><mo>+</mo><mi>E</mi><mi>x</mi><mi>c</mi><mo stretchy="false" form="prefix">(</mo><mi>f</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">f_*^{-1}\operatorname{supp}\Theta+f_*^{-1}\operatorname{supp}G+Exc(f)</annotation></semantics></math> is SNC. Write <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><msup><mi>f</mi><mo>*</mo></msup><mo stretchy="false" form="prefix">(</mo><msub><mi>K</mi><mi>X</mi></msub><mo>+</mo><mi mathvariant="normal">Θ</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><msub><mi>K</mi><mi>Y</mi></msub><mo>=</mo><munder><mo>∑</mo><mi>i</mi></munder><msub><mi>a</mi><mi>i</mi></msub><msub><mi>E</mi><mi>i</mi></msub><mo>,</mo><mspace width="0.222em"></mspace><msup><mi>f</mi><mo>*</mo></msup><mi>G</mi><mo>=</mo><munder><mo>∑</mo><mi>i</mi></munder><msub><mi>b</mi><mi>i</mi></msub><msub><mi>E</mi><mi>i</mi></msub><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align*}
 
         f^*(K_X+\Theta)-K_Y=\sum_ia_iE_i, \ f^*G=\sum_ib_iE_i.
 
@@ -204,7 +212,7 @@ h5.subsubsectionHead{font-size:1.05rem;margin:1.8rem 0 .6rem;font-weight:600;col
 
 </div>
 
-<h1 id="basepoint-free">Basepoint-free</h1>
+<h2 id="basepoint-free">Basepoint-free</h2>
 
 <p>This section proves the following theorem</p>
 
