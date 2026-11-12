@@ -1,0 +1,530 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>Hurwitz</title>
+<style>
+:root{--paper:#fbfaf6;--paper2:#f3f0e8;--ink:#1a1917;--soft:#3d3a34;--muted:#78726a;
+--faint:#a49d92;--rule:#e4dfd3;--rule2:#cec7b7;--accent:#9a3b2c;--tint:rgba(154,59,44,.045);}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--soft);font-family:"Source Serif 4",Georgia,serif;
+font-size:16.5px;line-height:1.8;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:underline;text-underline-offset:.2em;text-decoration-color:rgba(154,59,44,.3)}
+.wrap{max-width:46rem;margin:0 auto;padding:0 1.8rem}
+.topnav{display:flex;align-items:center;justify-content:space-between;gap:2rem;position:sticky;top:0;z-index:9;
+background:rgba(251,250,246,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule);
+padding:1rem 1.8rem;font-family:system-ui,sans-serif}
+.brand{font-size:.95rem;letter-spacing:.18em;font-weight:600;color:var(--ink);text-decoration:none}
+.topnav nav{display:flex;gap:1.4rem;font-size:.74rem;letter-spacing:.12em;margin-left:auto}
+.topnav nav a{color:var(--muted);text-decoration:none}
+.topnav nav a:hover{color:var(--accent)}
+.topnav nav button{font:inherit;background:none;border:0;padding:0;color:var(--muted);cursor:pointer;letter-spacing:inherit}
+.topnav nav button:hover{color:var(--accent)}
+.hero{padding:5.5rem 0 3.5rem}
+.hero h1{margin:0 0 .9rem;font-size:clamp(2.6rem,6vw,4rem);letter-spacing:-.02em;line-height:1.1;color:var(--ink)}
+.hero p{margin:0;color:var(--muted);font-size:1rem;max-width:30rem}
+section{padding:3.2rem 0;border-top:1px solid var(--rule)}
+.shead{display:flex;align-items:baseline;gap:.9rem;margin-bottom:1.7rem}
+.snum{font-family:system-ui,sans-serif;font-size:.7rem;letter-spacing:.12em;color:var(--accent)}
+.shead h2{margin:0;font-size:1.05rem;font-weight:600;letter-spacing:.02em;color:var(--ink)}
+.shead span.note{margin-left:auto;font-family:system-ui,sans-serif;font-size:.72rem;color:var(--faint)}
+.group{margin:1.6rem 0 0}
+.glabel{display:flex;align-items:center;gap:.75rem;font-family:system-ui,sans-serif;font-size:1.06rem;
+font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);margin:2.3rem 0 .85rem}
+.glabel::before{content:"";width:22px;height:2px;background:var(--accent);flex:none}
+.glabel:first-child{margin-top:.2rem}
+.row{display:flex;align-items:baseline;gap:1rem;padding:.62rem 0;border-bottom:1px solid var(--rule);
+text-decoration:none;color:inherit}
+.row:last-child{border-bottom:0}
+.row:hover .t{color:var(--accent)}
+.row .t{font-size:1rem;color:var(--ink);transition:color .15s}
+.row .meta{margin-left:auto;font-family:system-ui,sans-serif;font-size:.7rem;letter-spacing:.1em;color:var(--faint)}
+.row .arrow{color:var(--faint);font-size:.8rem}
+.row:hover .arrow{color:var(--accent)}
+.empty{font-size:.9rem;color:var(--faint);padding:.5rem 0}
+.about p{margin:0 0 .5rem;color:var(--muted);font-size:.95rem}
+.about a{text-decoration:none;border-bottom:1px solid rgba(154,59,44,.28)}
+footer{max-width:46rem;margin:0 auto;padding:2.6rem 1.8rem 4rem;color:var(--faint);
+font-family:system-ui,sans-serif;font-size:.72rem;letter-spacing:.06em}
+.crumb{font-family:system-ui,sans-serif;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
+color:var(--faint);margin:2.6rem 0 1.4rem}
+.crumb a{color:var(--muted);text-decoration:none}
+.crumb span{margin:0 .55rem;color:var(--rule2)}
+main.article{max-width:44rem;margin:0 auto;padding:0 1.8rem 6rem}
+.article h1{font-size:2rem;margin:.4rem 0 1.2rem;line-height:1.25;color:var(--ink)}
+.article h2{font-size:1.3rem;margin:2.5rem 0 1rem;padding-bottom:.4rem;border-bottom:1px solid var(--rule);color:var(--ink)}
+.article h3{font-size:1.06rem;margin:1.8rem 0 .6rem;color:var(--ink)}
+.article p{margin:0 0 1.05rem;text-align:justify}
+.header-section-number{font-family:system-ui,sans-serif;font-size:.78em;color:var(--faint);margin-right:.5em}
+.stmt{margin:1.7rem 0;padding:1rem 1.3rem;border-left:2px solid var(--rule2)}
+.stmt-theorem,.stmt-lemma,.stmt-proposition,.stmt-corollary{border-left-color:var(--accent);background:var(--tint)}
+.stmt-definition{border-left-color:#35506f;background:rgba(53,80,111,.045)}
+.stmt-head{display:flex;gap:.5rem;align-items:baseline;margin-bottom:.6rem;font-family:system-ui,sans-serif}
+.stmt-kind{font-size:.74rem;font-weight:700;letter-spacing:.14em;color:var(--muted)}
+.stmt-num{font-size:.78rem;font-weight:600;color:var(--muted)}
+.stmt-theorem .stmt-kind,.stmt-theorem .stmt-num,.stmt-lemma .stmt-kind,.stmt-lemma .stmt-num{color:var(--accent)}
+.stmt>p:last-child{margin-bottom:0}
+.proof{margin:1.1rem 0 1.8rem;padding-left:1.2rem;border-left:1px solid var(--rule)}
+.proof-head{font-family:system-ui,sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.2em;color:var(--faint);margin-bottom:.5rem}
+.eq{text-align:center;margin:1.4rem 0}.eq p{text-align:center;margin:0}
+a.xref{text-decoration:none;border-bottom:1px solid rgba(154,59,44,.3)}
+.math-source{margin:0 .05em}
+.math-source.katex-display{margin:1.4rem 0;overflow-x:auto;overflow-y:hidden}
+.katex{font-size:1.04em}
+
+/* make4ht 输出的排版映射 */
+/* pandoc 生成的定理块 */
+.proposition,.lemma,.theorem,.corollary{margin:1.7rem 0;padding:1rem 1.3rem;border-left:2px solid var(--accent);background:var(--tint)}
+.definition{margin:1.7rem 0;padding:1rem 1.3rem;border-left:2px solid #35506f;background:rgba(53,80,111,.045)}
+.example,.remark{margin:1.7rem 0;padding:1rem 1.3rem;border-left:2px solid var(--rule2)}
+.proposition p,.lemma p,.theorem p,.definition p,.example p,.remark p{margin:0 0 .6rem}
+.proposition p:last-child,.lemma p:last-child,.theorem p:last-child,.definition p:last-child,
+.example p:last-child,.remark p:last-child{margin-bottom:0}
+.proof{margin:1.1rem 0 1.8rem;padding-left:1.2rem;border-left:1px solid var(--rule)}
+.newtheorem{margin:1.6rem 0;padding:1rem 1.3rem;border-left:2px solid var(--rule2)}
+.newtheorem .head{display:block;margin-bottom:.45rem;font-family:system-ui,sans-serif;font-size:.8rem;
+font-weight:700;letter-spacing:.08em;color:var(--accent)}
+.cmbx-12,.cmbx-10,.cmbx-9,.cmbx-8{font-weight:600}
+.cmti-12,.cmti-10,.cmti-9,.cmti-8,.cmsl-12{font-style:italic}
+.qopname{font-style:normal}
+.titlemark{display:none}
+h3.sectionHead{font-size:1.7rem;margin:0 0 1.2rem;padding-bottom:.5rem;border-bottom:1px solid var(--rule);color:var(--ink)}
+h4.subsectionHead{font-size:1.22rem;margin:2.2rem 0 .8rem;font-weight:600;color:var(--ink)}
+h5.subsubsectionHead{font-size:1.05rem;margin:1.8rem 0 .6rem;font-weight:600;color:var(--ink)}
+.article p.noindent,.article p.indent{margin:0 0 1.05rem}
+.article img{max-width:100%;height:auto;display:block;margin:1.4rem auto}
+.article .newtheorem p:last-child{margin-bottom:0}
+
+.pdf-meta{font-family:system-ui,sans-serif;font-size:.78rem;color:var(--muted);margin:0 0 1rem}
+.pdf-view{width:100%;height:78vh;border:1px solid var(--rule);border-radius:6px;background:var(--paper2)}
+.pdf-fallback{font-size:.9rem;color:var(--muted);padding:1rem}
+@media(max-width:760px){.pdf-view{height:65vh}}
+@media(max-width:640px){.topnav{padding:.9rem 1.2rem}.topnav nav{gap:.9rem;font-size:.68rem}
+.hero{padding:3.4rem 0 2.4rem}.row .meta{display:none}}
+</style><link rel="stylesheet" href="../assets/katex/katex.min.css"></head><body>
+<header class="topnav"><nav><a href="../index.html#note">NOTE</a><button id="egg" type="button" title="彩蛋" aria-label="彩蛋">???</button></nav></header>
+<main class="article"><p class="crumb"><a href="../index.html">NOTE</a><span>/</span>Algebraic Geometry</p><h1>Hurwitz</h1><h1 id="hurwitz-formula">Hurwitz formula</h1>
+
+<div class="proposition">
+
+<p><strong>Proposition 1</strong>.  <em>Let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mo>→</mo><mi>Y</mi></mrow><annotation encoding="application/x-tex">X\to Y</annotation></semantics></math> be a separable morphism between varieties. Then there is an exact sequence of sheaves on <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>, <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mn>0</mn><mo>→</mo><msup><mi>f</mi><mo>*</mo></msup><msub><mi mathvariant="normal">Ω</mi><mi>Y</mi></msub><mo>→</mo><msub><mi mathvariant="normal">Ω</mi><mi>X</mi></msub><mo>→</mo><msub><mi mathvariant="normal">Ω</mi><mrow><mi>X</mi><mi>/</mi><mi>Y</mi></mrow></msub><mo>→</mo><mn>0</mn><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align*}
+
+        0\to f^*\Omega_{Y}\to \Omega_X\to \Omega_{X/Y}\to 0.
+
+\end{align*}</annotation></semantics></math></em></p>
+
+</div>
+
+<div class="proof">
+
+<p><em>Proof.</em> <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><msup><mi>f</mi><mo>*</mo></msup><msub><mi mathvariant="normal">Ω</mi><mi>Y</mi></msub><mo>→</mo><msub><mi mathvariant="normal">Ω</mi><mi>X</mi></msub><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> is injective </mtext><mspace width="0.333em"></mspace></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mo>⇔</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">(</mo><msup><mi>f</mi><mo>*</mo></msup><msub><mi mathvariant="normal">Ω</mi><mi>Y</mi></msub><msub><mo minsize="120%" maxsize="120%" stretchy="true" form="postfix">)</mo><msub><mi>η</mi><mi>X</mi></msub></msub><mo>→</mo><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">(</mo><msub><mi mathvariant="normal">Ω</mi><mi>X</mi></msub><msub><mo minsize="120%" maxsize="120%" stretchy="true" form="postfix">)</mo><msub><mi>η</mi><mi>X</mi></msub></msub><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> is injective </mtext><mspace width="0.333em"></mspace></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>η</mi><mi>X</mi></msub><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> is the generic point of </mtext><mspace width="0.333em"></mspace></mrow><mi>X</mi><mo stretchy="false" form="postfix">)</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mo>⇔</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><msub><mi mathvariant="normal">Ω</mi><mrow><mi>K</mi><mo stretchy="false" form="prefix">(</mo><mi>Y</mi><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mi>k</mi></mrow></msub><msub><mo>⊗</mo><mrow><mi>K</mi><mo stretchy="false" form="prefix">(</mo><mi>Y</mi><mo stretchy="false" form="postfix">)</mo></mrow></msub><mi>K</mi><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo stretchy="false" form="postfix">)</mo><mo>→</mo><msub><mi mathvariant="normal">Ω</mi><mrow><mi>K</mi><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mi>k</mi></mrow></msub><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> is injective </mtext><mspace width="0.333em"></mspace></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mo>⇔</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><msub><mi mathvariant="normal">Ω</mi><mrow><mi>K</mi><mo stretchy="false" form="prefix">(</mo><mi>Y</mi><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mi>k</mi></mrow></msub><msub><mo>⊗</mo><mrow><mi>K</mi><mo stretchy="false" form="prefix">(</mo><mi>Y</mi><mo stretchy="false" form="postfix">)</mo></mrow></msub><mi>K</mi><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo stretchy="false" form="postfix">)</mo><mo>→</mo><msub><mi mathvariant="normal">Ω</mi><mrow><mi>K</mi><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mi>k</mi></mrow></msub><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> is isomorphic </mtext><mspace width="0.333em"></mspace></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mo>⇔</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><msub><mi mathvariant="normal">Ω</mi><mrow><mi>K</mi><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mi>K</mi><mo stretchy="false" form="prefix">(</mo><mi>Y</mi><mo stretchy="false" form="postfix">)</mo></mrow></msub><mo>=</mo><mn>0</mn></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mo>⇔</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mi>K</mi><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mi>K</mi><mo stretchy="false" form="prefix">(</mo><mi>Y</mi><mo stretchy="false" form="postfix">)</mo><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> is separable</mtext></mrow><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align*}
+
+        &amp;f^*\Omega_Y\to \Omega_X \text{ is injective } \\ \iff&amp; \big(f^*\Omega_Y\big)_{\eta_X}\to \big(\Omega_X\big)_{\eta_X} \text{ is injective }(\eta_X \text{ is the generic point of }X) \\ \iff&amp; \Omega_{K(Y)/k}\otimes_{K(Y)}K(X)\to \Omega_{K(X)/k} \text{ is injective } \\ \iff&amp; \Omega_{K(Y)/k}\otimes_{K(Y)}K(X)\to \Omega_{K(X)/k} \text{ is isomorphic } \\ \iff&amp; \Omega_{K(X)/K(Y)}=0 \\ \iff&amp; K(X)/K(Y) \text{ is separable}.
+
+\end{align*}</annotation></semantics></math> ◻</p>
+
+</div>
+
+<div class="remark">
+
+<p><strong>Remark 2</strong>.  <em>Let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math> be algebraically closed and of characteristic <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>0</mn><annotation encoding="application/x-tex">0</annotation></semantics></math>, let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo>:</mo><mi>X</mi><mo>→</mo><mi>Y</mi></mrow><annotation encoding="application/x-tex">f:X\to Y</annotation></semantics></math> be a dominant map between nonsingular varieties of dimension <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math> over <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>. Then there is a nonempty open subset <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo>⊂</mo><mi>Y</mi></mrow><annotation encoding="application/x-tex">V\subset Y</annotation></semantics></math> such that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo>:</mo><msup><mi>f</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>V</mi><mo stretchy="false" form="postfix">)</mo><mo>→</mo><mi>V</mi></mrow><annotation encoding="application/x-tex">f:f^{-1}(V)\to V</annotation></semantics></math> is smooth by <span class="citation" data-cites="hartshorne1977algebraic">(Hartshorne 1977, III, Corollary 10.7)</span> and is therefore étale by <span class="citation" data-cites="hartshorne1977algebraic">(Hartshorne 1977, III, Proposition 10.4)</span>. Let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>K</mi><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mi>K</mi><mo stretchy="false" form="prefix">(</mo><mi>Y</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">K(X)/K(Y)</annotation></semantics></math> be the induced field extension, note that <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mi>K</mi><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mi>K</mi><mo stretchy="false" form="prefix">(</mo><mi>Y</mi><mo stretchy="false" form="postfix">)</mo><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> is separable </mtext><mspace width="0.333em"></mspace></mrow><mo>⇔</mo><mrow><mi mathvariant="normal">Spec</mi><mo>&#8289;</mo></mrow><mi>K</mi><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo stretchy="false" form="postfix">)</mo><mo>→</mo><mrow><mi mathvariant="normal">Spec</mi><mo>&#8289;</mo></mrow><mi>K</mi><mo stretchy="false" form="prefix">(</mo><mi>Y</mi><mo stretchy="false" form="postfix">)</mo><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> is étale </mtext><mspace width="0.333em"></mspace></mrow><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align*}
+
+        K(X)/K(Y) \text{ is separable } \iff \mathop{\mathrm{Spec}}K(X)\to \mathop{\mathrm{Spec}}K(Y) \text{ is \&#39;etale }.
+
+\end{align*}</annotation></semantics></math> Hence such <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math> is always separable.</em></p>
+
+</div>
+
+<p>If <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics></math> are nonsingular of dimension <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>, Let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">{</mo><msub><mi>U</mi><mi>λ</mi></msub><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{U_{\lambda}\}</annotation></semantics></math> (resp. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">{</mo><msub><mi>V</mi><mi>μ</mi></msub><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{V_{\mu}\}</annotation></semantics></math>) be a coordinate cover of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> (resp. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics></math>) with local coordinate <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>x</mi><mi>λ</mi><mn>1</mn></msubsup><mo>,</mo><mi>⋯</mi><mo>,</mo><msubsup><mi>x</mi><mi>λ</mi><mi>n</mi></msubsup></mrow><annotation encoding="application/x-tex">x_{\lambda}^1,\cdots ,x_{\lambda}^n</annotation></semantics></math> (resp. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>y</mi><mi>μ</mi><mn>1</mn></msubsup><mo>,</mo><mi>⋯</mi><mo>,</mo><msubsup><mi>y</mi><mi>μ</mi><mi>n</mi></msubsup></mrow><annotation encoding="application/x-tex">y_{\mu}^1,\cdots ,y_{\mu}^n</annotation></semantics></math>) and let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ω</mi><annotation encoding="application/x-tex">\omega</annotation></semantics></math> be a rational <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>-form on <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics></math>, given locally on <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>V</mi><mi>μ</mi></msub><annotation encoding="application/x-tex">V_{\mu}</annotation></semantics></math> by <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ϕ</mi><mi>μ</mi></msub><mi>d</mi><msubsup><mi>y</mi><mi>μ</mi><mn>1</mn></msubsup><mo>∧</mo><mi>⋯</mi><mo>∧</mo><mi>d</mi><msubsup><mi>y</mi><mi>μ</mi><mi>n</mi></msubsup></mrow><annotation encoding="application/x-tex">\phi_{\mu}dy_{\mu}^1\wedge\cdots \wedge dy_{\mu}^n</annotation></semantics></math>. Then <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mo>*</mo></msup><mi>ω</mi><mo>=</mo><msup><mi>f</mi><mo>*</mo></msup><msub><mi>ϕ</mi><mi>μ</mi></msub><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">(</mo><mfrac><mrow><mi>∂</mi><mo stretchy="false" form="prefix">(</mo><msup><mi>f</mi><mo>*</mo></msup><msub><mi>y</mi><mi>μ</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mi>∂</mi><msub><mi>x</mi><mi>λ</mi></msub></mrow></mfrac><mo minsize="120%" maxsize="120%" stretchy="true" form="postfix">)</mo><mo>⋅</mo><mi>d</mi><msubsup><mi>x</mi><mi>λ</mi><mn>1</mn></msubsup><mo>∧</mo><mi>⋯</mi><mo>∧</mo><mi>d</mi><msubsup><mi>x</mi><mi>λ</mi><mi>n</mi></msubsup></mrow><annotation encoding="application/x-tex">f^*\omega=f^*\phi_{\mu}\big(\frac{\partial (f^*y_{\mu})}{\partial x_{\lambda}}\big)\cdot dx_{\lambda}^1\wedge\cdots\wedge dx_{\lambda}^n</annotation></semantics></math> and <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msup><mi>f</mi><mo>*</mo></msup><mrow><mi mathvariant="normal">div</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>ω</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mo stretchy="false" form="prefix">{</mo><mo stretchy="false" form="prefix">(</mo><msup><mi>f</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><msub><mi>V</mi><mi>μ</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>,</mo><msup><mi>f</mi><mo>*</mo></msup><msub><mi>ϕ</mi><mi>μ</mi></msub><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">}</mo><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mrow><mi mathvariant="normal">div</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><msup><mi>f</mi><mo>*</mo></msup><mi>ω</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mo stretchy="false" form="prefix">{</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>U</mi><mi>λ</mi></msub><mo>∩</mo><msup><mi>f</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><msub><mi>V</mi><mi>μ</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>,</mo><msup><mi>f</mi><mo>*</mo></msup><msub><mi>ϕ</mi><mi>μ</mi></msub><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">(</mo><mfrac><mrow><mi>∂</mi><mo stretchy="false" form="prefix">(</mo><msup><mi>f</mi><mo>*</mo></msup><msub><mi>y</mi><mi>μ</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mi>∂</mi><msub><mi>x</mi><mi>λ</mi></msub></mrow></mfrac><mo minsize="120%" maxsize="120%" stretchy="true" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">}</mo><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align*}
+
+    f^*\operatorname{div}(\omega)&amp;=\{(f^{-1}(V_{\mu}),f^*\phi_{\mu})\},\\
+
+    \operatorname{div}(f^*\omega)&amp;=\{(U_{\lambda}\cap f^{-1}(V_{\mu}),f^*\phi_{\mu}\big(\frac{\partial (f^*y_{\mu})}{\partial x_{\lambda}}\big))\}.
+
+\end{align*}</annotation></semantics></math></p>
+
+<p>Define a new divisor <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mo>:=</mo><mo stretchy="false" form="prefix">{</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>U</mi><mi>λ</mi></msub><mo>∩</mo><msup><mi>f</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><msub><mi>V</mi><mi>μ</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>,</mo><mfrac><mrow><mi>∂</mi><mo stretchy="false" form="prefix">(</mo><msup><mi>f</mi><mo>*</mo></msup><msub><mi>y</mi><mi>μ</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mi>∂</mi><msub><mi>x</mi><mi>λ</mi></msub></mrow></mfrac><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">R:=\{(U_{\lambda}\cap f^{-1}(V_{\mu}),\frac{\partial (f^*y_{\mu})}{\partial x_{\lambda}})\}</annotation></semantics></math> It is an effective divisor on <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>, we call it the ramification divisor. It is easy to see that <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mo>=</mo><mrow><mi mathvariant="normal">div</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><msup><mi>f</mi><mo>*</mo></msup><mi>ω</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><msup><mi>f</mi><mo>*</mo></msup><mrow><mi mathvariant="normal">div</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>ω</mi><mo stretchy="false" form="postfix">)</mo><mo>∼</mo><msub><mi>K</mi><mi>X</mi></msub><mo>−</mo><msup><mi>f</mi><mo>*</mo></msup><msub><mi>K</mi><mi>Y</mi></msub></mrow><annotation encoding="application/x-tex">R=\operatorname{div}(f^*\omega)-f^*\operatorname{div}(\omega)\sim K_X-f^*K_Y</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi mathvariant="normal">Ω</mi><mrow><mi>X</mi><mi>/</mi><mi>Y</mi></mrow></msub><annotation encoding="application/x-tex">\Omega_{X/Y}</annotation></semantics></math> is supported on <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">Supp</mi><mo>&#8289;</mo></mrow><mi>R</mi></mrow><annotation encoding="application/x-tex">\operatorname{Supp}R</annotation></semantics></math>.</p>
+
+<p>Note that <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mo stretchy="false" form="prefix">(</mo><msub><mi mathvariant="normal">Ω</mi><mrow><mi>X</mi><mi>/</mi><mi>Y</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo><msub><mo stretchy="false" form="prefix">|</mo><mrow><msub><mi>U</mi><mi>λ</mi></msub><mo>∩</mo><msup><mi>f</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><msub><mi>V</mi><mi>μ</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow></msub><mo>≅</mo><mrow><mi mathvariant="normal">Coker</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mo minsize="180%" maxsize="180%" stretchy="true" form="prefix">[</mo><mfrac><mrow><mi>∂</mi><mo stretchy="false" form="prefix">(</mo><msup><mi>f</mi><mo>*</mo></msup><msubsup><mi>y</mi><mi>μ</mi><mi>i</mi></msubsup><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mi>∂</mi><msubsup><mi>x</mi><mi>λ</mi><mi>j</mi></msubsup></mrow></mfrac><mo minsize="180%" maxsize="180%" stretchy="true" form="postfix">]</mo><mo>:</mo><msup><mi mathvariant="script">𝒪</mi><mrow><mi>⊕</mi><mi>n</mi></mrow></msup><mo>→</mo><msup><mi mathvariant="script">𝒪</mi><mrow><mi>⊕</mi><mi>n</mi></mrow></msup><mo stretchy="false" form="postfix">)</mo></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align*}
+
+    (\Omega_{X/Y})|_{U_{\lambda}\cap f^{-1}(V_{\mu})}\cong \operatorname{Coker}(\Big[\frac{\partial (f^*y^i_{\mu})}{\partial x^j_{\lambda}}\Big]:\mathcal{O}^{\oplus n}\to \mathcal{O}^{\oplus n})
+
+\end{align*}</annotation></semantics></math> Now, let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>P</mi><annotation encoding="application/x-tex">P</annotation></semantics></math> be a prime divisor on <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> with generic point <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>η</mi><annotation encoding="application/x-tex">\eta</annotation></semantics></math>. Assume further that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>η</mi><mo>∈</mo><msub><mi>U</mi><mi>λ</mi></msub><mo>∩</mo><msup><mi>f</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><msub><mi>V</mi><mi>μ</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\eta\in U_{\lambda}\cap f^{-1}(V_{\mu})</annotation></semantics></math>, let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="normal">Φ</mi><annotation encoding="application/x-tex">\Phi</annotation></semantics></math> denote the matrix <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo minsize="180%" maxsize="180%" stretchy="true" form="prefix">[</mo><mfrac><mrow><mi>∂</mi><mo stretchy="false" form="prefix">(</mo><msup><mi>f</mi><mo>*</mo></msup><msubsup><mi>y</mi><mi>μ</mi><mi>i</mi></msubsup><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mi>∂</mi><msubsup><mi>x</mi><mi>λ</mi><mi>j</mi></msubsup></mrow></mfrac><mo minsize="180%" maxsize="180%" stretchy="true" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">\Big[\frac{\partial (f^*y^i_{\mu})}{\partial x^j_{\lambda}}\Big]</annotation></semantics></math> and let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math> denote the image of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="normal">Φ</mi><annotation encoding="application/x-tex">\Phi</annotation></semantics></math>, then <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mrow><mi mathvariant="normal">mult</mi><mo>&#8289;</mo></mrow><mi>P</mi></msub><mi>R</mi><mo>=</mo><msub><mi>v</mi><mi>P</mi></msub><mo stretchy="false" form="prefix">(</mo><mrow><mi mathvariant="normal">det</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="normal">Φ</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msub><mrow><mi mathvariant="normal">length</mi><mo>&#8289;</mo></mrow><msub><mi mathvariant="script">𝒪</mi><mrow><mi>X</mi><mo>,</mo><mi>η</mi></mrow></msub></msub><mo stretchy="false" form="prefix">(</mo><msub><mi mathvariant="script">𝒪</mi><mrow><mi>X</mi><mo>,</mo><mi>η</mi></mrow></msub><mi>/</mi><mrow><mi mathvariant="normal">det</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="normal">Φ</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mo stretchy="false" form="prefix">(</mo><mi>*</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msub><mrow><mi mathvariant="normal">length</mi><mo>&#8289;</mo></mrow><msub><mi mathvariant="script">𝒪</mi><mrow><mi>X</mi><mo>,</mo><mi>η</mi></mrow></msub></msub><mo stretchy="false" form="prefix">(</mo><msubsup><mi mathvariant="script">𝒪</mi><mrow><mi>X</mi><mo>,</mo><mi>η</mi></mrow><mrow><mi>⊕</mi><mi>n</mi></mrow></msubsup><mi>/</mi><mi>N</mi><mo stretchy="false" form="postfix">)</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msub><mrow><mi mathvariant="normal">length</mi><mo>&#8289;</mo></mrow><msub><mi mathvariant="script">𝒪</mi><mrow><mi>X</mi><mo>,</mo><mi>η</mi></mrow></msub></msub><mo stretchy="false" form="prefix">(</mo><msub><mi mathvariant="normal">Ω</mi><mrow><mi>X</mi><mi>/</mi><mi>Y</mi></mrow></msub><msub><mo stretchy="false" form="postfix">)</mo><mi>η</mi></msub></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align*}
+
+    \operatorname{mult}_PR=v_P(\operatorname{det}(\Phi))&amp;=\operatorname{length}_{\mathcal{O}_{X,\eta}}(\mathcal{O}_{X,\eta}/\operatorname{det}(\Phi))\\
+
+    (*)&amp;=\operatorname{length}_{\mathcal{O}_{X,\eta}}(\mathcal{O}_{X,\eta}^{\oplus n}/N)\\
+
+    &amp;=\operatorname{length}_{\mathcal{O}_{X,\eta}}(\Omega_{X/Y})_{\eta}
+
+\end{align*}</annotation></semantics></math> where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>*</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(*)</annotation></semantics></math> follows from the following lemma.</p>
+
+<div class="lemma">
+
+<p><strong>Lemma 3</strong>.  <em>Let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> be a PID and let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ϕ</mi><mo>:</mo><mi>M</mi><mo>→</mo><mi>M</mi></mrow><annotation encoding="application/x-tex">\phi:M\to M</annotation></semantics></math> be a endomorphism of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>M</mi><annotation encoding="application/x-tex">M</annotation></semantics></math>, where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>M</mi><annotation encoding="application/x-tex">M</annotation></semantics></math> is a finitely generated free <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>-module. Then <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><msub><mrow><mi mathvariant="normal">length</mi><mo>&#8289;</mo></mrow><mi>A</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>M</mi><mi>/</mi><mi>ϕ</mi><mo stretchy="false" form="prefix">(</mo><mi>M</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mrow><mi mathvariant="normal">length</mi><mo>&#8289;</mo></mrow><mi>A</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mi>/</mi><mrow><mi mathvariant="normal">det</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>ϕ</mi><mo stretchy="false" form="postfix">)</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align*}
+
+        \operatorname{length}_A(M/\phi(M))=\operatorname{length}_A(A/\operatorname{det}(\phi)A).
+
+\end{align*}</annotation></semantics></math></em></p>
+
+</div>
+
+<div class="proof">
+
+<p><em>Proof.</em> If <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> is a PID, then there exist elements <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>d</mi><mn>1</mn></msub><mo>,</mo><mi>⋯</mi><mo>,</mo><msub><mi>d</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">d_1,\cdots,d_n</annotation></semantics></math> with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>d</mi><mn>1</mn></msub><mo stretchy="false" form="prefix">|</mo><mi>⋯</mi><mo stretchy="false" form="prefix">|</mo><msub><mi>d</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">d_1|\cdots |d_n</annotation></semantics></math> such that the quotient <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>M</mi><mi>/</mi><mi>ϕ</mi><mo stretchy="false" form="prefix">(</mo><mi>M</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">M/\phi(M)</annotation></semantics></math> is isomorphic to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mo>⨁</mo><mi>i</mi></msub><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">(</mo><mi>A</mi><mi>/</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>d</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo><mo minsize="120%" maxsize="120%" stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\bigoplus_i \big(A/(d_i)\big)</annotation></semantics></math>. Therefore, we have <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><msub><mrow><mi mathvariant="normal">length</mi><mo>&#8289;</mo></mrow><mi>A</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>M</mi><mi>/</mi><mi>ϕ</mi><mo stretchy="false" form="prefix">(</mo><mi>M</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mo>=</mo><munder><mo>∑</mo><mi>i</mi></munder><msub><mrow><mi mathvariant="normal">length</mi><mo>&#8289;</mo></mrow><mi>A</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mi>/</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>d</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mrow><mi mathvariant="normal">length</mi><mo>&#8289;</mo></mrow><mi>A</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mi>/</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>d</mi><mn>1</mn></msub><mi>⋯</mi><msub><mi>d</mi><mi>n</mi></msub><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mrow><mi mathvariant="normal">length</mi><mo>&#8289;</mo></mrow><mi>A</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mi>/</mi><mrow><mi mathvariant="normal">det</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>ϕ</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align*}
+
+        \operatorname{length}_{A}(M/\phi(M))=\sum_i\operatorname{length}_{A}(A/(d_i))=\operatorname{length}_{A}(A/(d_1\cdots d_n))=\operatorname{length}_A(A/\operatorname{det}(\phi)).
+
+\end{align*}</annotation></semantics></math> Done. ◻</p>
+
+</div>
+
+<p>So, we see that <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mi>R</mi><mo>=</mo><munder><mo>∑</mo><mi>P</mi></munder><msub><mrow><mi mathvariant="normal">length</mi><mo>&#8289;</mo></mrow><msub><mi mathvariant="script">𝒪</mi><mrow><mi>X</mi><mo>,</mo><mi>P</mi></mrow></msub></msub><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">(</mo><msub><mi mathvariant="normal">Ω</mi><mrow><mi>X</mi><mi>/</mi><mi>Y</mi></mrow></msub><msub><mo minsize="120%" maxsize="120%" stretchy="true" form="postfix">)</mo><mi>P</mi></msub><mo>⋅</mo><mi>P</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align*}
+
+    R=\sum_P \operatorname{length}_{\mathcal{O}_{X,P}}\big(\Omega_{X/Y}\big)_P\cdot P
+
+\end{align*}</annotation></semantics></math> By <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">(</mo><msub><mi mathvariant="normal">Ω</mi><mrow><mi>X</mi><mi>/</mi><mi>Y</mi></mrow></msub><msub><mo minsize="120%" maxsize="120%" stretchy="true" form="postfix">)</mo><mi>P</mi></msub></mrow><annotation encoding="application/x-tex">\big(\Omega_{X/Y}\big)_P</annotation></semantics></math> I mean the stalk at the generic point of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>P</mi><annotation encoding="application/x-tex">P</annotation></semantics></math>.</p>
+
+<p>In summary, we have</p>
+
+<div class="proposition">
+
+<p><strong>Proposition 4</strong>.  <em>Let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mo>→</mo><mi>Y</mi></mrow><annotation encoding="application/x-tex">X\to Y</annotation></semantics></math> be a separable morphism between nonsingular varieties of dimension <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>. Then <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi mathvariant="normal">Ω</mi><mrow><mi>X</mi><mi>/</mi><mi>Y</mi></mrow></msub><annotation encoding="application/x-tex">\Omega_{X/Y}</annotation></semantics></math> is a torsion sheaf and <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>K</mi><mi>X</mi></msub><mo>∼</mo><msup><mi>f</mi><mo>*</mo></msup><msub><mi>K</mi><mi>Y</mi></msub><mo>+</mo><munder><mo>∑</mo><mi>P</mi></munder><msub><mrow><mi mathvariant="normal">length</mi><mo>&#8289;</mo></mrow><msub><mi mathvariant="script">𝒪</mi><mrow><mi>X</mi><mo>,</mo><mi>P</mi></mrow></msub></msub><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">(</mo><msub><mi mathvariant="normal">Ω</mi><mrow><mi>X</mi><mi>/</mi><mi>Y</mi></mrow></msub><msub><mo minsize="120%" maxsize="120%" stretchy="true" form="postfix">)</mo><mi>P</mi></msub><mo>⋅</mo><mi>P</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align*}
+
+        K_X\sim f^*K_Y+\sum_P \operatorname{length}_{\mathcal{O}_{X,P}}\big(\Omega_{X/Y}\big)_P\cdot P
+
+\end{align*}</annotation></semantics></math></em></p>
+
+</div>
+
+<div class="example">
+
+<p><strong>Example 5</strong> (Hurwitz formula).  <em>Let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics></math> be nonsingular curves with finite separable map <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo>:</mo><mi>X</mi><mo>→</mo><mi>Y</mi></mrow><annotation encoding="application/x-tex">f:X\to Y</annotation></semantics></math>. Let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo>∈</mo><mi>X</mi></mrow><annotation encoding="application/x-tex">P\in X</annotation></semantics></math> be a point and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Q</mi><mo>=</mo><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mi>P</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">Q=f(P)</annotation></semantics></math>, let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ϕ</mi><mo>:</mo><msub><mi mathvariant="script">𝒪</mi><mrow><mi>Y</mi><mo>,</mo><mi>Q</mi></mrow></msub><mo>→</mo><msub><mi mathvariant="script">𝒪</mi><mrow><mi>X</mi><mo>,</mo><mi>P</mi></mrow></msub></mrow><annotation encoding="application/x-tex">\phi:\mathcal{O}_{Y,Q}\to \mathcal{O}_{X,P}</annotation></semantics></math> be the induced map and let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>u</mi><annotation encoding="application/x-tex">u</annotation></semantics></math> be the uniformizer of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi mathvariant="script">𝒪</mi><mrow><mi>Y</mi><mo>,</mo><mi>Q</mi></mrow></msub><annotation encoding="application/x-tex">\mathcal{O}_{Y,Q}</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi mathvariant="script">𝒪</mi><mrow><mi>X</mi><mo>,</mo><mi>P</mi></mrow></msub><annotation encoding="application/x-tex">\mathcal{O}_{X,P}</annotation></semantics></math>. If <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ϕ</mi><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>a</mi><msup><mi>u</mi><mi>e</mi></msup></mrow><annotation encoding="application/x-tex">\phi(t)=au^e</annotation></semantics></math> where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math> is an unit, then <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mi>P</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>ϕ</mi><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>e</mi></mrow><annotation encoding="application/x-tex">v_P(\phi(t))=e</annotation></semantics></math>. On the other hand, we have <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mi>d</mi><mi>ϕ</mi><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>e</mi><mi>a</mi><msup><mi>u</mi><mrow><mi>e</mi><mo>−</mo><mn>1</mn></mrow></msup><mi>d</mi><mi>u</mi><mo>+</mo><msup><mi>u</mi><mi>e</mi></msup><mi>d</mi><mi>a</mi><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align*}
+
+        d\phi(t)=eau^{e-1}du+u^eda.
+
+\end{align*}</annotation></semantics></math> Hence if <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mo>≠</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">e\not=0</annotation></semantics></math>, we have <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mi>P</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>d</mi><mo stretchy="false" form="prefix">(</mo><mi>ϕ</mi><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mi>d</mi><mi>u</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mrow><mi mathvariant="normal">length</mi><mo>&#8289;</mo></mrow><msub><mi mathvariant="script">𝒪</mi><mrow><mi>X</mi><mo>,</mo><mi>P</mi></mrow></msub></msub><mo stretchy="false" form="prefix">(</mo><msub><mi mathvariant="normal">Ω</mi><mrow><mi>X</mi><mi>/</mi><mi>Y</mi></mrow></msub><msub><mo stretchy="false" form="postfix">)</mo><mi>P</mi></msub><mo>=</mo><mi>e</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">v_P(d(\phi(t))/du)=\operatorname{length}_{\mathcal{O}_{X,P}}(\Omega_{X/Y})_P=e-1</annotation></semantics></math>.</em></p>
+
+<p><em>For each point <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>P</mi><annotation encoding="application/x-tex">P</annotation></semantics></math>, we obtain an integer <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>e</mi><mi>p</mi></msub><annotation encoding="application/x-tex">e_p</annotation></semantics></math> as above, so we can define the pullback of Weil divisors <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mo>*</mo></msup><mo>:</mo><mrow><mi mathvariant="normal">WDiv</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>Y</mi><mo stretchy="false" form="postfix">)</mo><mo>→</mo><mrow><mi mathvariant="normal">WDiv</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">f^*:\operatorname{WDiv}(Y)\to \operatorname{WDiv}(X)</annotation></semantics></math> as follows <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><msup><mi>f</mi><mo>*</mo></msup><mo stretchy="false" form="prefix">(</mo><mi>Q</mi><mo stretchy="false" form="postfix">)</mo><mo>:=</mo><munder><mo>∑</mo><mrow><mi>P</mi><mo>→</mo><mi>Q</mi></mrow></munder><msub><mi>e</mi><mi>p</mi></msub><mo>⋅</mo><mi>P</mi><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align*}
+
+        f^*(Q):=\sum_{P\to Q}e_p\cdot P.
+
+\end{align*}</annotation></semantics></math> The ramification divisor is <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mi>R</mi><mo>=</mo><munder><mo>∑</mo><mi>P</mi></munder><mo stretchy="false" form="prefix">(</mo><msub><mi>e</mi><mi>p</mi></msub><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>⋅</mo><mi>P</mi><mo>∼</mo><msub><mi>K</mi><mi>X</mi></msub><mo>−</mo><msup><mi>f</mi><mo>*</mo></msup><msub><mi>K</mi><mi>Y</mi></msub><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align*}
+
+        R=\sum_P(e_p-1)\cdot P\sim K_X-f^*K_Y.
+
+\end{align*}</annotation></semantics></math> Therefore, we obtain that <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mn>2</mn><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mn>2</mn><mo>=</mo><mrow><mi mathvariant="normal">deg</mi><mo>&#8289;</mo></mrow><mi>f</mi><mo>⋅</mo><mo stretchy="false" form="prefix">(</mo><mn>2</mn><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>Y</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mn>2</mn><mo stretchy="false" form="postfix">)</mo><mo>+</mo><munder><mo>∑</mo><mi>P</mi></munder><mo stretchy="false" form="prefix">(</mo><msub><mi>e</mi><mi>P</mi></msub><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align*}
+
+        2g(X)-2=\operatorname{deg}f\cdot (2g(Y)-2)+\sum_P(e_P-1).
+
+\end{align*}</annotation></semantics></math></em></p>
+
+</div>
+
+<h1 id="aut">Aut</h1>
+
+<p>Let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> be a nonsingular projective curve over a algebraically closed field of characteristic <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>0</mn><annotation encoding="application/x-tex">0</annotation></semantics></math> and assume that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo stretchy="false" form="postfix">)</mo><mo>≥</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">g(X)\ge 2</annotation></semantics></math>, we then show that <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>#</mi><mrow><mi mathvariant="normal">Aut</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo stretchy="false" form="postfix">)</mo><mo>≤</mo><mn>84</mn><mo stretchy="false" form="prefix">(</mo><mi>g</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\#\operatorname{Aut}(X)\le 84(g-1)</annotation></semantics></math></p>
+
+<div class="lemma">
+
+<p><strong>Lemma 6</strong>.  <em><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>#</mi><mrow><mi mathvariant="normal">Aut</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo stretchy="false" form="postfix">)</mo><mo>&lt;</mo><mi>∞</mi></mrow><annotation encoding="application/x-tex">\#\operatorname{Aut}(X)&lt;\infty</annotation></semantics></math>.</em></p>
+
+</div>
+
+<div class="proof">
+
+<p><em>Proof.</em> See Appendix A. ◻</p>
+
+</div>
+
+<p>According to the lemma above, let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>G</mi><annotation encoding="application/x-tex">G</annotation></semantics></math> denote the automorphism group <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">Aut</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\operatorname{Aut}(X)</annotation></semantics></math>. The fix field <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>K</mi><mo stretchy="false" form="prefix">(</mo><mi>X</mi><msup><mo stretchy="false" form="postfix">)</mo><mi>G</mi></msup><mo>⊂</mo><mi>K</mi><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">K(X)^G\subset K(X)</annotation></semantics></math> then satisfies the property that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>K</mi><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mi>K</mi><mo stretchy="false" form="prefix">(</mo><mi>X</mi><msup><mo stretchy="false" form="postfix">)</mo><mi>G</mi></msup></mrow><annotation encoding="application/x-tex">K(X)/K(X)^G</annotation></semantics></math> is a finite extension, which induces a map <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo>:</mo><mi>X</mi><mo>→</mo><mi>Y</mi></mrow><annotation encoding="application/x-tex">f:X\to Y</annotation></semantics></math> such that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>K</mi><mo stretchy="false" form="prefix">(</mo><mi>Y</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>K</mi><mo stretchy="false" form="prefix">(</mo><mi>X</mi><msup><mo stretchy="false" form="postfix">)</mo><mi>G</mi></msup></mrow><annotation encoding="application/x-tex">K(Y)=K(X)^G</annotation></semantics></math>.</p>
+
+<p>Let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mi>#</mi><mi>G</mi></mrow><annotation encoding="application/x-tex">n=\#G</annotation></semantics></math>, note that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">deg</mi><mo>&#8289;</mo></mrow><mi>f</mi><mo>=</mo><mo stretchy="false" form="prefix">|</mo><mi>K</mi><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mi>K</mi><mo stretchy="false" form="prefix">(</mo><mi>X</mi><msup><mo stretchy="false" form="postfix">)</mo><mi>G</mi></msup><mo stretchy="false" form="prefix">|</mo><mo>=</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">\operatorname{deg}f=|K(X)/K(X)^G|=n</annotation></semantics></math>. For each <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>∈</mo><mi>X</mi></mrow><annotation encoding="application/x-tex">x\in X</annotation></semantics></math>, we have <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><msup><mi>f</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mo stretchy="false" form="prefix">{</mo><mi>P</mi><mo>∈</mo><mi>X</mi><mspace width="0.222em"></mspace><mo stretchy="false" form="prefix">|</mo><mspace width="0.222em"></mspace><mo>∃</mo><mi>g</mi><mo>∈</mo><mi>G</mi><mspace width="0.222em"></mspace><mi>s</mi><mi>.</mi><mi>t</mi><mi>.</mi><mspace width="0.222em"></mspace><mi>g</mi><mi>x</mi><mo>=</mo><mi>P</mi><mo stretchy="false" form="postfix">}</mo><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align*}
+
+    f^{-1}f(x)=\{P\in X \ | \ \exists g\in G \ s.t. \ gx=P\}.
+
+\end{align*}</annotation></semantics></math></p>
+
+<p>If <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mi>P</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>e</mi><mn>1</mn></msub><mo>⋅</mo><msub><mi>P</mi><mn>1</mn></msub><mo>+</mo><mi>⋯</mi><mo>+</mo><msub><mi>e</mi><mi>r</mi></msub><mo>⋅</mo><msub><mi>P</mi><mi>r</mi></msub></mrow><annotation encoding="application/x-tex">f^{-1}f(P)=e_1\cdot P_1+\cdots +e_r\cdot P_r</annotation></semantics></math> (written as a divisor), we can find a <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo>∈</mo><mi>G</mi></mrow><annotation encoding="application/x-tex">g\in G</annotation></semantics></math> such that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><msub><mi>P</mi><mn>1</mn></msub><mo>=</mo><msub><mi>P</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">g P_1=P_2</annotation></semantics></math>. This induces a permutation <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi><mo>∈</mo><msub><mi>S</mi><mi>r</mi></msub></mrow><annotation encoding="application/x-tex">\sigma\in S_r</annotation></semantics></math> such that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi><mo stretchy="false" form="prefix">(</mo><mn>2</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\sigma(2)=1</annotation></semantics></math> and <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mi>g</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>e</mi><mn>1</mn></msub><mo>⋅</mo><msub><mi>P</mi><mn>1</mn></msub><mo>+</mo><msub><mi>e</mi><mn>2</mn></msub><mo>⋅</mo><msub><mi>P</mi><mn>2</mn></msub><mo>+</mo><mi>⋯</mi><mo>+</mo><msub><mi>e</mi><mi>r</mi></msub><mo>⋅</mo><msub><mi>P</mi><mi>r</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>e</mi><mrow><mi>σ</mi><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow></msub><mo>⋅</mo><msub><mi>P</mi><mn>1</mn></msub><mo>+</mo><msub><mi>e</mi><mrow><mi>σ</mi><mo stretchy="false" form="prefix">(</mo><mn>2</mn><mo stretchy="false" form="postfix">)</mo></mrow></msub><mo>⋅</mo><msub><mi>P</mi><mn>2</mn></msub><mo>+</mo><mi>⋯</mi><mo>+</mo><msub><mi>e</mi><mrow><mi>σ</mi><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mo stretchy="false" form="postfix">)</mo></mrow></msub><mo>⋅</mo><msub><mi>P</mi><mi>r</mi></msub><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align*}
+
+    g(e_1\cdot P_1+e_2\cdot P_2+\cdots +e_r\cdot P_r)=e_{\sigma(1)}\cdot P_1+e_{\sigma(2)}\cdot P_2+\cdots +e_{\sigma(r)}\cdot P_r.
+
+\end{align*}</annotation></semantics></math> Hence we see that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>e</mi><mn>1</mn></msub><mo>=</mo><msub><mi>e</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">e_1=e_2</annotation></semantics></math>. By varying <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>P</mi><mn>2</mn></msub><annotation encoding="application/x-tex">P_2</annotation></semantics></math>, we obtain that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>e</mi><mn>1</mn></msub><mo>=</mo><mi>⋯</mi><mo>=</mo><msub><mi>e</mi><mi>r</mi></msub><mo>=</mo><mi>e</mi></mrow><annotation encoding="application/x-tex">e_1=\cdots=e_r=e</annotation></semantics></math>. Moreover, by the following equation <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mo stretchy="false" form="prefix">|</mo><msub><mi>G</mi><mi>x</mi></msub><mo stretchy="false" form="prefix">|</mo><mi>⋅</mi><mo stretchy="false" form="prefix">|</mo><mi>G</mi><mo>⋅</mo><mi>x</mi><mo stretchy="false" form="prefix">|</mo><mo>=</mo><mo stretchy="false" form="prefix">|</mo><mi>G</mi><mo stretchy="false" form="prefix">|</mo></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align*}
+
+    |G_x|\cdot |G\cdot x|=|G|
+
+\end{align*}</annotation></semantics></math> we see that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mo>=</mo><mo stretchy="false" form="prefix">|</mo><msub><mi>G</mi><mi>x</mi></msub><mo stretchy="false" form="prefix">|</mo></mrow><annotation encoding="application/x-tex">e=|G_x|</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>#</mi><msup><mi>f</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mi>P</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>n</mi><mi>/</mi><mi>e</mi></mrow><annotation encoding="application/x-tex">\#f^{-1}f(P)=n/e</annotation></semantics></math>.</p>
+
+<p>We call a point <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>∈</mo><mi>Y</mi></mrow><annotation encoding="application/x-tex">y\in Y</annotation></semantics></math> is a branch point if there exists a point <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>∈</mo><msup><mi>f</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">x\in f^{-1}f(y)</annotation></semantics></math> that is a ramification point, i.e. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>e</mi><mi>x</mi></msub><mo>&gt;</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">e_x&gt;1</annotation></semantics></math>. Let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>y</mi><mn>1</mn></msub><mo>,</mo><mi>⋯</mi><mo>,</mo><msub><mi>y</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">y_1,\cdots ,y_k</annotation></semantics></math> be branch points on <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics></math> and let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>e</mi><mi>i</mi></msub><annotation encoding="application/x-tex">e_i</annotation></semantics></math> denote the ramification index of the ramification points lying over <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>y</mi><mi>i</mi></msub><annotation encoding="application/x-tex">y_i</annotation></semantics></math>, then the degree of ramification divisor is <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mrow><mi mathvariant="normal">deg</mi><mo>&#8289;</mo></mrow><mi>R</mi><mo>=</mo><munder><mo>∑</mo><mi>i</mi></munder><mfrac><mi>n</mi><msub><mi>e</mi><mi>i</mi></msub></mfrac><mo stretchy="false" form="prefix">(</mo><msub><mi>e</mi><mi>i</mi></msub><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>n</mi><munder><mo>∑</mo><mi>i</mi></munder><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mfrac><mn>1</mn><msub><mi>e</mi><mi>i</mi></msub></mfrac><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align*}
+
+    \operatorname{deg}R=\sum_i \frac{n}{e_i}(e_i-1)=n\sum_i(1-\frac{1}{e_i}).
+
+\end{align*}</annotation></semantics></math> So, by the Hurwitz formula we have <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mo stretchy="false" form="prefix">(</mo><mn>2</mn><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mn>2</mn><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mi>n</mi><mo>=</mo><mn>2</mn><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>Y</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mn>2</mn><mo>+</mo><munder><mo>∑</mo><mi>i</mi></munder><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mn>1</mn><mi>/</mi><msub><mi>e</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align*}
+
+    (2g(X)-2)/n=2g(Y)-2+\sum_i(1-1/e_i).
+
+\end{align*}</annotation></semantics></math> Since <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>Y</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mn>2</mn><mo>+</mo><msub><mo>∑</mo><mi>i</mi></msub><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mn>1</mn><mi>/</mi><msub><mi>e</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>≥</mo><mn>1</mn><mi>/</mi><mn>42</mn></mrow><annotation encoding="application/x-tex">2g(Y)-2+\sum_i(1-1/e_i)\ge 1/42</annotation></semantics></math> (see appendix B.), we get <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>≤</mo><mn>84</mn><mo stretchy="false" form="prefix">(</mo><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">n\le 84(g(X)-1)</annotation></semantics></math>.</p>
+
+<h1 id="appendix-a.">Appendix A.</h1>
+
+<p>Here we work over a field <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math> of characteristic <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>0</mn><annotation encoding="application/x-tex">0</annotation></semantics></math>.</p>
+
+<div class="proposition">
+
+<p><strong>Proposition 7</strong>.  <em>Let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> be a nonsingular projective variety with ample canonical divisor <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mi>X</mi></msub><annotation encoding="application/x-tex">K_X</annotation></semantics></math>. Then <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>#</mi><mrow><mi mathvariant="normal">Aut</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo stretchy="false" form="postfix">)</mo><mo>&lt;</mo><mi>∞</mi></mrow><annotation encoding="application/x-tex">\#\operatorname{Aut}(X)&lt;\infty</annotation></semantics></math>.</em></p>
+
+</div>
+
+<div class="proof">
+
+<p><em>sketch of proof.</em> Let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math> be the integer such that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><msub><mi>K</mi><mi>X</mi></msub></mrow><annotation encoding="application/x-tex">mK_X</annotation></semantics></math> is very ample and set <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>=</mo><mi>m</mi><msub><mi>K</mi><mi>X</mi></msub></mrow><annotation encoding="application/x-tex">A=mK_X</annotation></semantics></math>. Note that there exists a rational function <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics></math> such that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mo>*</mo></msup><mi>A</mi><mo>=</mo><mi>A</mi><mo>+</mo><mi mathvariant="normal">div(r)</mi></mrow><annotation encoding="application/x-tex">f^*A=A+\operatorname{div(r)}</annotation></semantics></math>, so we obtain two maps <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mi mathvariant="normal">Γ</mi><mo stretchy="false" form="prefix">(</mo><msup><mi>f</mi><mo>*</mo></msup><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>→</mo><mi mathvariant="normal">Γ</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mspace width="1.0em"></mspace><mi>s</mi><mo>↦</mo><mi>r</mi><mi>s</mi></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mi mathvariant="normal">Γ</mi><mo stretchy="false" form="prefix">(</mo><msup><mi>f</mi><mo>*</mo></msup><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>→</mo><mi mathvariant="normal">Γ</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mspace width="1.0em"></mspace><mi>s</mi><mo>↦</mo><msup><mi>f</mi><mo>*</mo></msup><mi>s</mi><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align*}
+
+        &amp;\Gamma(f^*A)\to \Gamma(A) \quad s\mapsto rs \\
+
+        &amp;\Gamma(f^*A)\to \Gamma(A) \quad s\mapsto f^*s.
+
+\end{align*}</annotation></semantics></math> Define a map between groups <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>ρ</mi><mo>:</mo><mrow><mi mathvariant="normal">Aut</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>→</mo><mrow><mi mathvariant="normal">PGL</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="normal">Γ</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>f</mi></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>↦</mo><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">[</mo><mo stretchy="false" form="prefix">[</mo><mi>s</mi><mo stretchy="false" form="postfix">]</mo><mo>↦</mo><mo stretchy="false" form="prefix">[</mo><mfrac><mn>1</mn><mi>r</mi></mfrac><mo>⋅</mo><msup><mi>f</mi><mo>*</mo></msup><mi>s</mi><mo stretchy="false" form="postfix">]</mo><mo minsize="120%" maxsize="120%" stretchy="true" form="postfix">]</mo></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align*}
+
+        \rho:\operatorname{Aut}(X)&amp;\to \operatorname{PGL}(\Gamma(A)) \\
+
+        f&amp;\mapsto \big[[s]\mapsto [\frac{1}{r}\cdot f^*s]\big]
+
+\end{align*}</annotation></semantics></math> It is well define and is a homomorphism. Then we obtain a commutative diagram as follows</p>
+
+<div class="center">
+
+<p><img src="hshur-diagram-1.png" style="width:90.0%" alt="image" /></p>
+
+</div>
+
+<p>One can show that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ρ</mi><annotation encoding="application/x-tex">\rho</annotation></semantics></math> is injective and that the closure of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">Aut</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\operatorname{Aut}(X)</annotation></semantics></math> in <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">PGL</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="normal">Γ</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\operatorname{PGL}(\Gamma(A))</annotation></semantics></math> is of dimension <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>0</mn><annotation encoding="application/x-tex">0</annotation></semantics></math>, which implies that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>#</mi><mrow><mi mathvariant="normal">Aut</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo stretchy="false" form="postfix">)</mo><mo>&lt;</mo><mi>∞</mi></mrow><annotation encoding="application/x-tex">\#\operatorname{Aut}(X)&lt;\infty</annotation></semantics></math>. ◻</p>
+
+</div>
+
+<div class="remark">
+
+<p><strong>Remark 8</strong>.  <em><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>T</mi><mi>e</mi></msub><mrow><mi mathvariant="normal">Aut</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msup><mi>H</mi><mn>0</mn></msup><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo>,</mo><msub><mi>T</mi><mi>X</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">T_e\operatorname{Aut}(X)=H^0(X,T_X)=0</annotation></semantics></math> again implies that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">Aut</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\operatorname{Aut}(X)</annotation></semantics></math> is discrete, and hence finite.</em></p>
+
+</div>
+
+<h1 id="appendix-b.">Appendix B.</h1>
+
+<p>The following lemma is proved by ai</p>
+
+<div class="lemma">
+
+<p><strong>Lemma 9</strong>.  <em><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>Y</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mn>2</mn><mo>+</mo><msub><mo>∑</mo><mi>i</mi></msub><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mn>1</mn><mi>/</mi><msub><mi>e</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>≥</mo><mn>1</mn><mi>/</mi><mn>42</mn></mrow><annotation encoding="application/x-tex">2g(Y)-2+\sum_i(1-1/e_i)\ge 1/42</annotation></semantics></math>.</em></p>
+
+</div>
+
+<div class="proof">
+
+<p><em>Proof.</em> Let the given expression be denoted by <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>E</mi><annotation encoding="application/x-tex">E</annotation></semantics></math>: <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo>=</mo><mn>2</mn><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>Y</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mn>2</mn><mo>+</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>s</mi></munderover><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><mfrac><mn>1</mn><msub><mi>r</mi><mi>i</mi></msub></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">E = 2g(Y) - 2 + \sum_{i=1}^s \left(1 - \frac{1}{r_i}\right)</annotation></semantics></math> We are given that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>Y</mi><mo stretchy="false" form="postfix">)</mo><mo>≥</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">g(Y) \ge 0</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo>≥</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">s \ge 0</annotation></semantics></math>, and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>r</mi><mi>i</mi></msub><mo>≥</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">r_i \ge 2</annotation></semantics></math> are integers. We require <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">E &gt; 0</annotation></semantics></math> and want to find its minimum possible value. We proceed by analyzing the possible values of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>Y</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">g(Y)</annotation></semantics></math>:</p>
+
+<p><strong>Case 1: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>Y</mi><mo stretchy="false" form="postfix">)</mo><mo>≥</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">g(Y) \ge 1</annotation></semantics></math></strong></p>
+
+<ul>
+
+<li><p>If <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>Y</mi><mo stretchy="false" form="postfix">)</mo><mo>≥</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">g(Y) \ge 2</annotation></semantics></math>, then <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>Y</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mn>2</mn><mo>≥</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">2g(Y) - 2 \ge 2</annotation></semantics></math>. Since <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>−</mo><mn>1</mn><mi>/</mi><msub><mi>r</mi><mi>i</mi></msub><mo>≥</mo><mn>1</mn><mi>/</mi><mn>2</mn><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">1 - 1/r_i \ge 1/2 &gt; 0</annotation></semantics></math>, we have <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo>≥</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">E \ge 2</annotation></semantics></math>.</p></li>
+
+<li><p>If <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>Y</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">g(Y) = 1</annotation></semantics></math>, then <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>Y</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mn>2</mn><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">2g(Y) - 2 = 0</annotation></semantics></math>. Thus, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo>=</mo><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>s</mi></msubsup><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mn>1</mn><mi>/</mi><msub><mi>r</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">E = \sum_{i=1}^s (1 - 1/r_i)</annotation></semantics></math>. To ensure <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">E &gt; 0</annotation></semantics></math>, we must have <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo>≥</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">s \ge 1</annotation></semantics></math>. The minimum is achieved for <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">s = 1</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>r</mi><mn>1</mn></msub><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">r_1 = 2</annotation></semantics></math>, which gives <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo>=</mo><mn>1</mn><mi>/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">E = 1/2</annotation></semantics></math>.</p></li>
+
+</ul>
+
+<p>In both subcases, the minimum values (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>2</mn><annotation encoding="application/x-tex">2</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">1/2</annotation></semantics></math>) are strictly greater than <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>/</mi><mn>42</mn></mrow><annotation encoding="application/x-tex">1/42</annotation></semantics></math>.</p>
+
+<p><strong>Case 2: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>Y</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">g(Y) = 0</annotation></semantics></math></strong><br />
+
+The expression simplifies to: <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo>=</mo><mi>−</mi><mn>2</mn><mo>+</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>s</mi></munderover><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><mfrac><mn>1</mn><msub><mi>r</mi><mi>i</mi></msub></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>s</mi><mo>−</mo><mn>2</mn><mo>−</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>s</mi></munderover><mfrac><mn>1</mn><msub><mi>r</mi><mi>i</mi></msub></mfrac></mrow><annotation encoding="application/x-tex">E = -2 + \sum_{i=1}^s \left(1 - \frac{1}{r_i}\right) = s - 2 - \sum_{i=1}^s \frac{1}{r_i}</annotation></semantics></math> We analyze this based on the number of branch points <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>:</p>
+
+<ul>
+
+<li><p><strong>If <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo>≤</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">s \le 2</annotation></semantics></math>:</strong> Since <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>−</mo><mn>1</mn><mi>/</mi><msub><mi>r</mi><mi>i</mi></msub><mo>&lt;</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">1 - 1/r_i &lt; 1</annotation></semantics></math> for all finite <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>r</mi><mi>i</mi></msub><annotation encoding="application/x-tex">r_i</annotation></semantics></math>, we have <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>s</mi></msubsup><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mn>1</mn><mi>/</mi><msub><mi>r</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>&lt;</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">\sum_{i=1}^s (1 - 1/r_i) &lt; 2</annotation></semantics></math>. Thus, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo>&lt;</mo><mi>−</mi><mn>2</mn><mo>+</mo><mn>2</mn><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">E &lt; -2 + 2 = 0</annotation></semantics></math>, which contradicts the condition <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">E &gt; 0</annotation></semantics></math>.</p></li>
+
+<li><p><strong>If <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo>≥</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">s \ge 4</annotation></semantics></math>:</strong> To minimize <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>E</mi><annotation encoding="application/x-tex">E</annotation></semantics></math>, we need to maximize the subtracted sum, meaning we need the smallest possible <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>r</mi><mi>i</mi></msub><annotation encoding="application/x-tex">r_i</annotation></semantics></math>. If we choose <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">{</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{2, 2, 2, 2\}</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo>=</mo><mn>4</mn><mo>−</mo><mn>2</mn><mo>−</mo><mn>4</mn><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mi>/</mi><mn>2</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">E = 4 - 2 - 4(1/2) = 0</annotation></semantics></math>, which is not strictly positive. The next smallest choice is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">{</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{2, 2, 2, 3\}</annotation></semantics></math>, which yields: <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo>=</mo><mn>4</mn><mo>−</mo><mn>2</mn><mo>−</mo><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mo>+</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mo>+</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mo>+</mo><mfrac><mn>1</mn><mn>3</mn></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mn>2</mn><mo>−</mo><mfrac><mn>11</mn><mn>6</mn></mfrac><mo>=</mo><mfrac><mn>1</mn><mn>6</mn></mfrac></mrow><annotation encoding="application/x-tex">E = 4 - 2 - \left(\frac{1}{2} + \frac{1}{2} + \frac{1}{2} + \frac{1}{3}\right) = 2 - \frac{11}{6} = \frac{1}{6}</annotation></semantics></math> For <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo>&gt;</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">s &gt; 4</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>E</mi><annotation encoding="application/x-tex">E</annotation></semantics></math> will only increase. Note that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>/</mi><mn>6</mn><mo>&gt;</mo><mn>1</mn><mi>/</mi><mn>42</mn></mrow><annotation encoding="application/x-tex">1/6 &gt; 1/42</annotation></semantics></math>.</p></li>
+
+<li><p><strong>If <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">s = 3</annotation></semantics></math>:</strong> This is the critical case. <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo>=</mo><mn>1</mn><mo>−</mo><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mn>1</mn><msub><mi>r</mi><mn>1</mn></msub></mfrac><mo>+</mo><mfrac><mn>1</mn><msub><mi>r</mi><mn>2</mn></msub></mfrac><mo>+</mo><mfrac><mn>1</mn><msub><mi>r</mi><mn>3</mn></msub></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">E = 1 - \left(\frac{1}{r_1} + \frac{1}{r_2} + \frac{1}{r_3}\right)</annotation></semantics></math> We need to maximize the sum <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>1</mn><msub><mi>r</mi><mn>1</mn></msub></mfrac><mo>+</mo><mfrac><mn>1</mn><msub><mi>r</mi><mn>2</mn></msub></mfrac><mo>+</mo><mfrac><mn>1</mn><msub><mi>r</mi><mn>3</mn></msub></mfrac></mrow><annotation encoding="application/x-tex">\frac{1}{r_1} + \frac{1}{r_2} + \frac{1}{r_3}</annotation></semantics></math> strictly subject to the sum being <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>&lt;</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">&lt; 1</annotation></semantics></math>. Assume without loss of generality that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mo>≤</mo><msub><mi>r</mi><mn>1</mn></msub><mo>≤</mo><msub><mi>r</mi><mn>2</mn></msub><mo>≤</mo><msub><mi>r</mi><mn>3</mn></msub></mrow><annotation encoding="application/x-tex">2 \le r_1 \le r_2 \le r_3</annotation></semantics></math>.</p>
+
+<ul>
+
+<li><p>If <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>r</mi><mn>1</mn></msub><mo>≥</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">r_1 \ge 3</annotation></semantics></math>: The maximum sum strictly less than 1 is for <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">{</mo><mn>3</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{3, 3, 4\}</annotation></semantics></math>. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo>=</mo><mn>1</mn><mo>−</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mi>/</mi><mn>3</mn><mo>+</mo><mn>1</mn><mi>/</mi><mn>3</mn><mo>+</mo><mn>1</mn><mi>/</mi><mn>4</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>1</mn><mi>/</mi><mn>12</mn></mrow><annotation encoding="application/x-tex">E = 1 - (1/3 + 1/3 + 1/4) = 1/12</annotation></semantics></math>.</p></li>
+
+<li><p>If <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>r</mi><mn>1</mn></msub><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">r_1 = 2</annotation></semantics></math>: We need <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>1</mn><msub><mi>r</mi><mn>2</mn></msub></mfrac><mo>+</mo><mfrac><mn>1</mn><msub><mi>r</mi><mn>3</mn></msub></mfrac><mo>&lt;</mo><mfrac><mn>1</mn><mn>2</mn></mfrac></mrow><annotation encoding="application/x-tex">\frac{1}{r_2} + \frac{1}{r_3} &lt; \frac{1}{2}</annotation></semantics></math>.</p>
+
+<ul>
+
+<li><p>If <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>r</mi><mn>2</mn></msub><mo>≥</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">r_2 \ge 4</annotation></semantics></math>, the maximum sum is for <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">{</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo>,</mo><mn>5</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{2, 4, 5\}</annotation></semantics></math>, giving <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo>=</mo><mn>1</mn><mo>−</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mi>/</mi><mn>2</mn><mo>+</mo><mn>1</mn><mi>/</mi><mn>4</mn><mo>+</mo><mn>1</mn><mi>/</mi><mn>5</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>1</mn><mi>/</mi><mn>20</mn></mrow><annotation encoding="application/x-tex">E = 1 - (1/2 + 1/4 + 1/5) = 1/20</annotation></semantics></math>.</p></li>
+
+<li><p>If <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>r</mi><mn>2</mn></msub><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">r_2 = 3</annotation></semantics></math>, we need <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>1</mn><msub><mi>r</mi><mn>3</mn></msub></mfrac><mo>&lt;</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mo>−</mo><mfrac><mn>1</mn><mn>3</mn></mfrac><mo>=</mo><mfrac><mn>1</mn><mn>6</mn></mfrac></mrow><annotation encoding="application/x-tex">\frac{1}{r_3} &lt; \frac{1}{2} - \frac{1}{3} = \frac{1}{6}</annotation></semantics></math>. The smallest integer satisfying this is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>r</mi><mn>3</mn></msub><mo>=</mo><mn>7</mn></mrow><annotation encoding="application/x-tex">r_3 = 7</annotation></semantics></math>.</p></li>
+
+</ul></li>
+
+</ul></li>
+
+</ul>
+
+<p>Substituting the optimal tuple <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">{</mo><msub><mi>r</mi><mn>1</mn></msub><mo>,</mo><msub><mi>r</mi><mn>2</mn></msub><mo>,</mo><msub><mi>r</mi><mn>3</mn></msub><mo stretchy="false" form="postfix">}</mo><mo>=</mo><mo stretchy="false" form="prefix">{</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>7</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{r_1, r_2, r_3\} = \{2, 3, 7\}</annotation></semantics></math> into the expression for <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>E</mi><annotation encoding="application/x-tex">E</annotation></semantics></math>: <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo>=</mo><mn>1</mn><mo>−</mo><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mo>+</mo><mfrac><mn>1</mn><mn>3</mn></mfrac><mo>+</mo><mfrac><mn>1</mn><mn>7</mn></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mn>1</mn><mo>−</mo><mfrac><mrow><mn>21</mn><mo>+</mo><mn>14</mn><mo>+</mo><mn>6</mn></mrow><mn>42</mn></mfrac><mo>=</mo><mn>1</mn><mo>−</mo><mfrac><mn>41</mn><mn>42</mn></mfrac><mo>=</mo><mfrac><mn>1</mn><mn>42</mn></mfrac></mrow><annotation encoding="application/x-tex">E = 1 - \left(\frac{1}{2} + \frac{1}{3} + \frac{1}{7}\right) = 1 - \frac{21 + 14 + 6}{42} = 1 - \frac{41}{42} = \frac{1}{42}</annotation></semantics></math> Comparing all strictly positive cases (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>/</mi><mn>2</mn><mo>,</mo><mn>1</mn><mi>/</mi><mn>6</mn><mo>,</mo><mn>1</mn><mi>/</mi><mn>12</mn><mo>,</mo><mn>1</mn><mi>/</mi><mn>20</mn><mo>,</mo><mn>1</mn><mi>/</mi><mn>42</mn></mrow><annotation encoding="application/x-tex">1/2, 1/6, 1/12, 1/20, 1/42</annotation></semantics></math>), the global minimum is exactly <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>/</mi><mn>42</mn></mrow><annotation encoding="application/x-tex">1/42</annotation></semantics></math>. ◻</p>
+
+</div>
+
+<h2>References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+
+<div id="ref-hartshorne1977algebraic" class="csl-entry" role="listitem">
+
+Hartshorne, Robin. 1977. <em>Algebraic Geometry</em>. Vol. 52. Graduate Texts in Mathematics. Springer-Verlag.
+
+</div>
+
+</div>
+
+</main>
+<canvas id="fx" style="position:fixed;inset:0;pointer-events:none;z-index:9998"></canvas>
+<div id="fx-flash" style="position:fixed;inset:0;pointer-events:none;z-index:9997;opacity:0;
+  background:radial-gradient(circle at 50% 42%, rgba(255,246,214,.95) 0%, rgba(255,214,140,.45) 22%,
+  rgba(255,255,255,0) 62%);transition:opacity .5s ease-out"></div>
+<script>
+(function () {
+  var btn = document.getElementById("egg");
+  var cv = document.getElementById("fx");
+  var flash = document.getElementById("fx-flash");
+  if (!btn || !cv) return;
+
+  // 手机/触屏：粒子减半、光晕减一层、不再抖页面
+  var small = window.matchMedia("(max-width: 760px)").matches ||
+              ("ontouchstart" in window && window.innerWidth < 900);
+  var calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var DPR = Math.min(window.devicePixelRatio || 1, 2);
+  var ctx = cv.getContext("2d");
+
+  function size() {
+    cv.width = window.innerWidth * DPR;
+    cv.height = window.innerHeight * DPR;
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  }
+  size();
+  window.addEventListener("resize", size);
+  window.addEventListener("orientationchange", function () { setTimeout(size, 250); });
+
+  var PALETTE = [
+    ["#e0245e", "#ff8fb1"], ["#f4b400", "#ffe98a"], ["#1b6ca8", "#8ec9f0"],
+    ["#7b2ff7", "#cfaeff"], ["#0f9d58", "#9be7bd"], ["#ff6d00", "#ffc48a"]
+  ];
+  var parts = [], rings = [], running = false;
+  var MAX_PARTS = small ? 700 : 2200;
+
+  function burst(x, y, count, power) {
+    if (parts.length > MAX_PARTS) return;
+    var pair = PALETTE[(Math.random() * PALETTE.length) | 0];
+    for (var i = 0; i < count; i++) {
+      var a = (Math.PI * 2 * i) / count + Math.random() * 0.14;
+      var sp = power * (0.3 + Math.random());
+      parts.push({
+        x: x, y: y, px: x, py: y,
+        vx: Math.cos(a) * sp,
+        vy: Math.sin(a) * sp,
+        life: 1,
+        decay: 0.004 + Math.random() * 0.005,
+        c: pair[(Math.random() < 0.75) ? 0 : 1],
+        r: (small ? 1.8 : 2.2) + Math.random() * (small ? 2.2 : 3.2)
+      });
+    }
+    rings.push({ x: x, y: y, r: 8, life: 1, c: pair[0] });
+    if (!small) rings.push({ x: x, y: y, r: 2, life: 1, c: pair[1] });
+  }
+
+  function tick() {
+    var W = window.innerWidth, H = window.innerHeight;
+    ctx.clearRect(0, 0, W, H);
+
+    for (var i = parts.length - 1; i >= 0; i--) {
+      var p = parts[i];
+      p.px = p.x; p.py = p.y;
+      p.x += p.vx; p.y += p.vy;
+      p.vy += 0.05;
+      p.vx *= 0.985;
+      p.vy *= 0.985;
+      p.life -= p.decay;
+      if (p.life <= 0) { parts.splice(i, 1); continue; }
+
+      var alpha = Math.max(p.life, 0);
+
+      if (!small) {
+        ctx.globalAlpha = alpha * 0.18;
+        ctx.strokeStyle = p.c;
+        ctx.lineWidth = p.r * 4.5;
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        ctx.moveTo(p.px, p.py);
+        ctx.lineTo(p.x, p.y);
+        ctx.stroke();
+      }
+
+      ctx.globalAlpha = alpha;
+      ctx.lineWidth = p.r * (small ? 1.1 : 0.5 + 0.5 * alpha);
+      ctx.beginPath();
+      ctx.moveTo(p.px, p.py);
+      ctx.lineTo(p.x, p.y);
+      ctx.stroke();
+    }
+
+    for (var j = rings.length - 1; j >= 0; j--) {
+      var g = rings[j];
+      g.r += small ? 12 : 16;
+      g.life -= 0.045;
+      if (g.life <= 0) { rings.splice(j, 1); continue; }
+      ctx.globalAlpha = g.life * 0.55;
+      ctx.strokeStyle = g.c;
+      ctx.lineWidth = 4 * g.life + 1;
+      ctx.beginPath();
+      ctx.arc(g.x, g.y, g.r, 0, 6.284);
+      ctx.stroke();
+    }
+
+    ctx.globalAlpha = 1;
+    if (parts.length || rings.length) {
+      requestAnimationFrame(tick);
+    } else {
+      running = false;
+      ctx.clearRect(0, 0, W, H);
+    }
+  }
+
+  function shake(px) {
+    if (calm || !document.body.animate) return;
+    document.body.animate(
+      [{ transform: "translate(0,0)" }, { transform: "translate(" + (-px) + "px," + (px * 0.7) + "px)" },
+       { transform: "translate(" + (px * 0.85) + "px," + (-px * 0.55) + "px)" },
+       { transform: "translate(" + (-px * 0.4) + "px," + (px * 0.3) + "px)" },
+       { transform: "translate(0,0)" }],
+      { duration: 340, easing: "ease-out" }
+    );
+  }
+
+  function show() {
+    var cx = window.innerWidth / 2;
+    var cy = window.innerHeight * (small ? 0.34 : 0.4);
+    var k = small ? 0.55 : 1;
+
+    flash.style.opacity = calm ? "0" : "1";
+    setTimeout(function () { flash.style.opacity = "0"; }, 90);
+    if (!calm) shake(small ? 3 : 7);
+
+    burst(cx, cy, Math.round(320 * k), (small ? 11 : 15));
+    setTimeout(function () { burst(cx - 170 * k, cy + 60 * k, Math.round(200 * k), (small ? 8 : 11)); }, 170);
+    setTimeout(function () { burst(cx + 180 * k, cy - 40 * k, Math.round(200 * k), (small ? 8 : 11)); }, 330);
+    setTimeout(function () { burst(cx, cy + 150 * k, Math.round(160 * k), (small ? 7 : 9)); }, 500);
+
+    if (!running) { running = true; requestAnimationFrame(tick); }
+  }
+
+  btn.style.touchAction = "manipulation";
+  btn.addEventListener("click", function (e) { e.preventDefault(); show(); });
+
+  var keys = "";
+  window.addEventListener("keydown", function (e) {
+    keys = (keys + e.key.toLowerCase()).slice(-3);
+    if (keys === "www") show();
+  });
+})();
+</script>
+
+<script src="../assets/katex/katex.min.js" defer></script><script src="../assets/js/math-katex.js" defer></script></body></html>
