@@ -1,0 +1,555 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>Negativity Lemma</title>
+<style>
+:root{--paper:#fbfaf6;--paper2:#f3f0e8;--ink:#1a1917;--soft:#3d3a34;--muted:#78726a;
+--faint:#a49d92;--rule:#e4dfd3;--rule2:#cec7b7;--accent:#9a3b2c;--tint:rgba(154,59,44,.045);}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--soft);font-family:"Source Serif 4",Georgia,serif;
+font-size:16.5px;line-height:1.8;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:underline;text-underline-offset:.2em;text-decoration-color:rgba(154,59,44,.3)}
+.wrap{max-width:46rem;margin:0 auto;padding:0 1.8rem}
+.topnav{display:flex;align-items:center;justify-content:space-between;gap:2rem;position:sticky;top:0;z-index:9;
+background:rgba(251,250,246,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule);
+padding:1rem 1.8rem;font-family:system-ui,sans-serif}
+.brand{font-size:.95rem;letter-spacing:.18em;font-weight:600;color:var(--ink);text-decoration:none}
+.topnav nav{display:flex;gap:1.4rem;font-size:.74rem;letter-spacing:.12em}
+.topnav nav a{color:var(--muted);text-decoration:none}
+.topnav nav a:hover{color:var(--accent)}
+.topnav nav button{font:inherit;background:none;border:0;padding:0;color:var(--muted);cursor:pointer;letter-spacing:inherit}
+.topnav nav button:hover{color:var(--accent)}
+.hero{padding:5.5rem 0 3.5rem}
+.hero h1{margin:0 0 .9rem;font-size:clamp(2.6rem,6vw,4rem);letter-spacing:-.02em;line-height:1.1;color:var(--ink)}
+.hero p{margin:0;color:var(--muted);font-size:1rem;max-width:30rem}
+section{padding:3.2rem 0;border-top:1px solid var(--rule)}
+.shead{display:flex;align-items:baseline;gap:.9rem;margin-bottom:1.7rem}
+.snum{font-family:system-ui,sans-serif;font-size:.7rem;letter-spacing:.12em;color:var(--accent)}
+.shead h2{margin:0;font-size:1.05rem;font-weight:600;letter-spacing:.02em;color:var(--ink)}
+.shead span.note{margin-left:auto;font-family:system-ui,sans-serif;font-size:.72rem;color:var(--faint)}
+.group{margin:1.6rem 0 0}
+.glabel{display:flex;align-items:center;gap:.75rem;font-family:system-ui,sans-serif;font-size:1.06rem;
+font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);margin:2.3rem 0 .85rem}
+.glabel::before{content:"";width:22px;height:2px;background:var(--accent);flex:none}
+.glabel:first-child{margin-top:.2rem}
+.row{display:flex;align-items:baseline;gap:1rem;padding:.62rem 0;border-bottom:1px solid var(--rule);
+text-decoration:none;color:inherit}
+.row:last-child{border-bottom:0}
+.row:hover .t{color:var(--accent)}
+.row .t{font-size:1rem;color:var(--ink);transition:color .15s}
+.row .meta{margin-left:auto;font-family:system-ui,sans-serif;font-size:.7rem;letter-spacing:.1em;color:var(--faint)}
+.row .arrow{color:var(--faint);font-size:.8rem}
+.row:hover .arrow{color:var(--accent)}
+.empty{font-size:.9rem;color:var(--faint);padding:.5rem 0}
+.about p{margin:0 0 .5rem;color:var(--muted);font-size:.95rem}
+.about a{text-decoration:none;border-bottom:1px solid rgba(154,59,44,.28)}
+footer{max-width:46rem;margin:0 auto;padding:2.6rem 1.8rem 4rem;color:var(--faint);
+font-family:system-ui,sans-serif;font-size:.72rem;letter-spacing:.06em}
+.crumb{font-family:system-ui,sans-serif;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
+color:var(--faint);margin:2.6rem 0 1.4rem}
+.crumb a{color:var(--muted);text-decoration:none}
+.crumb span{margin:0 .55rem;color:var(--rule2)}
+main.article{max-width:44rem;margin:0 auto;padding:0 1.8rem 6rem}
+.article h1{font-size:2rem;margin:.4rem 0 1.2rem;line-height:1.25;color:var(--ink)}
+.article h2{font-size:1.3rem;margin:2.5rem 0 1rem;padding-bottom:.4rem;border-bottom:1px solid var(--rule);color:var(--ink)}
+.article h3{font-size:1.06rem;margin:1.8rem 0 .6rem;color:var(--ink)}
+.article p{margin:0 0 1.05rem;text-align:justify}
+.header-section-number{font-family:system-ui,sans-serif;font-size:.78em;color:var(--faint);margin-right:.5em}
+.stmt{margin:1.7rem 0;padding:1rem 1.3rem;border-left:2px solid var(--rule2)}
+.stmt-theorem,.stmt-lemma,.stmt-proposition,.stmt-corollary{border-left-color:var(--accent);background:var(--tint)}
+.stmt-definition{border-left-color:#35506f;background:rgba(53,80,111,.045)}
+.stmt-head{display:flex;gap:.5rem;align-items:baseline;margin-bottom:.6rem;font-family:system-ui,sans-serif}
+.stmt-kind{font-size:.74rem;font-weight:700;letter-spacing:.14em;color:var(--muted)}
+.stmt-num{font-size:.78rem;font-weight:600;color:var(--muted)}
+.stmt-theorem .stmt-kind,.stmt-theorem .stmt-num,.stmt-lemma .stmt-kind,.stmt-lemma .stmt-num{color:var(--accent)}
+.stmt>p:last-child{margin-bottom:0}
+.proof{margin:1.1rem 0 1.8rem;padding-left:1.2rem;border-left:1px solid var(--rule)}
+.proof-head{font-family:system-ui,sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.2em;color:var(--faint);margin-bottom:.5rem}
+.proof>p:last-child::after{content:"∎";float:right;color:var(--faint)}
+.eq{text-align:center;margin:1.4rem 0}.eq p{text-align:center;margin:0}
+a.xref{text-decoration:none;border-bottom:1px solid rgba(154,59,44,.3)}
+@media(max-width:640px){.topnav{padding:.9rem 1.2rem}.topnav nav{gap:.9rem;font-size:.68rem}
+.hero{padding:3.4rem 0 2.4rem}.row .meta{display:none}}
+</style></head><body>
+<header class="topnav"><a class="brand" href="../index.html">Junjie Chen</a><nav><a href="../index.html#note">NOTE</a><button id="egg" type="button" title="彩蛋" aria-label="彩蛋">???</button></nav></header>
+<main class="article"><p class="crumb"><a href="../index.html">NOTE</a><span>/</span>Birational Geometry</p><h1 id="statement">Negativity Lemma</h1>
+
+<p><strong>Theorem.</strong> Let
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo>:</mo><mi>X</mi><mo>→</mo><mi>Y</mi></mrow><annotation encoding="application/x-tex">f:X\to Y</annotation></semantics></math>
+
+be a proper birational morphism between normal varieties. Let
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>D</mi><annotation encoding="application/x-tex">D</annotation></semantics></math>
+
+be a
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="double-struck">ℝ</mi><annotation encoding="application/x-tex">\mathbb R</annotation></semantics></math>-Cartier
+
+divisor on
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>
+
+such that
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mi>D</mi></mrow><annotation encoding="application/x-tex">-D</annotation></semantics></math>
+
+is nef over
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics></math>.
+
+Then:</p>
+
+<ol type="1">
+
+<li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>D</mi><annotation encoding="application/x-tex">D</annotation></semantics></math>
+
+is effective if and only if
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mo>*</mo></msub><mi>D</mi></mrow><annotation encoding="application/x-tex">f_*D</annotation></semantics></math>
+
+is effective.</p></li>
+
+<li><p>Assume that
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>D</mi><annotation encoding="application/x-tex">D</annotation></semantics></math>
+
+is effective. Then for every
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>∈</mo><mi>Y</mi></mrow><annotation encoding="application/x-tex">y\in Y</annotation></semantics></math>,
+
+either
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo><mo>∩</mo><mrow><mi mathvariant="normal">Supp</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>D</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>∅</mi></mrow><annotation encoding="application/x-tex">f^{-1}(y)\cap \operatorname{Supp}(D)=\emptyset</annotation></semantics></math>
+
+or
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo><mo>⊂</mo><mrow><mi mathvariant="normal">Supp</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>D</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">f^{-1}(y)\subset \operatorname{Supp}(D)</annotation></semantics></math>.</p></li>
+
+</ol>
+
+<p id="proof1">
+
+<strong>Proof of (1)</strong>
+
+</p>
+
+<p>It suffices to prove the “only if” part.</p>
+
+<p><a href="#step-assume">Step 1.</a>We may assume that
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>
+
+is projective and
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mo>,</mo><mi>Y</mi></mrow><annotation encoding="application/x-tex">X,Y</annotation></semantics></math>
+
+are quasi-projective.</p>
+
+<p><a href="#step-antiample">Step 2.</a>Then there exists an effective
+
+divisor
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>E</mi><annotation encoding="application/x-tex">E</annotation></semantics></math>
+
+which is
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>-antiample
+
+and
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>E</mi><annotation encoding="application/x-tex">E</annotation></semantics></math>
+
+contains each exceptional divisor.</p>
+
+<p><a href="#step-curve">Step 3.</a> Note that the negative part of
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>D</mi><annotation encoding="application/x-tex">D</annotation></semantics></math>
+
+is exceptional. Let
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>e</mi><annotation encoding="application/x-tex">e</annotation></semantics></math>
+
+be the minimal non-negative number such that
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi><mo>+</mo><mi>e</mi><mi>E</mi></mrow><annotation encoding="application/x-tex">D+eE</annotation></semantics></math>
+
+is effective then there exists a curve
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math>
+
+contracted by
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>
+
+such that
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>D</mi><mo>+</mo><mi>e</mi><mi>E</mi><mo stretchy="false" form="postfix">)</mo><mo>⋅</mo><mi>C</mi><mo>≥</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">(D+eE)\cdot C\ge 0</annotation></semantics></math>.
+
+But note that
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mi>D</mi></mrow><annotation encoding="application/x-tex">-D</annotation></semantics></math>
+
+is
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>-nef
+
+and
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mi>E</mi></mrow><annotation encoding="application/x-tex">-E</annotation></semantics></math>
+
+is
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>-ample
+
+and hence we get a contradiction.</p>
+
+<p id="proof2">
+
+<strong>Proof of (2)</strong>
+
+</p>
+
+<p>If there exists a fiber
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">f^{-1}(y)</annotation></semantics></math>
+
+such that
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo><mo>∩</mo><mrow><mi mathvariant="normal">Supp</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>D</mi><mo stretchy="false" form="postfix">)</mo><mo>≠</mo><mi>∅</mi></mrow><annotation encoding="application/x-tex">f^{-1}(y)\cap \operatorname{Supp}(D)\not=\emptyset</annotation></semantics></math>
+
+and
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo><mo>⊄</mo><mrow><mi mathvariant="normal">Supp</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>D</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">f^{-1}(y)\not\subset \operatorname{Supp}(D)</annotation></semantics></math>,
+
+then we can find a curve
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math>
+
+in the fiber that intersects the support of
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>D</mi><annotation encoding="application/x-tex">D</annotation></semantics></math>
+
+but is not contained in it. Then we have
+
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi><mo>⋅</mo><mi>C</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">D\cdot C&gt;0</annotation></semantics></math>
+
+Contradiction.</p>
+
+<h2 id="details-of-proof-of-1">Details of proof of (1)</h2>
+
+<h4 id="step-assume">Step 1.</h4>
+
+<p>By <a href="https://stacks.math.columbia.edu/tag/0203" title="Stacks Project, Lemma 32.12.3 (0203)">Chow’s lemma</a>, we
+
+obtain a projective birational morphisms
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>π</mi><mo>:</mo><msup><mi>X</mi><mo>′</mo></msup><mo>→</mo><mi>X</mi></mrow><annotation encoding="application/x-tex">\pi:X&#39;\to X</annotation></semantics></math>
+
+and
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mo>′</mo></msup><mo>:</mo><msup><mi>X</mi><mo>′</mo></msup><mo>→</mo><mi>Y</mi></mrow><annotation encoding="application/x-tex">f&#39;:X&#39;\to Y</annotation></semantics></math>.
+
+Let
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>
+
+be an effective divisor on
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>X</mi><mo>′</mo></msup><annotation encoding="application/x-tex">X&#39;</annotation></semantics></math>,
+
+then
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>π</mi><mo>*</mo></msub><mi>B</mi></mrow><annotation encoding="application/x-tex">\pi_*B</annotation></semantics></math>
+
+is again effective. So we may assume that
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>
+
+is projective. Let
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>U</mi><mo>⊂</mo><mi>Y</mi></mrow><annotation encoding="application/x-tex">U\subset Y</annotation></semantics></math>
+
+be an affine open subset which meets each component of
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mo>*</mo></msub><mi>D</mi></mrow><annotation encoding="application/x-tex">f_*D</annotation></semantics></math>.
+
+Replacing
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics></math>
+
+by
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>U</mi><annotation encoding="application/x-tex">U</annotation></semantics></math>
+
+we may assume that
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics></math>
+
+is affine. Then
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mo>,</mo><mi>Y</mi></mrow><annotation encoding="application/x-tex">X,Y</annotation></semantics></math>
+
+are quasi-projective.</p>
+
+<p><a href="#proof1">↑ Back to the proof of (1)</a>
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mspace width="1.0em"></mspace><annotation encoding="application/x-tex">\quad</annotation></semantics></math>
+
+<a href="#step-antiample">↓ Next step</a></p>
+
+<h4 id="step-antiample">Step 2.</h4>
+
+<p>Let
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math>
+
+be an ample divisor on
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics></math>
+
+which contains each center of exceptional divisors. Then we have
+
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mo>*</mo></msup><mi>H</mi><mo>=</mo><mover><mi>H</mi><mo accent="true">̃</mo></mover><mo>+</mo><mi>E</mi></mrow><annotation encoding="application/x-tex">f^*H=\widetilde{H}+E</annotation></semantics></math>
+
+Where
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>H</mi><mo accent="true">̃</mo></mover><annotation encoding="application/x-tex">\widetilde{H}</annotation></semantics></math>
+
+is the birational transform of
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math>
+
+and
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>E</mi><annotation encoding="application/x-tex">E</annotation></semantics></math>
+
+contains each exceptional divisor. We see that
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><msub><mo>∼</mo><mi>f</mi></msub><mo>−</mo><mover><mi>H</mi><mo accent="true">̃</mo></mover></mrow><annotation encoding="application/x-tex">E\sim_{f} -\widetilde{H}</annotation></semantics></math>
+
+and hence
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mi>E</mi></mrow><annotation encoding="application/x-tex">-E</annotation></semantics></math>
+
+is
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>-ample.</p>
+
+<p><a href="#proof1">↑ Back to the proof of (1)</a>
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mspace width="1.0em"></mspace><annotation encoding="application/x-tex">\quad</annotation></semantics></math>
+
+<a href="#step-curve">↓ Next step</a></p>
+
+<h4 id="step-curve">Step 3.</h4>
+
+<p>Let
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi><mo>=</mo><msup><mi>D</mi><mo>+</mo></msup><mo>−</mo><msup><mi>D</mi><mo>−</mo></msup></mrow><annotation encoding="application/x-tex">D=D^+-D^-</annotation></semantics></math>
+
+where
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>D</mi><mo>+</mo></msup><mo>,</mo><msup><mi>D</mi><mo>−</mo></msup></mrow><annotation encoding="application/x-tex">D^+,D^-</annotation></semantics></math>
+
+are effective. We see that
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>D</mi><mo>−</mo></msup><annotation encoding="application/x-tex">D^-</annotation></semantics></math>
+
+is exceptional since
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mo>*</mo></msub><mi>D</mi></mrow><annotation encoding="application/x-tex">f_*D</annotation></semantics></math>
+
+is effective. Let
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>e</mi><annotation encoding="application/x-tex">e</annotation></semantics></math>
+
+be the minimal non-negative number such that
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi><mo>+</mo><mi>e</mi><mi>E</mi></mrow><annotation encoding="application/x-tex">D+eE</annotation></semantics></math>
+
+is effective. Then there exists an prime divisor
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>F</mi><annotation encoding="application/x-tex">F</annotation></semantics></math>
+
+whose coefficient is positive in
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>D</mi><annotation encoding="application/x-tex">D</annotation></semantics></math>
+
+but is zero in
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi><mo>+</mo><mi>e</mi><mi>E</mi></mrow><annotation encoding="application/x-tex">D+eE</annotation></semantics></math>.
+
+Then there exists a curve
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mo>⊂</mo><mi>F</mi></mrow><annotation encoding="application/x-tex">C\subset F</annotation></semantics></math>
+
+which is contracted by
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>
+
+and not contained in the support of
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi><mo>+</mo><mi>e</mi><mi>E</mi></mrow><annotation encoding="application/x-tex">D+eE</annotation></semantics></math>.
+
+Hecne we have
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>D</mi><mo>+</mo><mi>e</mi><mi>E</mi><mo stretchy="false" form="postfix">)</mo><mo>⋅</mo><mi>C</mi><mo>≥</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">(D+eE)\cdot C\ge 0</annotation></semantics></math>.
+
+But
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mi>D</mi></mrow><annotation encoding="application/x-tex">-D</annotation></semantics></math>
+
+is
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>-nef
+
+and
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mi>E</mi></mrow><annotation encoding="application/x-tex">-E</annotation></semantics></math>
+
+is
+
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>-ample,
+
+we obtain that
+
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>D</mi><mo>+</mo><mi>e</mi><mi>E</mi><mo stretchy="false" form="postfix">)</mo><mo>⋅</mo><mi>C</mi><mo>&lt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">(D+eE)\cdot C&lt;0</annotation></semantics></math>
+
+a contradiction. <a href="#proof1">↑ Back to the proof of (1)</a></p>
+
+</main>
+<canvas id="fx" style="position:fixed;inset:0;pointer-events:none;z-index:9998"></canvas>
+<div id="fx-flash" style="position:fixed;inset:0;pointer-events:none;z-index:9997;opacity:0;
+  background:radial-gradient(circle at 50% 42%, rgba(255,246,214,.95) 0%, rgba(255,214,140,.45) 22%,
+  rgba(255,255,255,0) 62%);transition:opacity .5s ease-out"></div>
+<script>
+(function () {
+  var btn = document.getElementById("egg");
+  var cv = document.getElementById("fx");
+  var flash = document.getElementById("fx-flash");
+  if (!btn || !cv) return;
+  var ctx = cv.getContext("2d"), DPR = window.devicePixelRatio || 1;
+  function size() {
+    cv.width = window.innerWidth * DPR;
+    cv.height = window.innerHeight * DPR;
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  }
+  size();
+  window.addEventListener("resize", size);
+
+  var PALETTE = [
+    ["#e0245e", "#ff8fb1"], ["#f4b400", "#ffe98a"], ["#1b6ca8", "#8ec9f0"],
+    ["#7b2ff7", "#cfaeff"], ["#0f9d58", "#9be7bd"], ["#ff6d00", "#ffc48a"]
+  ];
+  var parts = [], rings = [], running = false;
+
+  function burst(x, y, count, power) {
+    var pair = PALETTE[(Math.random() * PALETTE.length) | 0];
+    for (var i = 0; i < count; i++) {
+      var a = (Math.PI * 2 * i) / count + Math.random() * 0.14;
+      var sp = power * (0.3 + Math.random());
+      parts.push({
+        x: x, y: y, px: x, py: y,
+        vx: Math.cos(a) * sp,
+        vy: Math.sin(a) * sp,
+        life: 1,
+        decay: 0.004 + Math.random() * 0.005,
+        c: pair[(Math.random() < 0.75) ? 0 : 1],
+        r: 2.2 + Math.random() * 3.2,
+        spin: Math.random() * 6.28
+      });
+    }
+    rings.push({ x: x, y: y, r: 8, life: 1, c: pair[0] });
+    rings.push({ x: x, y: y, r: 2, life: 1, c: pair[1] });
+  }
+
+  function tick() {
+    var W = window.innerWidth, H = window.innerHeight;
+    ctx.clearRect(0, 0, W, H);
+
+    for (var i = parts.length - 1; i >= 0; i--) {
+      var p = parts[i];
+      p.px = p.x; p.py = p.y;
+      p.x += p.vx; p.y += p.vy;
+      p.vy += 0.05;
+      p.vx *= 0.985;
+      p.vy *= 0.985;
+      p.life -= p.decay;
+      if (p.life <= 0) { parts.splice(i, 1); continue; }
+
+      var alpha = Math.max(p.life, 0);
+
+      // 外层光晕（便宜版的 bloom）
+      ctx.globalAlpha = alpha * 0.18;
+      ctx.strokeStyle = p.c;
+      ctx.lineWidth = p.r * 4.5;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(p.px, p.py);
+      ctx.lineTo(p.x, p.y);
+      ctx.stroke();
+
+      // 芯
+      ctx.globalAlpha = alpha;
+      ctx.lineWidth = p.r * (0.5 + 0.5 * alpha);
+      ctx.beginPath();
+      ctx.moveTo(p.px, p.py);
+      ctx.lineTo(p.x, p.y);
+      ctx.stroke();
+    }
+
+    for (var j = rings.length - 1; j >= 0; j--) {
+      var g = rings[j];
+      g.r += 16;
+      g.life -= 0.045;
+      if (g.life <= 0) { rings.splice(j, 1); continue; }
+      ctx.globalAlpha = g.life * 0.55;
+      ctx.strokeStyle = g.c;
+      ctx.lineWidth = 4 * g.life + 1;
+      ctx.beginPath();
+      ctx.arc(g.x, g.y, g.r, 0, 6.284);
+      ctx.stroke();
+    }
+
+    ctx.globalAlpha = 1;
+    if (parts.length || rings.length) {
+      requestAnimationFrame(tick);
+    } else {
+      running = false;
+      ctx.clearRect(0, 0, W, H);
+    }
+  }
+
+  function shake() {
+    if (!document.body.animate) return;
+    document.body.animate(
+      [{ transform: "translate(0,0)" }, { transform: "translate(-7px,5px)" },
+       { transform: "translate(6px,-4px)" }, { transform: "translate(-3px,2px)" },
+       { transform: "translate(0,0)" }],
+      { duration: 340, easing: "ease-out" }
+    );
+  }
+
+  function show() {
+    var cx = window.innerWidth / 2;
+    var cy = window.innerHeight * 0.4;
+    flash.style.opacity = "1";
+    setTimeout(function () { flash.style.opacity = "0"; }, 90);
+    shake();
+    burst(cx, cy, 320, 15);
+    setTimeout(function () { burst(cx - 170, cy + 60, 200, 11); }, 170);
+    setTimeout(function () { burst(cx + 180, cy - 40, 200, 11); }, 330);
+    setTimeout(function () { burst(cx, cy + 150, 160, 9); }, 500);
+    if (!running) { running = true; requestAnimationFrame(tick); }
+  }
+
+  btn.addEventListener("click", show);
+
+  var keys = "";
+  window.addEventListener("keydown", function (e) {
+    keys = (keys + e.key.toLowerCase()).slice(-3);
+    if (keys === "www") show();
+  });
+})();
+</script>
+
+</body></html>
