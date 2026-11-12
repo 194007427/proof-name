@@ -66,6 +66,21 @@ main.article{max-width:44rem;margin:0 auto;padding:0 1.8rem 6rem}
 .proof>p:last-child::after{content:"∎";float:right;color:var(--faint)}
 .eq{text-align:center;margin:1.4rem 0}.eq p{text-align:center;margin:0}
 a.xref{text-decoration:none;border-bottom:1px solid rgba(154,59,44,.3)}
+/* make4ht 输出的排版映射 */
+.newtheorem{margin:1.6rem 0;padding:1rem 1.3rem;border-left:2px solid var(--rule2)}
+.newtheorem .head{display:block;margin-bottom:.45rem;font-family:system-ui,sans-serif;font-size:.8rem;
+font-weight:700;letter-spacing:.08em;color:var(--accent)}
+.cmbx-12,.cmbx-10,.cmbx-9,.cmbx-8{font-weight:600}
+.cmti-12,.cmti-10,.cmti-9,.cmti-8,.cmsl-12{font-style:italic}
+.qopname{font-style:normal}
+.titlemark{display:none}
+h3.sectionHead{font-size:1.7rem;margin:0 0 1.2rem;padding-bottom:.5rem;border-bottom:1px solid var(--rule);color:var(--ink)}
+h4.subsectionHead{font-size:1.22rem;margin:2.2rem 0 .8rem;font-weight:600;color:var(--ink)}
+h5.subsubsectionHead{font-size:1.05rem;margin:1.8rem 0 .6rem;font-weight:600;color:var(--ink)}
+.article p.noindent,.article p.indent{margin:0 0 1.05rem}
+.article img{max-width:100%;height:auto;display:block;margin:1.4rem auto}
+.article .newtheorem p:last-child{margin-bottom:0}
+
 .pdf-meta{font-family:system-ui,sans-serif;font-size:.78rem;color:var(--muted);margin:0 0 1rem}
 .pdf-view{width:100%;height:78vh;border:1px solid var(--rule);border-radius:6px;background:var(--paper2)}
 .pdf-fallback{font-size:.9rem;color:var(--muted);padding:1rem}
