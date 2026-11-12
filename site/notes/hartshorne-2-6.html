@@ -66,6 +66,10 @@ main.article{max-width:44rem;margin:0 auto;padding:0 1.8rem 6rem}
 .proof>p:last-child::after{content:"∎";float:right;color:var(--faint)}
 .eq{text-align:center;margin:1.4rem 0}.eq p{text-align:center;margin:0}
 a.xref{text-decoration:none;border-bottom:1px solid rgba(154,59,44,.3)}
+.math-source{margin:0 .05em}
+.math-source.katex-display{margin:1.4rem 0;overflow-x:auto;overflow-y:hidden}
+.katex{font-size:1.04em}
+
 /* make4ht 输出的排版映射 */
 /* pandoc 生成的定理块 */
 .proposition,.lemma,.theorem,.corollary{margin:1.7rem 0;padding:1rem 1.3rem;border-left:2px solid var(--accent);background:var(--tint)}
@@ -95,7 +99,7 @@ h5.subsubsectionHead{font-size:1.05rem;margin:1.8rem 0 .6rem;font-weight:600;col
 @media(max-width:760px){.pdf-view{height:65vh}}
 @media(max-width:640px){.topnav{padding:.9rem 1.2rem}.topnav nav{gap:.9rem;font-size:.68rem}
 .hero{padding:3.4rem 0 2.4rem}.row .meta{display:none}}
-</style></head><body>
+</style><link rel="stylesheet" href="../assets/katex/katex.min.css"></head><body>
 <header class="topnav"><a class="brand" href="../index.html">Junjie Chen</a><nav><a href="../index.html#note">NOTE</a><button id="egg" type="button" title="彩蛋" aria-label="彩蛋">???</button></nav></header>
 <main class="article"><p class="crumb"><a href="../index.html">NOTE</a><span>/</span>Algebraic Geometry</p><h1>Hartshorne 2.6</h1><h2 id="cartier-divisor">Cartier divisor</h2>
 
@@ -529,4 +533,4 @@ h5.subsubsectionHead{font-size:1.05rem;margin:1.8rem 0 .6rem;font-weight:600;col
 })();
 </script>
 
-</body></html>
+<script src="../assets/katex/katex.min.js" defer></script><script src="../assets/js/math-katex.js" defer></script></body></html>
