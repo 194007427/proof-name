@@ -88,7 +88,15 @@ a.xref{text-decoration:none;border-bottom:1px solid rgba(154,59,44,.3)}
   var cv = document.getElementById("fx");
   var flash = document.getElementById("fx-flash");
   if (!btn || !cv) return;
-  var ctx = cv.getContext("2d"), DPR = window.devicePixelRatio || 1;
+
+  // 手机/触屏：粒子减半、光晕减一层、不再抖页面
+  var small = window.matchMedia("(max-width: 760px)").matches ||
+              ("ontouchstart" in window && window.innerWidth < 900);
+  var calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var DPR = Math.min(window.devicePixelRatio || 1, 2);
+  var ctx = cv.getContext("2d");
+
   function size() {
     cv.width = window.innerWidth * DPR;
     cv.height = window.innerHeight * DPR;
@@ -96,14 +104,17 @@ a.xref{text-decoration:none;border-bottom:1px solid rgba(154,59,44,.3)}
   }
   size();
   window.addEventListener("resize", size);
+  window.addEventListener("orientationchange", function () { setTimeout(size, 250); });
 
   var PALETTE = [
     ["#e0245e", "#ff8fb1"], ["#f4b400", "#ffe98a"], ["#1b6ca8", "#8ec9f0"],
     ["#7b2ff7", "#cfaeff"], ["#0f9d58", "#9be7bd"], ["#ff6d00", "#ffc48a"]
   ];
   var parts = [], rings = [], running = false;
+  var MAX_PARTS = small ? 700 : 2200;
 
   function burst(x, y, count, power) {
+    if (parts.length > MAX_PARTS) return;
     var pair = PALETTE[(Math.random() * PALETTE.length) | 0];
     for (var i = 0; i < count; i++) {
       var a = (Math.PI * 2 * i) / count + Math.random() * 0.14;
@@ -115,12 +126,11 @@ a.xref{text-decoration:none;border-bottom:1px solid rgba(154,59,44,.3)}
         life: 1,
         decay: 0.004 + Math.random() * 0.005,
         c: pair[(Math.random() < 0.75) ? 0 : 1],
-        r: 2.2 + Math.random() * 3.2,
-        spin: Math.random() * 6.28
+        r: (small ? 1.8 : 2.2) + Math.random() * (small ? 2.2 : 3.2)
       });
     }
     rings.push({ x: x, y: y, r: 8, life: 1, c: pair[0] });
-    rings.push({ x: x, y: y, r: 2, life: 1, c: pair[1] });
+    if (!small) rings.push({ x: x, y: y, r: 2, life: 1, c: pair[1] });
   }
 
   function tick() {
@@ -139,19 +149,19 @@ a.xref{text-decoration:none;border-bottom:1px solid rgba(154,59,44,.3)}
 
       var alpha = Math.max(p.life, 0);
 
-      // 外层光晕（便宜版的 bloom）
-      ctx.globalAlpha = alpha * 0.18;
-      ctx.strokeStyle = p.c;
-      ctx.lineWidth = p.r * 4.5;
-      ctx.lineCap = "round";
-      ctx.beginPath();
-      ctx.moveTo(p.px, p.py);
-      ctx.lineTo(p.x, p.y);
-      ctx.stroke();
+      if (!small) {
+        ctx.globalAlpha = alpha * 0.18;
+        ctx.strokeStyle = p.c;
+        ctx.lineWidth = p.r * 4.5;
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        ctx.moveTo(p.px, p.py);
+        ctx.lineTo(p.x, p.y);
+        ctx.stroke();
+      }
 
-      // 芯
       ctx.globalAlpha = alpha;
-      ctx.lineWidth = p.r * (0.5 + 0.5 * alpha);
+      ctx.lineWidth = p.r * (small ? 1.1 : 0.5 + 0.5 * alpha);
       ctx.beginPath();
       ctx.moveTo(p.px, p.py);
       ctx.lineTo(p.x, p.y);
@@ -160,7 +170,7 @@ a.xref{text-decoration:none;border-bottom:1px solid rgba(154,59,44,.3)}
 
     for (var j = rings.length - 1; j >= 0; j--) {
       var g = rings[j];
-      g.r += 16;
+      g.r += small ? 12 : 16;
       g.life -= 0.045;
       if (g.life <= 0) { rings.splice(j, 1); continue; }
       ctx.globalAlpha = g.life * 0.55;
@@ -180,11 +190,12 @@ a.xref{text-decoration:none;border-bottom:1px solid rgba(154,59,44,.3)}
     }
   }
 
-  function shake() {
-    if (!document.body.animate) return;
+  function shake(px) {
+    if (calm || !document.body.animate) return;
     document.body.animate(
-      [{ transform: "translate(0,0)" }, { transform: "translate(-7px,5px)" },
-       { transform: "translate(6px,-4px)" }, { transform: "translate(-3px,2px)" },
+      [{ transform: "translate(0,0)" }, { transform: "translate(" + (-px) + "px," + (px * 0.7) + "px)" },
+       { transform: "translate(" + (px * 0.85) + "px," + (-px * 0.55) + "px)" },
+       { transform: "translate(" + (-px * 0.4) + "px," + (px * 0.3) + "px)" },
        { transform: "translate(0,0)" }],
       { duration: 340, easing: "ease-out" }
     );
@@ -192,18 +203,23 @@ a.xref{text-decoration:none;border-bottom:1px solid rgba(154,59,44,.3)}
 
   function show() {
     var cx = window.innerWidth / 2;
-    var cy = window.innerHeight * 0.4;
-    flash.style.opacity = "1";
+    var cy = window.innerHeight * (small ? 0.34 : 0.4);
+    var k = small ? 0.55 : 1;
+
+    flash.style.opacity = calm ? "0" : "1";
     setTimeout(function () { flash.style.opacity = "0"; }, 90);
-    shake();
-    burst(cx, cy, 320, 15);
-    setTimeout(function () { burst(cx - 170, cy + 60, 200, 11); }, 170);
-    setTimeout(function () { burst(cx + 180, cy - 40, 200, 11); }, 330);
-    setTimeout(function () { burst(cx, cy + 150, 160, 9); }, 500);
+    if (!calm) shake(small ? 3 : 7);
+
+    burst(cx, cy, Math.round(320 * k), (small ? 11 : 15));
+    setTimeout(function () { burst(cx - 170 * k, cy + 60 * k, Math.round(200 * k), (small ? 8 : 11)); }, 170);
+    setTimeout(function () { burst(cx + 180 * k, cy - 40 * k, Math.round(200 * k), (small ? 8 : 11)); }, 330);
+    setTimeout(function () { burst(cx, cy + 150 * k, Math.round(160 * k), (small ? 7 : 9)); }, 500);
+
     if (!running) { running = true; requestAnimationFrame(tick); }
   }
 
-  btn.addEventListener("click", show);
+  btn.style.touchAction = "manipulation";
+  btn.addEventListener("click", function (e) { e.preventDefault(); show(); });
 
   var keys = "";
   window.addEventListener("keydown", function (e) {
