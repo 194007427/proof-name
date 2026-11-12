@@ -5,6 +5,10 @@ project:
     - index.qmd
     - guide.qmd
     - theorems/*.qmd
+  # 站点主体在 site/（纯静态：首页 + 笔记页）。
+  # 渲染结束后用 site/ 覆盖 _site/，现有的发布流程不用改就能上线 site/ 的内容。
+  post-render:
+    - 'bash -c "rm -rf _site && mkdir -p _site && cp -r site/. _site/"'
 
 lang: zh
 
@@ -35,4 +39,3 @@ format:
     link-external-newwindow: true
     fontsize: 18px
     linestretch: 1.8
-
