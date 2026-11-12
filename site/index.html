@@ -17,10 +17,6 @@ padding:1rem 1.8rem;font-family:system-ui,sans-serif}
 .topnav nav a:hover{color:var(--accent)}
 .topnav nav button{font:inherit;background:none;border:0;padding:0;color:var(--muted);cursor:pointer;letter-spacing:inherit}
 .topnav nav button:hover{color:var(--accent)}
-.egg-count{font-family:system-ui,sans-serif;font-size:.74rem;color:var(--soft);font-variant-numeric:tabular-nums;
-letter-spacing:.02em;margin-left:.45rem}
-.egg-count:not(:empty)::before{content:"\00b7";margin-right:.35rem;color:var(--faint)}
-@media(max-width:640px){.egg-count{font-size:.6rem;margin-left:.2rem}}
 .hero{padding:5.5rem 0 3.5rem}
 .hero h1{margin:0 0 .9rem;font-size:clamp(2.6rem,6vw,4rem);letter-spacing:-.02em;line-height:1.1;color:var(--ink)}
 .hero p{margin:0;color:var(--muted);font-size:1rem;max-width:30rem}
@@ -73,7 +69,7 @@ a.xref{text-decoration:none;border-bottom:1px solid rgba(154,59,44,.3)}
 @media(max-width:640px){.topnav{padding:.9rem 1.2rem}.topnav nav{gap:.9rem;font-size:.68rem}
 .hero{padding:3.4rem 0 2.4rem}.row .meta{display:none}}
 </style></head><body>
-<header class="topnav"><a class="brand" href="index.html">Junjie Chen</a><nav><a href="index.html#note">NOTE</a><button id="egg" type="button" title="彩蛋" aria-label="彩蛋">???</button><span id="egg-count" class="egg-count"></span></nav></header>
+<header class="topnav"><a class="brand" href="index.html">Junjie Chen</a><nav><a href="index.html#note">NOTE</a><button id="egg" type="button" title="彩蛋" aria-label="彩蛋">???</button></nav></header>
 
 <div class="wrap">
   <div class="hero"><h1>Notes</h1></div>
@@ -222,62 +218,8 @@ a.xref{text-decoration:none;border-bottom:1px solid rgba(154,59,44,.3)}
     if (!running) { running = true; requestAnimationFrame(tick); }
   }
 
-  // ---- 计数：所有人共享，存在 abacus.jasoncameron.dev ----
-  var cntEl = document.getElementById("egg-count");
-  var API = "https://abacus.jasoncameron.dev", NS = "junjiechen-note", KEY = "fireworks";
-
-  function paint(n) {
-    if (!cntEl) return;
-    var v = Number(n);
-    if (isNaN(v)) return;
-    cntEl.textContent = v.toLocaleString("en-US");
-    try { localStorage.setItem("egg-count", String(v)); } catch (e) {}
-  }
-  function loadCount() {
-    fetch(API + "/get/" + NS + "/" + KEY, { cache: "no-store" })
-      .then(function (r) { return r.ok ? r.json() : { value: 0 }; })
-      .then(function (d) { paint(d.value); })
-      .catch(function () {});
-  }
-  // 排队提交：每次点击排队一次 hit，逐个发送并重试，
-  // 显示的值永远来自服务器返回，绝不本地加法。
-  var pending = 0, sending = false, tries = 0;
-
-  function flush() {
-    if (sending || pending <= 0) return;
-    sending = true;
-    fetch(API + "/hit/" + NS + "/" + KEY, { cache: "no-store" })
-      .then(function (r) {
-        if (!r.ok) throw new Error("http " + r.status);
-        return r.json();
-      })
-      .then(function (d) {
-        pending -= 1;
-        tries = 0;
-        paint(d.value);
-        setTimeout(function () { sending = false; flush(); }, 360);
-      })
-      .catch(function () {
-        tries += 1;
-        if (tries > 6) { pending = 0; tries = 0; }
-        setTimeout(function () { sending = false; flush(); }, 1000 * tries);
-      });
-  }
-
-  function queueHit() {
-    pending += 1;
-    flush();
-  }
-
-  try {
-    var cached = localStorage.getItem("egg-count");
-    if (cached !== null) paint(cached);
-  } catch (e) {}
-  if (cntEl && !cntEl.textContent) cntEl.textContent = "—";
-  loadCount();
-
   btn.style.touchAction = "manipulation";
-  btn.addEventListener("click", function (e) { e.preventDefault(); queueHit(); show(); });
+  btn.addEventListener("click", function (e) { e.preventDefault(); show(); });
 
   var keys = "";
   window.addEventListener("keydown", function (e) {
