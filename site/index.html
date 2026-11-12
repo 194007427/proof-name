@@ -66,6 +66,10 @@ main.article{max-width:44rem;margin:0 auto;padding:0 1.8rem 6rem}
 .proof>p:last-child::after{content:"∎";float:right;color:var(--faint)}
 .eq{text-align:center;margin:1.4rem 0}.eq p{text-align:center;margin:0}
 a.xref{text-decoration:none;border-bottom:1px solid rgba(154,59,44,.3)}
+.pdf-meta{font-family:system-ui,sans-serif;font-size:.78rem;color:var(--muted);margin:0 0 1rem}
+.pdf-view{width:100%;height:78vh;border:1px solid var(--rule);border-radius:6px;background:var(--paper2)}
+.pdf-fallback{font-size:.9rem;color:var(--muted);padding:1rem}
+@media(max-width:760px){.pdf-view{height:65vh}}
 @media(max-width:640px){.topnav{padding:.9rem 1.2rem}.topnav nav{gap:.9rem;font-size:.68rem}
 .hero{padding:3.4rem 0 2.4rem}.row .meta{display:none}}
 </style></head><body>
@@ -74,7 +78,7 @@ a.xref{text-decoration:none;border-bottom:1px solid rgba(154,59,44,.3)}
 <div class="wrap">
   <div class="hero"><h1>Notes</h1></div>
   <section id="note">
-    <div class="group"><p class="glabel">Algebraic Geometry</p><p class="empty">—</p></div><div class="group"><p class="glabel">Birational Geometry</p><a class="row" href="notes/negativity.html"><span class="t">Negativity Lemma</span><span class="arrow">↗</span></a></div>
+    <div class="group"><p class="glabel">Algebraic Geometry</p><a class="row" href="notes/hartshorne-2-6.html"><span class="t">Hartshorne 2.6</span><span class="arrow">↗</span></a></div><div class="group"><p class="glabel">Birational Geometry</p><a class="row" href="notes/negativity.html"><span class="t">Negativity Lemma</span><span class="arrow">↗</span></a></div>
   </section>
 </div>
 
