@@ -67,6 +67,14 @@ main.article{max-width:44rem;margin:0 auto;padding:0 1.8rem 6rem}
 .eq{text-align:center;margin:1.4rem 0}.eq p{text-align:center;margin:0}
 a.xref{text-decoration:none;border-bottom:1px solid rgba(154,59,44,.3)}
 /* make4ht 输出的排版映射 */
+/* pandoc 生成的定理块 */
+.proposition,.lemma,.theorem,.corollary{margin:1.7rem 0;padding:1rem 1.3rem;border-left:2px solid var(--accent);background:var(--tint)}
+.definition{margin:1.7rem 0;padding:1rem 1.3rem;border-left:2px solid #35506f;background:rgba(53,80,111,.045)}
+.example,.remark{margin:1.7rem 0;padding:1rem 1.3rem;border-left:2px solid var(--rule2)}
+.proposition p,.lemma p,.theorem p,.definition p,.example p,.remark p{margin:0 0 .6rem}
+.proposition p:last-child,.lemma p:last-child,.theorem p:last-child,.definition p:last-child,
+.example p:last-child,.remark p:last-child{margin-bottom:0}
+.proof{margin:1.1rem 0 1.8rem;padding-left:1.2rem;border-left:1px solid var(--rule)}
 .newtheorem{margin:1.6rem 0;padding:1rem 1.3rem;border-left:2px solid var(--rule2)}
 .newtheorem .head{display:block;margin-bottom:.45rem;font-family:system-ui,sans-serif;font-size:.8rem;
 font-weight:700;letter-spacing:.08em;color:var(--accent)}
