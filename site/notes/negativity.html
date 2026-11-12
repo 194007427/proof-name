@@ -567,13 +567,15 @@ a contradiction. <a href="#proof1">↑ Back to the proof of (1)</a></p>
   function paint(n) {
     if (!cntEl) return;
     var v = Number(n);
-    cntEl.textContent = isNaN(v) ? "" : v.toLocaleString("en-US");
+    if (isNaN(v)) return;
+    cntEl.textContent = v.toLocaleString("en-US");
+    try { localStorage.setItem("egg-count", String(v)); } catch (e) {}
   }
   function loadCount() {
     fetch(API + "/get/" + NS + "/" + KEY, { cache: "no-store" })
       .then(function (r) { return r.ok ? r.json() : { value: 0 }; })
       .then(function (d) { paint(d.value); })
-      .catch(function () { if (cntEl) cntEl.style.visibility = "hidden"; });
+      .catch(function () {});
   }
   function bump() {
     if (cntEl) {
@@ -585,6 +587,11 @@ a contradiction. <a href="#proof1">↑ Back to the proof of (1)</a></p>
       .then(function (d) { paint(d.value); })
       .catch(function () {});
   }
+  try {
+    var cached = localStorage.getItem("egg-count");
+    if (cached !== null) paint(cached);
+  } catch (e) {}
+  if (cntEl && !cntEl.textContent) cntEl.textContent = "—";
   loadCount();
 
   btn.style.touchAction = "manipulation";
