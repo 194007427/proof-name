@@ -1,0 +1,970 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>Divisorial Proj</title>
+<style>
+:root{--paper:#fbfaf6;--paper2:#f3f0e8;--ink:#1a1917;--soft:#3d3a34;--muted:#78726a;
+--faint:#a49d92;--rule:#e4dfd3;--rule2:#cec7b7;--accent:#9a3b2c;--tint:rgba(154,59,44,.045);}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--soft);font-family:"Source Serif 4",Georgia,serif;
+font-size:16.5px;line-height:1.8;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:underline;text-underline-offset:.2em;text-decoration-color:rgba(154,59,44,.3)}
+.wrap{max-width:46rem;margin:0 auto;padding:0 1.8rem}
+.topnav{display:flex;align-items:center;justify-content:space-between;gap:2rem;position:sticky;top:0;z-index:9;
+background:rgba(251,250,246,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule);
+padding:1rem 1.8rem;font-family:system-ui,sans-serif}
+.brand{font-size:.95rem;letter-spacing:.18em;font-weight:600;color:var(--ink);text-decoration:none}
+.topnav nav{display:flex;gap:1.4rem;font-size:.74rem;letter-spacing:.12em;margin-left:auto}
+.topnav nav a{color:var(--muted);text-decoration:none}
+.topnav nav a:hover{color:var(--accent)}
+.topnav nav button{font:inherit;background:none;border:0;padding:0;color:var(--muted);cursor:pointer;letter-spacing:inherit}
+.topnav nav button:hover{color:var(--accent)}
+.hero{padding:5.5rem 0 3.5rem}
+.hero h1{margin:0 0 .9rem;font-size:clamp(2.6rem,6vw,4rem);letter-spacing:-.02em;line-height:1.1;color:var(--ink)}
+.hero p{margin:0;color:var(--muted);font-size:1rem;max-width:30rem}
+section{padding:3.2rem 0;border-top:1px solid var(--rule)}
+.shead{display:flex;align-items:baseline;gap:.9rem;margin-bottom:1.7rem}
+.snum{font-family:system-ui,sans-serif;font-size:.7rem;letter-spacing:.12em;color:var(--accent)}
+.shead h2{margin:0;font-size:1.05rem;font-weight:600;letter-spacing:.02em;color:var(--ink)}
+.shead span.note{margin-left:auto;font-family:system-ui,sans-serif;font-size:.72rem;color:var(--faint)}
+.group{margin:1.6rem 0 0}
+.glabel{display:flex;align-items:center;gap:.75rem;font-family:system-ui,sans-serif;font-size:1.06rem;
+font-weight:700;letter-spacing:.01em;color:var(--ink);margin:2.3rem 0 .85rem}
+.glabel::before{content:"";width:22px;height:2px;background:var(--accent);flex:none}
+.glabel:first-child{margin-top:.2rem}
+.row{display:flex;align-items:baseline;gap:1rem;padding:.62rem 0;border-bottom:1px solid var(--rule);
+text-decoration:none;color:inherit}
+.row:last-child{border-bottom:0}
+.row:hover .t{color:var(--accent)}
+.row .t{font-size:1rem;color:var(--ink);transition:color .15s}
+.row .meta{margin-left:auto;font-family:system-ui,sans-serif;font-size:.7rem;letter-spacing:.1em;color:var(--faint)}
+.row .arrow{color:var(--faint);font-size:.8rem}
+.row:hover .arrow{color:var(--accent)}
+.empty{font-size:.9rem;color:var(--faint);padding:.5rem 0}
+.about p{margin:0 0 .5rem;color:var(--muted);font-size:.95rem}
+.about a{text-decoration:none;border-bottom:1px solid rgba(154,59,44,.28)}
+footer{max-width:46rem;margin:0 auto;padding:2.6rem 1.8rem 4rem;color:var(--faint);
+font-family:system-ui,sans-serif;font-size:.72rem;letter-spacing:.06em}
+.crumb{font-family:system-ui,sans-serif;font-size:.78rem;letter-spacing:.02em;
+color:var(--faint);margin:2.6rem 0 1.4rem}
+.crumb a{color:var(--muted);text-decoration:none}
+.crumb span{margin:0 .55rem;color:var(--rule2)}
+main.article{max-width:44rem;margin:0 auto;padding:0 1.8rem 6rem}
+.article h1{font-size:2rem;margin:.4rem 0 1.2rem;line-height:1.25;color:var(--ink)}
+.article h2{font-size:1.3rem;margin:2.5rem 0 1rem;padding-bottom:.4rem;border-bottom:1px solid var(--rule);color:var(--ink)}
+.article h3{font-size:1.06rem;margin:1.8rem 0 .6rem;color:var(--ink)}
+.article p{margin:0 0 1.05rem;text-align:justify}
+.header-section-number{font-family:system-ui,sans-serif;font-size:.78em;color:var(--faint);margin-right:.5em}
+.stmt{margin:1.7rem 0;padding:1rem 1.3rem;border-left:2px solid var(--rule2)}
+.stmt-theorem,.stmt-lemma,.stmt-proposition,.stmt-corollary{border-left-color:var(--accent);background:var(--tint)}
+.stmt-definition{border-left-color:#35506f;background:rgba(53,80,111,.045)}
+.stmt-head{display:flex;gap:.5rem;align-items:baseline;margin-bottom:.6rem;font-family:system-ui,sans-serif}
+.stmt-kind{font-size:.74rem;font-weight:700;letter-spacing:.14em;color:var(--muted)}
+.stmt-num{font-size:.78rem;font-weight:600;color:var(--muted)}
+.stmt-theorem .stmt-kind,.stmt-theorem .stmt-num,.stmt-lemma .stmt-kind,.stmt-lemma .stmt-num{color:var(--accent)}
+.stmt>p:last-child{margin-bottom:0}
+.proof{margin:1.1rem 0 1.8rem;padding-left:1.2rem;border-left:1px solid var(--rule)}
+.proof-head{font-family:system-ui,sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.2em;color:var(--faint);margin-bottom:.5rem}
+.eq{text-align:center;margin:1.4rem 0}.eq p{text-align:center;margin:0}
+a.xref{text-decoration:none;border-bottom:1px solid rgba(154,59,44,.3)}
+.math-source{margin:0 .05em}
+.math-source.katex-display{margin:1.4rem 0;overflow-x:auto;overflow-y:hidden}
+.katex{font-size:1.04em}
+
+/* make4ht 输出的排版映射 */
+/* pandoc 生成的定理块 */
+.proposition,.lemma,.theorem,.corollary{margin:1.7rem 0;padding:1rem 1.3rem;border-left:2px solid var(--accent);background:var(--tint)}
+.definition{margin:1.7rem 0;padding:1rem 1.3rem;border-left:2px solid #35506f;background:rgba(53,80,111,.045)}
+.example,.remark{margin:1.7rem 0;padding:1rem 1.3rem;border-left:2px solid var(--rule2)}
+.proposition p,.lemma p,.theorem p,.definition p,.example p,.remark p{margin:0 0 .6rem}
+.proposition p:last-child,.lemma p:last-child,.theorem p:last-child,.definition p:last-child,
+.example p:last-child,.remark p:last-child{margin-bottom:0}
+.proof{margin:1.1rem 0 1.8rem;padding-left:1.2rem;border-left:1px solid var(--rule)}
+.newtheorem{margin:1.6rem 0;padding:1rem 1.3rem;border-left:2px solid var(--rule2)}
+.newtheorem .head{display:block;margin-bottom:.45rem;font-family:system-ui,sans-serif;font-size:.8rem;
+font-weight:700;letter-spacing:.08em;color:var(--accent)}
+.cmbx-12,.cmbx-10,.cmbx-9,.cmbx-8{font-weight:600}
+.cmti-12,.cmti-10,.cmti-9,.cmti-8,.cmsl-12{font-style:italic}
+.qopname{font-style:normal}
+.titlemark{display:none}
+h3.sectionHead{font-size:1.7rem;margin:0 0 1.2rem;padding-bottom:.5rem;border-bottom:1px solid var(--rule);color:var(--ink)}
+h4.subsectionHead{font-size:1.22rem;margin:2.2rem 0 .8rem;font-weight:600;color:var(--ink)}
+h5.subsubsectionHead{font-size:1.05rem;margin:1.8rem 0 .6rem;font-weight:600;color:var(--ink)}
+.article p.noindent,.article p.indent{margin:0 0 1.05rem}
+.article img{max-width:100%;height:auto;display:block;margin:1.4rem auto}
+.article .newtheorem p:last-child{margin-bottom:0}
+
+.article h4{font-size:1rem;margin:1.5rem 0 .5rem;font-weight:600;color:var(--ink)}
+.article h5{font-size:.96rem;margin:1.2rem 0 .4rem;font-weight:600;color:var(--ink)}
+.notelayout{max-width:64rem;margin:0 auto;padding:0 1.8rem;display:grid;
+grid-template-columns:minmax(0,1fr) 13rem;gap:2.5rem;align-items:start}
+.notelayout main.article{max-width:none;margin:0;padding:0 0 6rem}
+.notetoc{position:sticky;top:4.2rem;padding-top:3.4rem;font-family:system-ui,sans-serif;font-size:.78rem;line-height:1.55}
+.notetoc .side-label{margin:0 0 .7rem;font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--faint)}
+.notetoc ul{list-style:none;margin:0;padding:0}
+.notetoc ul ul{padding-left:.85rem}
+.notetoc li{margin:0}
+.notetoc a{display:block;padding:.22rem 0 .22rem .75rem;border-left:1px solid var(--rule);
+color:var(--muted);text-decoration:none}
+.notetoc a:hover{color:var(--ink)}
+@media(max-width:1000px){.notelayout{grid-template-columns:1fr;padding:0 1.2rem}.notetoc{display:none}
+.notelayout main.article{padding:0 0 4rem}}
+.pdf-meta{font-family:system-ui,sans-serif;font-size:.78rem;color:var(--muted);margin:0 0 1rem}
+.pdf-view{width:100%;height:78vh;border:1px solid var(--rule);border-radius:6px;background:var(--paper2)}
+.pdf-fallback{font-size:.9rem;color:var(--muted);padding:1rem}
+@media(max-width:760px){.pdf-view{height:65vh}}
+@media(max-width:640px){.topnav{padding:.9rem 1.2rem}.topnav nav{gap:.9rem;font-size:.68rem}
+.hero{padding:3.4rem 0 2.4rem}.row .meta{display:none}}
+</style><link rel="stylesheet" href="../assets/katex/katex.min.css"><link rel="stylesheet" href="../assets/css/note-toc.css?v=1"><style>
+.divisorial-note section{padding:0;border:0}
+.divisorial-note h2{scroll-margin-top:6rem}
+.divisorial-note [id]{scroll-margin-top:6rem}
+.divisorial-note .math-source > .katex-display{overflow-x:auto;overflow-y:hidden;padding:.15rem 0}
+.divisorial-note .math-source:has(>.katex-display){display:block;max-width:100%;min-width:0}
+.divisorial-note .lemma,.divisorial-note .proposition,.divisorial-note .corollary{min-width:0}
+.divisorial-note .proof-fold{margin:1rem 0 2rem;border-bottom:1px solid var(--rule)}
+.divisorial-note .proof-fold>summary{display:flex;justify-content:space-between;align-items:center;gap:1rem;list-style:none;cursor:pointer;font:italic 1rem/1.5 Georgia,serif;color:var(--accent);padding:.7rem .15rem;min-height:48px}
+.divisorial-note .proof-fold>summary::-webkit-details-marker{display:none}
+.divisorial-note .proof-fold>summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.divisorial-note .fold-icon::before{content:'+';font:1.15rem system-ui,sans-serif}
+.divisorial-note .proof-fold[open] .fold-icon::before{content:'−'}
+.divisorial-note .proof-content{padding:.5rem 0 .7rem 1.2rem;border-left:1px solid var(--rule);min-width:0}
+.divisorial-note .proof-overview{margin:.8rem 0 0;color:var(--muted)}
+.divisorial-note ol{padding-left:1.8rem}
+.divisorial-note math[display=block]{max-width:100%;overflow-x:auto}
+.divisorial-note .source-links{font: .8rem/1.6 system-ui,sans-serif;color:var(--muted);margin-bottom:2rem}
+.divisorial-page .back-to-top{left:calc(50% + 34rem)}
+@media(max-width:1150px){.divisorial-page .back-to-top{left:auto;right:.75rem;top:.15rem;transform:none;width:44px;height:44px;border-color:transparent;box-shadow:none;background:transparent}.divisorial-page .back-to-top span{display:none}.divisorial-page.back-to-top-active .topnav nav{padding-right:48px}}
+</style><link rel="stylesheet" href="../assets/css/back-to-top.css"></head><body class="divisorial-page">
+<header class="topnav"><nav><a href="../index.html#note">Notes</a><button id="egg" type="button" title="彩蛋" aria-label="彩蛋">???</button></nav></header>
+<div class="notelayout"><main class="article divisorial-note"><p class="crumb"><a href="../index.html#note">Notes</a><span>/</span>Birational Geometry</p><h1 id="page-title">Divisorial Proj</h1><p class="source-links"><a href="../assets/notes/divisorial-proj.pdf">PDF</a> · <a href="../assets/notes/divisorial-proj.tex">LaTeX source</a></p><p>Let
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>
+be a normal integral variety over a field
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>,
+and let
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>
+be an integral Weil divisor on
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>.
+Assume that the divisorial algebra
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">ℛ</mi><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo>,</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mo>:=</mo><msub><mo>⨁</mo><mrow><mi>m</mi><mo>≥</mo><mn>0</mn></mrow></msub><msub><mi mathvariant="script">𝒪</mi><mi>X</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>m</mi><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathcal R(X,B):=\bigoplus_{m\ge0}\mathcal O_X(mB)</annotation></semantics></math>
+is finitely generated as an
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi mathvariant="script">𝒪</mi><mi>X</mi></msub><annotation encoding="application/x-tex">\mathcal O_X</annotation></semantics></math>-algebra,
+and set
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo>:</mo><mi>Z</mi><mo>=</mo><msub><mrow><mi mathvariant="normal">Proj</mi><mo>&#8289;</mo></mrow><mi>X</mi></msub><mi mathvariant="script">ℛ</mi><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo>,</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mo>→</mo><mi>X</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">f\colon Z=\mathop{\mathrm{Proj}}_X\mathcal R(X,B)\longrightarrow X.</annotation></semantics></math>
+This note studies the properties of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>
+and proves the following:</p>
+<ol>
+<li><p>The morphism
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>
+detects the
+non-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="double-struck">ℚ</mi><annotation encoding="application/x-tex">\mathbb Q</annotation></semantics></math>-Cartier
+locus of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>:
+its isomorphism locus on
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>
+is precisely the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="double-struck">ℚ</mi><annotation encoding="application/x-tex">\mathbb Q</annotation></semantics></math>-Cartier
+locus of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>.
+In particular,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>U</mi><mo stretchy="false" form="postfix">)</mo><mo>→</mo><mi>U</mi></mrow><annotation encoding="application/x-tex">f^{-1}(U)\to U</annotation></semantics></math>
+is an isomorphism, where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>U</mi><mo>⊆</mo><mi>X</mi></mrow><annotation encoding="application/x-tex">U\subseteq X</annotation></semantics></math>
+is the smooth locus.</p></li>
+<li><p>The variety
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Z</mi><annotation encoding="application/x-tex">Z</annotation></semantics></math>
+is normal.</p></li>
+<li><p>The morphism
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>
+is small. Consequently, the strict transform
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>B</mi><mi>Z</mi></msub><annotation encoding="application/x-tex">B_Z</annotation></semantics></math>
+of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>
+is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="double-struck">ℚ</mi><annotation encoding="application/x-tex">\mathbb Q</annotation></semantics></math>-Cartier
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>-ample.</p></li>
+</ol>
+<h2 id="the-twisting-sheaf-on-proj"><span class="header-section-number">0</span>The twisting sheaf on Proj</h2>
+<p>Let
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo>=</mo><msub><mo>⨁</mo><mrow><mi>n</mi><mo>≥</mo><mn>0</mn></mrow></msub><msub><mi>S</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">S=\bigoplus_{n\ge0}S_n</annotation></semantics></math>
+be a nonnegatively graded ring, and set
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo>=</mo><mrow><mi mathvariant="normal">Proj</mi><mo>&#8289;</mo></mrow><mi>S</mi></mrow><annotation encoding="application/x-tex">P=\mathop{\mathrm{Proj}}S</annotation></semantics></math>.
+For a graded
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>S</mi><annotation encoding="application/x-tex">S</annotation></semantics></math>-module
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>M</mi><annotation encoding="application/x-tex">M</annotation></semantics></math>,
+let
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>M</mi><mo accent="true">̃</mo></mover><annotation encoding="application/x-tex">\widetilde M</annotation></semantics></math>
+denote the associated quasicoherent sheaf on
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>P</mi><annotation encoding="application/x-tex">P</annotation></semantics></math>,
+characterized on standard affine opens by
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Γ</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>D</mi><mo>+</mo></msub><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo><mo>,</mo><mover><mi>M</mi><mo accent="true">̃</mo></mover><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>M</mi><mi>s</mi></msub><msub><mo stretchy="false" form="postfix">)</mo><mn>0</mn></msub><mo>,</mo></mrow><annotation encoding="application/x-tex">\Gamma(D_+(s),\widetilde M)=(M_s)_0,</annotation></semantics></math>
+where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>
+is homogeneous of positive degree. Define the shifted graded module
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">S(1)</annotation></semantics></math>
+by
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mn>1</mn><msub><mo stretchy="false" form="postfix">)</mo><mi>n</mi></msub><mo>=</mo><msub><mi>S</mi><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">S(1)_n=S_{n+1}.</annotation></semantics></math>
+The twisting sheaf on
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>P</mi><annotation encoding="application/x-tex">P</annotation></semantics></math>
+is defined as
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="script">𝒪</mi><mi>P</mi></msub><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>:=</mo><mover><mrow><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><mo accent="true">̃</mo></mover><mi>.</mi></mrow><annotation encoding="application/x-tex">\mathcal O_P(1):=\widetilde{S(1)}.</annotation></semantics></math>
+In particular,
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Γ</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>D</mi><mo>+</mo></msub><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo><mo>,</mo><msub><mi mathvariant="script">𝒪</mi><mi>P</mi></msub><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mn>1</mn><msub><mo stretchy="false" form="postfix">)</mo><mi>s</mi></msub><msub><mo stretchy="false" form="postfix">)</mo><mn>0</mn></msub><mo>=</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>S</mi><mi>s</mi></msub><msub><mo stretchy="false" form="postfix">)</mo><mn>1</mn></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">\Gamma(D_+(s),\mathcal O_P(1))
+ =(S(1)_s)_0=(S_s)_1.</annotation></semantics></math></p>
+<div id="lem:degree-one" class="lemma">
+<p><strong>Lemma 1</strong>. <em>If
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>S</mi><annotation encoding="application/x-tex">S</annotation></semantics></math>
+is generated by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>S</mi><mn>1</mn></msub><annotation encoding="application/x-tex">S_1</annotation></semantics></math>
+as an
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>S</mi><mn>0</mn></msub><annotation encoding="application/x-tex">S_0</annotation></semantics></math>-algebra,
+then
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="script">𝒪</mi><mi>P</mi></msub><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O_P(1)</annotation></semantics></math>
+is an invertible sheaf.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> We first show that the standard opens
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>D</mi><mo>+</mo></msub><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">D_+(s)</annotation></semantics></math>,
+with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo>∈</mo><msub><mi>S</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">s\in S_1</annotation></semantics></math>,
+cover
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>P</mi><annotation encoding="application/x-tex">P</annotation></semantics></math>.
+Indeed, if a homogeneous prime ideal
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="fraktur">𝔭</mi><annotation encoding="application/x-tex">\mathfrak p</annotation></semantics></math>
+contains
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>S</mi><mn>1</mn></msub><annotation encoding="application/x-tex">S_1</annotation></semantics></math>,
+then generation in degree one implies that it contains
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>S</mi><mo>+</mo></msub><annotation encoding="application/x-tex">S_+</annotation></semantics></math>.
+Such a prime does not belong to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">Proj</mi><mo>&#8289;</mo></mrow><mi>S</mi></mrow><annotation encoding="application/x-tex">\mathop{\mathrm{Proj}}S</annotation></semantics></math>.
+Hence every point of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>P</mi><annotation encoding="application/x-tex">P</annotation></semantics></math>
+lies in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>D</mi><mo>+</mo></msub><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">D_+(s)</annotation></semantics></math>
+for some
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo>∈</mo><msub><mi>S</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">s\in S_1</annotation></semantics></math>.</p>
+<p>Fix such an
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>.
+Since
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>
+is invertible in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>S</mi><mi>s</mi></msub><annotation encoding="application/x-tex">S_s</annotation></semantics></math>
+and has degree one, multiplication by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>
+gives an isomorphism of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>S</mi><mi>s</mi></msub><msub><mo stretchy="false" form="postfix">)</mo><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">(S_s)_0</annotation></semantics></math>-modules
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>S</mi><mi>s</mi></msub><msub><mo stretchy="false" form="postfix">)</mo><mn>0</mn></msub><mover><mo>→</mo><mrow><mspace width="0.222em"></mspace><mo>∼</mo><mspace width="0.222em"></mspace></mrow></mover><mo stretchy="false" form="prefix">(</mo><msub><mi>S</mi><mi>s</mi></msub><msub><mo stretchy="false" form="postfix">)</mo><mn>1</mn></msub><mo>,</mo><mspace width="2.0em"></mspace><mi>a</mi><mo>↦</mo><mi>s</mi><mi>a</mi><mo>,</mo></mrow><annotation encoding="application/x-tex">(S_s)_0\xrightarrow{\ \sim\ }(S_s)_1,
+ \qquad a\longmapsto sa,</annotation></semantics></math> whose inverse
+is multiplication by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>s</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><annotation encoding="application/x-tex">s^{-1}</annotation></semantics></math>.
+Sheafifying on
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>D</mi><mo>+</mo></msub><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mi mathvariant="normal">Spec</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>S</mi><mi>s</mi></msub><msub><mo stretchy="false" form="postfix">)</mo><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">D_+(s)=\mathop{\mathrm{Spec}}(S_s)_0</annotation></semantics></math>
+therefore yields
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="script">𝒪</mi><mrow><msub><mi>D</mi><mo>+</mo></msub><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo></mrow></msub><mo>≃</mo><msub><mi mathvariant="script">𝒪</mi><mi>P</mi></msub><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><msub><mo stretchy="false" form="prefix">|</mo><mrow><msub><mi>D</mi><mo>+</mo></msub><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo></mrow></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">\mathcal O_{D_+(s)}
+ \simeq\mathcal O_P(1)|_{D_+(s)}.</annotation></semantics></math> Since
+these opens cover
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>P</mi><annotation encoding="application/x-tex">P</annotation></semantics></math>,
+the sheaf
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="script">𝒪</mi><mi>P</mi></msub><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O_P(1)</annotation></semantics></math>
+is locally free of rank one. ◻</p>
+</div>
+<p>The sheaf
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="script">𝒪</mi><mi>P</mi></msub><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O_P(1)</annotation></semantics></math>
+need not be invertible for an arbitrary grading, as the following
+example shows.</p>
+<div id="ex:degree-two" class="example">
+<p><strong>Example 1</strong>. Let
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo>=</mo><mi>k</mi><mo stretchy="false" form="prefix">[</mo><mi>u</mi><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">S=k[u]</annotation></semantics></math>
+with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">deg</mi><mo>&#8289;</mo></mrow><mi>u</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">\deg u=2</annotation></semantics></math>.
+Localizing at
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>u</mi><annotation encoding="application/x-tex">u</annotation></semantics></math>
+preserves the original grading:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">deg</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><msup><mi>u</mi><mi>j</mi></msup><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>2</mn><mi>j</mi></mrow><annotation encoding="application/x-tex">\deg(u^j)=2j</annotation></semantics></math>
+for every
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>j</mi><mo>∈</mo><mi mathvariant="double-struck">ℤ</mi></mrow><annotation encoding="application/x-tex">j\in\mathbb Z</annotation></semantics></math>.
+Thus
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>u</mi></msub><mo>=</mo><mi>k</mi><mo stretchy="false" form="prefix">[</mo><mi>u</mi><mo>,</mo><msup><mi>u</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="postfix">]</mo><mo>=</mo><mi>⋯</mi><mo>⊕</mo><mi>k</mi><msup><mi>u</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo>⊕</mo><mi>k</mi><mo>⊕</mo><mi>k</mi><mi>u</mi><mo>⊕</mo><mi>k</mi><msup><mi>u</mi><mn>2</mn></msup><mo>⊕</mo><mi>⋯</mi><mo>,</mo></mrow><annotation encoding="application/x-tex">S_u=k[u,u^{-1}]
+ =\cdots\oplus ku^{-1}\oplus k\oplus ku\oplus ku^2\oplus\cdots,</annotation></semantics></math>
+where the displayed summands have degrees
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>…</mi><mo>,</mo><mi>−</mi><mn>2</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo>,</mo><mi>…</mi></mrow><annotation encoding="application/x-tex">\ldots,-2,0,2,4,\ldots</annotation></semantics></math>,
+respectively. In particular, only even degrees occur, and
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>S</mi><mi>u</mi></msub><msub><mo stretchy="false" form="postfix">)</mo><mn>0</mn></msub><mo>=</mo><mi>k</mi><mo>,</mo><mspace width="2.0em"></mspace><mo stretchy="false" form="prefix">(</mo><msub><mi>S</mi><mi>u</mi></msub><msub><mo stretchy="false" form="postfix">)</mo><mn>1</mn></msub><mo>=</mo><mn>0</mn><mo>,</mo><mspace width="2.0em"></mspace><mo stretchy="false" form="prefix">(</mo><msub><mi>S</mi><mi>u</mi></msub><msub><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msub><mo>=</mo><mi>k</mi><mi>u</mi><mo>≃</mo><mi>k</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">(S_u)_0=k,\qquad (S_u)_1=0,\qquad (S_u)_2=ku\simeq k.</annotation></semantics></math>
+Consequently,
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo>=</mo><msub><mi>D</mi><mo>+</mo></msub><mo stretchy="false" form="prefix">(</mo><mi>u</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mi mathvariant="normal">Spec</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>S</mi><mi>u</mi></msub><msub><mo stretchy="false" form="postfix">)</mo><mn>0</mn></msub><mo>≃</mo><mrow><mi mathvariant="normal">Spec</mi><mo>&#8289;</mo></mrow><mi>k</mi><mo>,</mo><mspace width="2.0em"></mspace><mi mathvariant="normal">Γ</mi><mo stretchy="false" form="prefix">(</mo><mi>P</mi><mo>,</mo><msub><mi mathvariant="script">𝒪</mi><mi>P</mi></msub><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>S</mi><mi>u</mi></msub><msub><mo stretchy="false" form="postfix">)</mo><mn>1</mn></msub><mo>=</mo><mn>0</mn><mi>.</mi></mrow><annotation encoding="application/x-tex">P=D_+(u)=\mathop{\mathrm{Spec}}(S_u)_0\simeq\mathop{\mathrm{Spec}}k,
+ \qquad
+ \Gamma(P,\mathcal O_P(1))=(S_u)_1=0.</annotation></semantics></math>
+Thus
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="script">𝒪</mi><mi>P</mi></msub><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O_P(1)</annotation></semantics></math>
+is the zero sheaf on the nonempty scheme
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>P</mi><annotation encoding="application/x-tex">P</annotation></semantics></math>,
+and is not invertible.</p>
+</div>
+<h2 id="the-isomorphism-locus"><span class="header-section-number">1</span>The isomorphism locus</h2>
+<div id="prop:isomorphism-locus" class="proposition">
+<p><strong>Proposition 2</strong>. <em>Let
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>
+be a normal integral variety and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>
+an integral Weil divisor on
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>.
+Assume that
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">ℛ</mi><mo>=</mo><mi mathvariant="script">ℛ</mi><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo>,</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mo>⨁</mo><mrow><mi>m</mi><mo>≥</mo><mn>0</mn></mrow></msub><msub><mi mathvariant="script">𝒪</mi><mi>X</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>m</mi><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathcal R=\mathcal R(X,B)=\bigoplus_{m\ge0}\mathcal O_X(mB)</annotation></semantics></math>
+is finitely generated, and let
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo>:</mo><mi>Z</mi><mo>=</mo><msub><mrow><mi mathvariant="normal">Proj</mi><mo>&#8289;</mo></mrow><mi>X</mi></msub><mi mathvariant="script">ℛ</mi><mo>→</mo><mi>X</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">f\colon Z=\mathop{\mathrm{Proj}}_X\mathcal R\longrightarrow X.</annotation></semantics></math>
+Choose
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">r&gt;0</annotation></semantics></math>
+such that the Veronese algebra
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi mathvariant="script">ℛ</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mo stretchy="false" form="postfix">)</mo></mrow></msup><mo>=</mo><msub><mo>⨁</mo><mrow><mi>n</mi><mo>≥</mo><mn>0</mn></mrow></msub><msub><mi mathvariant="script">𝒪</mi><mi>X</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mi>r</mi><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathcal R^{(r)}=\bigoplus_{n\ge0}\mathcal O_X(nrB)</annotation></semantics></math>
+is generated in degree one. Identifying
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Z</mi><annotation encoding="application/x-tex">Z</annotation></semantics></math>
+with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow><mi mathvariant="normal">Proj</mi><mo>&#8289;</mo></mrow><mi>X</mi></msub><msup><mi mathvariant="script">ℛ</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mo stretchy="false" form="postfix">)</mo></mrow></msup></mrow><annotation encoding="application/x-tex">\mathop{\mathrm{Proj}}_X\mathcal R^{(r)}</annotation></semantics></math>,
+Lemma <a href="#lem:degree-one">1</a> shows that
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mo>:=</mo><msub><mi mathvariant="script">𝒪</mi><mrow><msub><mrow><mi mathvariant="normal">Proj</mi><mo>&#8289;</mo></mrow><mi>X</mi></msub><msup><mi mathvariant="script">ℛ</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mo stretchy="false" form="postfix">)</mo></mrow></msup></mrow></msub><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">L:=\mathcal O_{\mathop{\mathrm{Proj}}_X\mathcal R^{(r)}}(1)</annotation></semantics></math>
+is a line bundle on
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Z</mi><annotation encoding="application/x-tex">Z</annotation></semantics></math>.
+For every point
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>∈</mo><mi>X</mi></mrow><annotation encoding="application/x-tex">x\in X</annotation></semantics></math>,
+the following conditions are equivalent:</em></p>
+<ol>
+<li><p><em><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>
+is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="double-struck">ℚ</mi><annotation encoding="application/x-tex">\mathbb Q</annotation></semantics></math>-Cartier
+at
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>;</em></p></li>
+<li><p><em>there is an open neighborhood
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>V</mi><annotation encoding="application/x-tex">V</annotation></semantics></math>
+of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+such that
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>V</mi><mo stretchy="false" form="postfix">)</mo><mo>→</mo><mi>V</mi></mrow><annotation encoding="application/x-tex">f^{-1}(V)\to V</annotation></semantics></math>
+is an isomorphism;</em></p></li>
+<li><p><em>the fiber
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">f^{-1}(x)</annotation></semantics></math>
+has dimension zero.</em></p></li>
+</ol>
+</div>
+<p class="proof-overview">Compare the tautological line bundle over the isomorphism locus, and use properness to handle zero-dimensional fibers.</p><details class="proof-fold"><summary><span>Proof</span><span class="fold-icon" aria-hidden="true"></span></summary><div class="proof-content"><p><span
+class="upright">(1)</span><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>⇒</mo><annotation encoding="application/x-tex">\Rightarrow</annotation></semantics></math><span
+class="upright">(2)</span>. Choose a neighborhood
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>V</mi><annotation encoding="application/x-tex">V</annotation></semantics></math>
+of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>q</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">q&gt;0</annotation></semantics></math>
+such that
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>q</mi><mi>B</mi><msub><mo stretchy="false" form="prefix">|</mo><mi>V</mi></msub></mrow><annotation encoding="application/x-tex">qB|_V</annotation></semantics></math>
+is Cartier. Then
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>V</mi><mo stretchy="false" form="postfix">)</mo><mo>≃</mo><msub><mrow><mi mathvariant="normal">Proj</mi><mo>&#8289;</mo></mrow><mi>V</mi></msub><msub><mo>⨁</mo><mrow><mi>m</mi><mo>≥</mo><mn>0</mn></mrow></msub><msub><mi mathvariant="script">𝒪</mi><mi>V</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>m</mi><mi>q</mi><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mo>≃</mo><msub><mrow><mi mathvariant="normal">Proj</mi><mo>&#8289;</mo></mrow><mi>V</mi></msub><msub><mrow><mi mathvariant="normal">Sym</mi><mo>&#8289;</mo></mrow><msub><mi mathvariant="script">𝒪</mi><mi>V</mi></msub></msub><msub><mi mathvariant="script">𝒪</mi><mi>V</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>q</mi><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mo>≃</mo><mi>V</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">f^{-1}(V)
+ \simeq\mathop{\mathrm{Proj}}_V\bigoplus_{m\ge0}\mathcal O_V(mqB)
+ \simeq\mathop{\mathrm{Proj}}_V\operatorname{Sym}_{\mathcal O_V}\mathcal O_V(qB)
+ \simeq V.</annotation></semantics></math></p>
+<p><span
+class="upright">(2)</span><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>⇒</mo><annotation encoding="application/x-tex">\Rightarrow</annotation></semantics></math><span
+class="upright">(1)</span>. Identify
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>V</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">f^{-1}(V)</annotation></semantics></math>
+with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>V</mi><annotation encoding="application/x-tex">V</annotation></semantics></math>.
+The line bundle
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><msub><mo stretchy="false" form="prefix">|</mo><mrow><msup><mi>f</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>V</mi><mo stretchy="false" form="postfix">)</mo></mrow></msub></mrow><annotation encoding="application/x-tex">L|_{f^{-1}(V)}</annotation></semantics></math>
+agrees with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="script">𝒪</mi><mi>V</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O_V(rB)</annotation></semantics></math>
+on the regular locus of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>V</mi><annotation encoding="application/x-tex">V</annotation></semantics></math>.
+Both sheaves are reflexive and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>V</mi><annotation encoding="application/x-tex">V</annotation></semantics></math>
+is normal, so this isomorphism extends to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>V</mi><annotation encoding="application/x-tex">V</annotation></semantics></math>.
+Thus
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="script">𝒪</mi><mi>V</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O_V(rB)</annotation></semantics></math>
+is invertible and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>
+is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="double-struck">ℚ</mi><annotation encoding="application/x-tex">\mathbb Q</annotation></semantics></math>-Cartier
+at
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>.</p>
+<p>The implication <span
+class="upright">(2)</span><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>⇒</mo><annotation encoding="application/x-tex">\Rightarrow</annotation></semantics></math><span
+class="upright">(3)</span> is immediate. For <span
+class="upright">(3)</span><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>⇒</mo><annotation encoding="application/x-tex">\Rightarrow</annotation></semantics></math><span
+class="upright">(2)</span>, since
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>
+is projective and birational, upper semicontinuity of fiber dimension
+gives a neighborhood
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>V</mi><annotation encoding="application/x-tex">V</annotation></semantics></math>
+of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+over which
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>
+is quasi-finite <a href="https://stacks.math.columbia.edu/tag/0D4I">[SP,
+Tag 0D4I]</a>. There
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>
+is proper and quasi-finite, hence finite <a
+href="https://stacks.math.columbia.edu/tag/02LS">[SP, Tag 02LS]</a>, and
+therefore an isomorphism because
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>V</mi><annotation encoding="application/x-tex">V</annotation></semantics></math>
+is normal <a href="https://stacks.math.columbia.edu/tag/0AB1">[SP,
+Tag 0AB1]</a>. ◻</p>
+</div></details>
+<p>In particular, if
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow><mi mathvariant="normal">Iso</mi><mo>&#8289;</mo></mrow><mi>X</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>f</mi><mo stretchy="false" form="postfix">)</mo><mo>:=</mo><mo stretchy="false" form="prefix">{</mo><mi>x</mi><mo>∈</mo><mi>X</mi><mo>∣</mo><mi>f</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> is an isomorphism over a neighborhood of </mtext><mspace width="0.333em"></mspace></mrow><mi>x</mi><mo stretchy="false" form="postfix">}</mo><mo>,</mo></mrow><annotation encoding="application/x-tex">\operatorname{Iso}_X(f)
+ :=\{x\in X\mid f\text{ is an isomorphism over a neighborhood of }x\},</annotation></semantics></math>
+then Proposition <a href="#prop:isomorphism-locus">2</a> identifies this
+set with the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="double-struck">ℚ</mi><annotation encoding="application/x-tex">\mathbb Q</annotation></semantics></math>-Cartier
+locus of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>.
+Its complement is
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>X</mi><mo>\</mo><msub><mrow><mi mathvariant="normal">Iso</mi><mo>&#8289;</mo></mrow><mi>X</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>f</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mo stretchy="false" form="prefix">{</mo><mi>x</mi><mo>∈</mo><mi>X</mi><mo>∣</mo><mi>B</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> is not </mtext><mspace width="0.333em"></mspace></mrow><mi mathvariant="double-struck">ℚ</mi><mrow><mtext mathvariant="normal">-Cartier at </mtext><mspace width="0.333em"></mspace></mrow><mi>x</mi><mo stretchy="false" form="postfix">}</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mo stretchy="false" form="prefix">{</mo><mi>x</mi><mo>∈</mo><mi>X</mi><mo>∣</mo><mrow><mi mathvariant="normal">dim</mi><mo>&#8289;</mo></mrow><msup><mi>f</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>≥</mo><mn>1</mn><mo stretchy="false" form="postfix">}</mo><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+ X\setminus\operatorname{Iso}_X(f)
+ &amp;=\{x\in X\mid B\text{ is not }\mathbb Q\text{-Cartier at }x\}\\
+ &amp;=\{x\in X\mid\dim f^{-1}(x)\ge1\}.
+ \end{aligned}</annotation></semantics></math> Since
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow><mi mathvariant="normal">Iso</mi><mo>&#8289;</mo></mrow><mi>X</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>f</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\operatorname{Iso}_X(f)</annotation></semantics></math>
+is open by definition, Proposition <a
+href="#prop:isomorphism-locus">2</a> also shows that the
+non-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="double-struck">ℚ</mi><annotation encoding="application/x-tex">\mathbb Q</annotation></semantics></math>-Cartier
+locus of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>
+is closed.</p>
+<p>We give a direct proof of this closedness, independent of
+Proposition <a href="#prop:isomorphism-locus">2</a> and of finite
+generation. Write
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>U</mi><mi>B</mi></msub><mo>=</mo><mo stretchy="false" form="prefix">{</mo><mi>x</mi><mo>∈</mo><mi>X</mi><mo>∣</mo><mi>B</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> is Cartier at </mtext><mspace width="0.333em"></mspace></mrow><mi>x</mi><mo stretchy="false" form="postfix">}</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">U_B=\{x\in X\mid B\text{ is Cartier at }x\}.</annotation></semantics></math></p>
+<div id="lem:cartier-locus" class="lemma">
+<p><strong>Lemma 3</strong>. <em>The Cartier locus
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>U</mi><mi>B</mi></msub><annotation encoding="application/x-tex">U_B</annotation></semantics></math>
+is open in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>.
+Equivalently, the non-Cartier locus
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mo>\</mo><msub><mi>U</mi><mi>B</mi></msub></mrow><annotation encoding="application/x-tex">X\setminus U_B</annotation></semantics></math>
+is closed.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> Fix
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>∈</mo><msub><mi>U</mi><mi>B</mi></msub></mrow><annotation encoding="application/x-tex">x\in U_B</annotation></semantics></math>.
+A Cartier divisor on the spectrum of a local ring is principal, since
+every invertible module over a local ring is free of rank one. Hence
+there is a rational function
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo>∈</mo><mi>K</mi><mo stretchy="false" form="prefix">(</mo><mi>X</mi><msup><mo stretchy="false" form="postfix">)</mo><mo>*</mo></msup></mrow><annotation encoding="application/x-tex">g\in K(X)^*</annotation></semantics></math>
+such that
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi><msub><mo stretchy="false" form="prefix">|</mo><mrow><mrow><mi mathvariant="normal">Spec</mi><mo>&#8289;</mo></mrow><msub><mi mathvariant="script">𝒪</mi><mrow><mi>X</mi><mo>,</mo><mi>x</mi></mrow></msub></mrow></msub><mo>=</mo><msub><mrow><mi mathvariant="normal">div</mi><mo>&#8289;</mo></mrow><mrow><mrow><mi mathvariant="normal">Spec</mi><mo>&#8289;</mo></mrow><msub><mi mathvariant="script">𝒪</mi><mrow><mi>X</mi><mo>,</mo><mi>x</mi></mrow></msub></mrow></msub><mo stretchy="false" form="prefix">(</mo><mi>g</mi><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">B|_{\mathop{\mathrm{Spec}}\mathcal O_{X,x}}
+ =\operatorname{div}_{\mathop{\mathrm{Spec}}\mathcal O_{X,x}}(g).</annotation></semantics></math>
+Set
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo>=</mo><mi>B</mi><mo>−</mo><msub><mrow><mi mathvariant="normal">div</mi><mo>&#8289;</mo></mrow><mi>X</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>g</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">E=B-\operatorname{div}_X(g)</annotation></semantics></math>.
+The prime divisors of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>
+that contain
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+correspond to the height-one primes of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi mathvariant="script">𝒪</mi><mrow><mi>X</mi><mo>,</mo><mi>x</mi></mrow></msub><annotation encoding="application/x-tex">\mathcal O_{X,x}</annotation></semantics></math>,
+with the same discrete valuations. The displayed equality therefore says
+that the coefficient of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>E</mi><annotation encoding="application/x-tex">E</annotation></semantics></math>
+along every prime divisor containing
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+is zero. Thus
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>∉</mo><mrow><mi mathvariant="normal">Supp</mi><mo>&#8289;</mo></mrow><mi>E</mi></mrow><annotation encoding="application/x-tex">x\notin\mathop{\mathrm{Supp}}E</annotation></semantics></math>.</p>
+<p>The support of a Weil divisor is closed, so
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo>=</mo><mi>X</mi><mo>\</mo><mrow><mi mathvariant="normal">Supp</mi><mo>&#8289;</mo></mrow><mi>E</mi></mrow><annotation encoding="application/x-tex">V=X\setminus\mathop{\mathrm{Supp}}E</annotation></semantics></math>
+is an open neighborhood of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>.
+On
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>V</mi><annotation encoding="application/x-tex">V</annotation></semantics></math>
+we have
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi><msub><mo stretchy="false" form="prefix">|</mo><mi>V</mi></msub><mo>=</mo><msub><mrow><mi mathvariant="normal">div</mi><mo>&#8289;</mo></mrow><mi>V</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>g</mi><mo stretchy="false" form="postfix">)</mo><mo>,</mo></mrow><annotation encoding="application/x-tex">B|_V=\operatorname{div}_V(g),</annotation></semantics></math>
+and consequently
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo>⊆</mo><msub><mi>U</mi><mi>B</mi></msub></mrow><annotation encoding="application/x-tex">V\subseteq U_B</annotation></semantics></math>.
+This proves that
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>U</mi><mi>B</mi></msub><annotation encoding="application/x-tex">U_B</annotation></semantics></math>
+is open. ◻</p>
+</div>
+<div id="cor:q-cartier-locus" class="corollary">
+<p><strong>Corollary 4</strong>. <em>The
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="double-struck">ℚ</mi><annotation encoding="application/x-tex">\mathbb Q</annotation></semantics></math>-Cartier
+locus
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>U</mi><mi>B</mi><mi mathvariant="double-struck">ℚ</mi></msubsup><mo>=</mo><mo stretchy="false" form="prefix">{</mo><mi>x</mi><mo>∈</mo><mi>X</mi><mo>∣</mo><mi>m</mi><mi>B</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> is Cartier at </mtext><mspace width="0.333em"></mspace></mrow><mi>x</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> for some integer </mtext><mspace width="0.333em"></mspace></mrow><mi>m</mi><mo>≥</mo><mn>1</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">U_B^{\mathbb Q}
+ =\{x\in X\mid mB\text{ is Cartier at }x
+                 \text{ for some integer }m\ge1\}</annotation></semantics></math>
+is open. In particular, the
+non-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="double-struck">ℚ</mi><annotation encoding="application/x-tex">\mathbb Q</annotation></semantics></math>-Cartier
+locus of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>
+is closed.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> We have
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>U</mi><mi>B</mi><mi mathvariant="double-struck">ℚ</mi></msubsup><mo>=</mo><msub><mo>⋃</mo><mrow><mi>m</mi><mo>≥</mo><mn>1</mn></mrow></msub><msub><mi>U</mi><mrow><mi>m</mi><mi>B</mi></mrow></msub></mrow><annotation encoding="application/x-tex">U_B^{\mathbb Q}=\bigcup_{m\ge1}U_{mB}</annotation></semantics></math>,
+and each
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>U</mi><mrow><mi>m</mi><mi>B</mi></mrow></msub><annotation encoding="application/x-tex">U_{mB}</annotation></semantics></math>
+is open by Lemma <a href="#lem:cartier-locus">3</a>. ◻</p>
+</div>
+<div class="remark">
+<p><em>Remark 5</em> (Locally factorial and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="double-struck">ℚ</mi><annotation encoding="application/x-tex">\mathbb Q</annotation></semantics></math>-factorial
+loci). The analogous openness questions for local factoriality and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="double-struck">ℚ</mi><annotation encoding="application/x-tex">\mathbb Q</annotation></semantics></math>-factoriality
+concern all Weil divisors simultaneously. Their loci are the
+intersections of the Cartier loci, respectively the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="double-struck">ℚ</mi><annotation encoding="application/x-tex">\mathbb Q</annotation></semantics></math>-Cartier
+loci, of all Weil divisors. Since these intersections can be infinite,
+their openness does not follow formally from Lemma <a
+href="#lem:cartier-locus">3</a> and Corollary <a
+href="#cor:q-cartier-locus">4</a>.</p>
+<p>For a normal variety over an algebraically closed field, both loci
+are open, by Boissière–Gabber–Serman <a
+href="https://arxiv.org/abs/1104.1861">[BGS, Theorems 4.2 and 6.1]</a>;
+hence their complements are closed. Here a variety is an integral
+separated scheme of finite type over the ground field, and these results
+hold in arbitrary characteristic. The
+non-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="double-struck">ℚ</mi><annotation encoding="application/x-tex">\mathbb Q</annotation></semantics></math>-Cartier
+locus of a fixed divisor
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>
+is contained in the
+non-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="double-struck">ℚ</mi><annotation encoding="application/x-tex">\mathbb Q</annotation></semantics></math>-factorial
+locus, but can be strictly smaller: for instance,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">B=0</annotation></semantics></math>
+is Cartier everywhere.</p>
+</div>
+<h2 id="normality-of-the-divisorial-proj"><span class="header-section-number">2</span>Normality of the divisorial
+Proj</h2>
+<p>We use the isomorphism over the regular locus to prove that
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Z</mi><annotation encoding="application/x-tex">Z</annotation></semantics></math>
+is normal.</p>
+<div id="prop:normality" class="proposition">
+<p><strong>Proposition 6</strong>. <em>Let
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>
+be a normal integral variety and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>
+an integral Weil divisor such that
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">ℛ</mi><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo>,</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mo>⨁</mo><mrow><mi>m</mi><mo>≥</mo><mn>0</mn></mrow></msub><msub><mi mathvariant="script">𝒪</mi><mi>X</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>m</mi><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathcal R(X,B)=\bigoplus_{m\ge0}\mathcal O_X(mB)</annotation></semantics></math>
+is finitely generated. Set
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo>:</mo><mi>Z</mi><mo>=</mo><msub><mrow><mi mathvariant="normal">Proj</mi><mo>&#8289;</mo></mrow><mi>X</mi></msub><mi mathvariant="script">ℛ</mi><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo>,</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mo>→</mo><mi>X</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">f\colon Z=\mathop{\mathrm{Proj}}_X\mathcal R(X,B)\longrightarrow X.</annotation></semantics></math>
+Choose
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">r&gt;0</annotation></semantics></math>
+such that
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">ℛ</mi><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo>,</mo><mi>B</mi><msup><mo stretchy="false" form="postfix">)</mo><mrow><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mo stretchy="false" form="postfix">)</mo></mrow></msup></mrow><annotation encoding="application/x-tex">\mathcal R(X,B)^{(r)}</annotation></semantics></math>
+is generated in degree one, and let
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mo>:=</mo><msub><mi mathvariant="script">𝒪</mi><mrow><msub><mrow><mi mathvariant="normal">Proj</mi><mo>&#8289;</mo></mrow><mi>X</mi></msub><mi mathvariant="script">ℛ</mi><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo>,</mo><mi>B</mi><msup><mo stretchy="false" form="postfix">)</mo><mrow><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mo stretchy="false" form="postfix">)</mo></mrow></msup></mrow></msub><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">L:=\mathcal O_{\mathop{\mathrm{Proj}}_X\mathcal R(X,B)^{(r)}}(1)</annotation></semantics></math>
+be the tautological line bundle on
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Z</mi><mo>≃</mo><msub><mrow><mi mathvariant="normal">Proj</mi><mo>&#8289;</mo></mrow><mi>X</mi></msub><mi mathvariant="script">ℛ</mi><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo>,</mo><mi>B</mi><msup><mo stretchy="false" form="postfix">)</mo><mrow><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mo stretchy="false" form="postfix">)</mo></mrow></msup></mrow><annotation encoding="application/x-tex">Z\simeq\mathop{\mathrm{Proj}}_X\mathcal R(X,B)^{(r)}</annotation></semantics></math>.
+Then
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Z</mi><annotation encoding="application/x-tex">Z</annotation></semantics></math>
+is normal, and the canonical maps give isomorphisms
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="script">𝒪</mi><mi>X</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>m</mi><mi>r</mi><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mover><mo>→</mo><mrow><mspace width="0.222em"></mspace><mo>∼</mo><mspace width="0.222em"></mspace></mrow></mover><msub><mi>f</mi><mo>*</mo></msub><msup><mi>L</mi><mrow><mi>⊗</mi><mi>m</mi></mrow></msup><mspace width="2.0em"></mspace><mo stretchy="false" form="prefix">(</mo><mi>m</mi><mo>≥</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">\mathcal O_X(mrB)\xrightarrow{\ \sim\ }f_*L^{\otimes m}
+ \qquad(m\ge0).</annotation></semantics></math></em></p>
+</div>
+<p class="proof-overview">Compare the section algebras on the normalization and on the big regular open subset, then recover the varieties by relative Proj.</p><details class="proof-fold"><summary><span>Proof</span><span class="fold-icon" aria-hidden="true"></span></summary><div class="proof-content"><p>Let
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ν</mi><mo>:</mo><mi>W</mi><mo>→</mo><mi>Z</mi></mrow><annotation encoding="application/x-tex">\nu\colon W\to Z</annotation></semantics></math>
+be the normalization, and set
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo>=</mo><mi>f</mi><mo>∘</mo><mi>ν</mi><mo>:</mo><mi>W</mi><mo>→</mo><mi>X</mi><mo>,</mo><mspace width="2.0em"></mspace><msup><mi>L</mi><mo>′</mo></msup><mo>=</mo><msup><mi>ν</mi><mo>*</mo></msup><mi>L</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">g=f\circ\nu\colon W\to X,
+ \qquad L&#39;=\nu^*L.</annotation></semantics></math> Since
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Z</mi><annotation encoding="application/x-tex">Z</annotation></semantics></math>
+is a variety,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ν</mi><annotation encoding="application/x-tex">\nu</annotation></semantics></math>
+is finite <a href="https://stacks.math.columbia.edu/tag/0BXR">[SP,
+Tag 0BXR]</a>. Hence
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>g</mi><annotation encoding="application/x-tex">g</annotation></semantics></math>
+is proper, and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>L</mi><mo>′</mo></msup><annotation encoding="application/x-tex">L&#39;</annotation></semantics></math>
+is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>g</mi><annotation encoding="application/x-tex">g</annotation></semantics></math>-ample:
+over each affine open subset of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>,
+it is the pullback of an ample line bundle by a finite morphism.</p>
+<p>Let
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>U</mi><mo>=</mo><msub><mi>X</mi><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">g</mi></mrow></msub></mrow><annotation encoding="application/x-tex">U=X_{\mathrm{reg}}</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>j</mi><mo>:</mo><mi>U</mi><mo>↪</mo><mi>X</mi></mrow><annotation encoding="application/x-tex">j\colon U\hookrightarrow X</annotation></semantics></math>
+be the inclusion. Over an algebraically closed field,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>U</mi><annotation encoding="application/x-tex">U</annotation></semantics></math>
+is the smooth locus. Since
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>
+is normal,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mo>\</mo><mi>U</mi></mrow><annotation encoding="application/x-tex">X\setminus U</annotation></semantics></math>
+has codimension at least two. Every Weil divisor on
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>U</mi><annotation encoding="application/x-tex">U</annotation></semantics></math>
+is Cartier, so Proposition <a href="#prop:isomorphism-locus">2</a>
+identifies
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>U</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">f^{-1}(U)</annotation></semantics></math>
+with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>U</mi><annotation encoding="application/x-tex">U</annotation></semantics></math>.
+The normalization is also an isomorphism there. Under these
+identifications,
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><msub><mo stretchy="false" form="prefix">|</mo><mrow><msup><mi>f</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>U</mi><mo stretchy="false" form="postfix">)</mo></mrow></msub><mo>≃</mo><msub><mi mathvariant="script">𝒪</mi><mi>U</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mo>,</mo><mspace width="2.0em"></mspace><msup><mi>L</mi><mo>′</mo></msup><msub><mo stretchy="false" form="prefix">|</mo><mrow><msup><mi>g</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>U</mi><mo stretchy="false" form="postfix">)</mo></mrow></msub><mo>≃</mo><msub><mi mathvariant="script">𝒪</mi><mi>U</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">L|_{f^{-1}(U)}\simeq\mathcal O_U(rB),
+ \qquad
+ L&#39;|_{g^{-1}(U)}\simeq\mathcal O_U(rB).</annotation></semantics></math></p>
+<p>Fix
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>≥</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">m\ge0</annotation></semantics></math>.
+Restriction to the dense open subset
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>g</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>U</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">g^{-1}(U)</annotation></semantics></math>
+gives an injection
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>g</mi><mo>*</mo></msub><mo stretchy="false" form="prefix">(</mo><msup><mi>L</mi><mo>′</mo></msup><msup><mo stretchy="false" form="postfix">)</mo><mrow><mi>⊗</mi><mi>m</mi></mrow></msup><mo>↪</mo><msub><mi>j</mi><mo>*</mo></msub><msub><mi mathvariant="script">𝒪</mi><mi>U</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>m</mi><mi>r</mi><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi mathvariant="script">𝒪</mi><mi>X</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>m</mi><mi>r</mi><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">g_*(L&#39;)^{\otimes m}
+ \hookrightarrow j_*\mathcal O_U(mrB)
+ =\mathcal O_X(mrB).</annotation></semantics></math> The injection holds
+because
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>W</mi><annotation encoding="application/x-tex">W</annotation></semantics></math>
+is integral and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><msup><mi>L</mi><mo>′</mo></msup><msup><mo stretchy="false" form="postfix">)</mo><mrow><mi>⊗</mi><mi>m</mi></mrow></msup></mrow><annotation encoding="application/x-tex">(L&#39;)^{\otimes m}</annotation></semantics></math>
+is invertible; the last equality follows from reflexivity of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="script">𝒪</mi><mi>X</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>m</mi><mi>r</mi><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O_X(mrB)</annotation></semantics></math>
+and the codimension of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mo>\</mo><mi>U</mi></mrow><annotation encoding="application/x-tex">X\setminus U</annotation></semantics></math>.
+In the other direction, the defining graded algebra and pullback by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ν</mi><annotation encoding="application/x-tex">\nu</annotation></semantics></math>
+give natural maps
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="script">𝒪</mi><mi>X</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>m</mi><mi>r</mi><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mo>→</mo><msub><mi>f</mi><mo>*</mo></msub><msup><mi>L</mi><mrow><mi>⊗</mi><mi>m</mi></mrow></msup><mo>→</mo><msub><mi>g</mi><mo>*</mo></msub><mo stretchy="false" form="prefix">(</mo><msup><mi>L</mi><mo>′</mo></msup><msup><mo stretchy="false" form="postfix">)</mo><mrow><mi>⊗</mi><mi>m</mi></mrow></msup><mi>.</mi></mrow><annotation encoding="application/x-tex">\mathcal O_X(mrB)\longrightarrow f_*L^{\otimes m}
+ \longrightarrow g_*(L&#39;)^{\otimes m}.</annotation></semantics></math>
+The second map is injective because
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ν</mi><annotation encoding="application/x-tex">\nu</annotation></semantics></math>
+is birational and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Z</mi><annotation encoding="application/x-tex">Z</annotation></semantics></math>
+is integral. The composite of these maps with the preceding injection
+into
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="script">𝒪</mi><mi>X</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>m</mi><mi>r</mi><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O_X(mrB)</annotation></semantics></math>
+is the identity: each section restricts to the same rational function on
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>U</mi><annotation encoding="application/x-tex">U</annotation></semantics></math>.
+It follows that all the maps are isomorphisms. In particular,
+<span id="eq:normalization-section-algebra"></span><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mo>⨁</mo><mrow><mi>m</mi><mo>≥</mo><mn>0</mn></mrow></msub><msub><mi>g</mi><mo>*</mo></msub><mo stretchy="false" form="prefix">(</mo><msup><mi>L</mi><mo>′</mo></msup><msup><mo stretchy="false" form="postfix">)</mo><mrow><mi>⊗</mi><mi>m</mi></mrow></msup><mo>≃</mo><msub><mo>⨁</mo><mrow><mi>m</mi><mo>≥</mo><mn>0</mn></mrow></msub><msub><mi mathvariant="script">𝒪</mi><mi>X</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>m</mi><mi>r</mi><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msup><mi mathvariant="script">ℛ</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mo stretchy="false" form="postfix">)</mo></mrow></msup></mrow><annotation encoding="application/x-tex">
+
+ \bigoplus_{m\ge0}g_*(L&#39;)^{\otimes m}
+ \simeq\bigoplus_{m\ge0}\mathcal O_X(mrB)
+ =\mathcal R^{(r)}
+\tag{1}</annotation></semantics></math> as graded
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi mathvariant="script">𝒪</mi><mi>X</mi></msub><annotation encoding="application/x-tex">\mathcal O_X</annotation></semantics></math>-algebras;
+the identifications respect multiplication because they are induced by
+restriction to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>U</mi><annotation encoding="application/x-tex">U</annotation></semantics></math>.</p>
+<p>A proper morphism equipped with a relatively ample line bundle is
+recovered as the relative Proj of its section algebra <a
+href="https://stacks.math.columbia.edu/tag/0C6J">[SP, Tag 0C6J]</a>.
+Applying this to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>g</mi><mo>,</mo><msup><mi>L</mi><mo>′</mo></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(g,L&#39;)</annotation></semantics></math>
+and using <a href="#eq:normalization-section-algebra">(1)</a>, we obtain
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>W</mi><mover><mo>→</mo><mrow><mspace width="0.222em"></mspace><mo>∼</mo><mspace width="0.222em"></mspace></mrow></mover><msub><mrow><mi mathvariant="normal">Proj</mi><mo>&#8289;</mo></mrow><mi>X</mi></msub><msub><mo>⨁</mo><mrow><mi>m</mi><mo>≥</mo><mn>0</mn></mrow></msub><msub><mi>g</mi><mo>*</mo></msub><mo stretchy="false" form="prefix">(</mo><msup><mi>L</mi><mo>′</mo></msup><msup><mo stretchy="false" form="postfix">)</mo><mrow><mi>⊗</mi><mi>m</mi></mrow></msup><mo>≃</mo><msub><mrow><mi mathvariant="normal">Proj</mi><mo>&#8289;</mo></mrow><mi>X</mi></msub><msup><mi mathvariant="script">ℛ</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mo stretchy="false" form="postfix">)</mo></mrow></msup><mo>=</mo><mi>Z</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">W\xrightarrow{\ \sim\ }
+ \mathop{\mathrm{Proj}}_X\bigoplus_{m\ge0}g_*(L&#39;)^{\otimes m}
+ \simeq\mathop{\mathrm{Proj}}_X\mathcal R^{(r)}=Z.</annotation></semantics></math>
+The resulting morphism
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>W</mi><mo>→</mo><mi>Z</mi></mrow><annotation encoding="application/x-tex">W\to Z</annotation></semantics></math>
+is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ν</mi><annotation encoding="application/x-tex">\nu</annotation></semantics></math>,
+since it is induced by the pullbacks of the defining homogeneous
+sections. Thus
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ν</mi><annotation encoding="application/x-tex">\nu</annotation></semantics></math>
+is an isomorphism and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Z</mi><annotation encoding="application/x-tex">Z</annotation></semantics></math>
+is normal. The asserted direct-image identities were established by the
+same comparison. ◻</p>
+</div></details>
+<h2 id="smallness"><span class="header-section-number">3</span>Smallness</h2>
+<p>To prepare for the proof of smallness, we express
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>
+locally as a blowup.</p>
+<p>On an affine open subset
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo>⊆</mo><mi>X</mi></mrow><annotation encoding="application/x-tex">V\subseteq X</annotation></semantics></math>,
+choose an effective Cartier divisor
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math>
+such that
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>J</mi><mo>:=</mo><msub><mi mathvariant="script">𝒪</mi><mi>V</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mi>B</mi><mo>−</mo><mi>H</mi><mo stretchy="false" form="postfix">)</mo><mo>⊆</mo><msub><mi mathvariant="script">𝒪</mi><mi>V</mi></msub></mrow><annotation encoding="application/x-tex">J:=\mathcal O_V(rB-H)\subseteq\mathcal O_V</annotation></semantics></math>
+is an ideal sheaf. Since
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi mathvariant="script">ℛ</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mo stretchy="false" form="postfix">)</mo></mrow></msup><annotation encoding="application/x-tex">\mathcal R^{(r)}</annotation></semantics></math>
+is generated in degree one,
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="script">𝒪</mi><mi>V</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mi>B</mi><msup><mo stretchy="false" form="postfix">)</mo><mi>m</mi></msup><mo>=</mo><msub><mi mathvariant="script">𝒪</mi><mi>V</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>m</mi><mi>r</mi><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mspace width="2.0em"></mspace><mo stretchy="false" form="prefix">(</mo><mi>m</mi><mo>≥</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">\mathcal O_V(rB)^m=\mathcal O_V(mrB)\qquad(m\ge0).</annotation></semantics></math>
+Hence
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>J</mi><mi>m</mi></msup><mo>=</mo><msub><mi mathvariant="script">𝒪</mi><mi>V</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mi>B</mi><msup><mo stretchy="false" form="postfix">)</mo><mi>m</mi></msup><mo>⊗</mo><msub><mi mathvariant="script">𝒪</mi><mi>V</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>−</mi><mi>m</mi><mi>H</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi mathvariant="script">𝒪</mi><mi>V</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>m</mi><mi>r</mi><mi>B</mi><mo>−</mo><mi>m</mi><mi>H</mi><mo stretchy="false" form="postfix">)</mo><mo>,</mo></mrow><annotation encoding="application/x-tex">J^m=\mathcal O_V(rB)^m\otimes\mathcal O_V(-mH)
+     =\mathcal O_V(mrB-mH),</annotation></semantics></math> and
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mo>⨁</mo><mrow><mi>m</mi><mo>≥</mo><mn>0</mn></mrow></msub><msup><mi>J</mi><mi>m</mi></msup><mo>=</mo><msub><mo>⨁</mo><mrow><mi>m</mi><mo>≥</mo><mn>0</mn></mrow></msub><msub><mi mathvariant="script">𝒪</mi><mi>V</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>m</mi><mi>r</mi><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mo>⊗</mo><msub><mi mathvariant="script">𝒪</mi><mi>V</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>−</mi><mi>H</mi><msup><mo stretchy="false" form="postfix">)</mo><mrow><mi>⊗</mi><mi>m</mi></mrow></msup><mi>.</mi></mrow><annotation encoding="application/x-tex">\bigoplus_{m\ge0}J^m
+ =\bigoplus_{m\ge0}\mathcal O_V(mrB)\otimes\mathcal O_V(-H)^{\otimes m}.</annotation></semantics></math>
+Twisting by a line bundle does not change relative Proj <a
+href="https://stacks.math.columbia.edu/tag/02NC">[SP, Tag 02NC]</a>, so
+<span id="eq:blowup-presentation"></span><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow><mi mathvariant="normal">Bl</mi><mo>&#8289;</mo></mrow><mi>J</mi></msub><mi>V</mi><mo>=</mo><msub><mrow><mi mathvariant="normal">Proj</mi><mo>&#8289;</mo></mrow><mi>V</mi></msub><msub><mo>⨁</mo><mrow><mi>m</mi><mo>≥</mo><mn>0</mn></mrow></msub><msup><mi>J</mi><mi>m</mi></msup><mo>≃</mo><msub><mrow><mi mathvariant="normal">Proj</mi><mo>&#8289;</mo></mrow><mi>V</mi></msub><mo stretchy="false" form="prefix">(</mo><msup><mi mathvariant="script">ℛ</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mo stretchy="false" form="postfix">)</mo></mrow></msup><msub><mo stretchy="false" form="prefix">|</mo><mi>V</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>≃</mo><msup><mi>f</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>V</mi><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">
+
+ \operatorname{Bl}_J V
+ =\mathop{\mathrm{Proj}}_V\bigoplus_{m\ge0}J^m
+ \simeq\mathop{\mathrm{Proj}}_V(\mathcal R^{(r)}|_V)
+ \simeq f^{-1}(V).
+\tag{2}</annotation></semantics></math> By Proposition <a
+href="#prop:isomorphism-locus">2</a>, its non-isomorphism locus is the
+non-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="double-struck">ℚ</mi><annotation encoding="application/x-tex">\mathbb Q</annotation></semantics></math>-Cartier
+locus of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi><msub><mo stretchy="false" form="prefix">|</mo><mi>V</mi></msub></mrow><annotation encoding="application/x-tex">B|_V</annotation></semantics></math>.</p>
+<div id="prop:smallness" class="proposition">
+<p><strong>Proposition 7</strong>. <em>The morphism
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>
+is small. If
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>B</mi><mi>Z</mi></msub><annotation encoding="application/x-tex">B_Z</annotation></semantics></math>
+denotes the strict transform of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>,
+then
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mo>≃</mo><msub><mi mathvariant="script">𝒪</mi><mi>Z</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>r</mi><msub><mi>B</mi><mi>Z</mi></msub><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">L\simeq\mathcal O_Z(rB_Z).</annotation></semantics></math>
+In particular,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>B</mi><mi>Z</mi></msub><annotation encoding="application/x-tex">B_Z</annotation></semantics></math>
+is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="double-struck">ℚ</mi><annotation encoding="application/x-tex">\mathbb Q</annotation></semantics></math>-Cartier
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>-ample.</em></p>
+</div>
+<p class="proof-overview">Use the blowup presentation to rule out a contracted prime divisor, then identify the tautological line bundle with the strict transform.</p><details class="proof-fold"><summary><span>Proof</span><span class="fold-icon" aria-hidden="true"></span></summary><div class="proof-content"><p>Smallness is local on
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>,
+so work over an affine open subset and use the blowup presentation
+above. Set
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi><mo>=</mo><mi>H</mi><mo>−</mo><mi>r</mi><mi>B</mi><mo>≥</mo><mn>0</mn><mo>,</mo><mspace width="2.0em"></mspace><mi>J</mi><mo>=</mo><msub><mi mathvariant="script">𝒪</mi><mi>X</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>−</mi><mi>D</mi><mo stretchy="false" form="postfix">)</mo><mo>,</mo></mrow><annotation encoding="application/x-tex">D=H-rB\ge0,\qquad J=\mathcal O_X(-D),</annotation></semantics></math>
+and define the effective Cartier divisor
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>F</mi><annotation encoding="application/x-tex">F</annotation></semantics></math>
+by
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>J</mi><msub><mi mathvariant="script">𝒪</mi><mi>Z</mi></msub><mo>=</mo><msub><mi mathvariant="script">𝒪</mi><mi>Z</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>−</mi><mi>F</mi><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">J\mathcal O_Z=\mathcal O_Z(-F).</annotation></semantics></math>
+Then
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>J</mi><mi>m</mi></msup><mo>=</mo><msub><mi mathvariant="script">𝒪</mi><mi>X</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>−</mi><mi>m</mi><mi>D</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">J^m=\mathcal O_X(-mD)</annotation></semantics></math>
+for all
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>≥</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">m\ge0</annotation></semantics></math>,
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="script">𝒪</mi><mi>Z</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>−</mi><mi>F</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O_Z(-F)</annotation></semantics></math>
+is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>-ample.
+On the big open set
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>U</mi><mo>=</mo><msub><mi>X</mi><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">g</mi></mrow></msub></mrow><annotation encoding="application/x-tex">U=X_{\mathrm{reg}}</annotation></semantics></math>,
+the morphism
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>
+is an isomorphism and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>F</mi><annotation encoding="application/x-tex">F</annotation></semantics></math>
+agrees with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>D</mi><annotation encoding="application/x-tex">D</annotation></semantics></math>.
+Thus
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>f</mi><mo>*</mo></msub><mi>F</mi><mo stretchy="false" form="postfix">)</mo><msub><mo stretchy="false" form="prefix">|</mo><mi>U</mi></msub><mo>=</mo><mi>D</mi><msub><mo stretchy="false" form="prefix">|</mo><mi>U</mi></msub></mrow><annotation encoding="application/x-tex">(f_*F)|_U=D|_U</annotation></semantics></math>,
+and hence
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mo>*</mo></msub><mi>F</mi><mo>=</mo><mi>D</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">f_*F=D.</annotation></semantics></math></p>
+<p>Suppose that
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>
+contracts a prime divisor
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>E</mi><annotation encoding="application/x-tex">E</annotation></semantics></math>.
+Since
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Z</mi><annotation encoding="application/x-tex">Z</annotation></semantics></math>
+is normal and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="script">𝒪</mi><mi>Z</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>−</mi><mi>F</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O_Z(-F)</annotation></semantics></math>
+is ample over the affine base,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="script">𝒪</mi><mi>Z</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>−</mi><mi>m</mi><mi>F</mi><mo>+</mo><mi>E</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O_Z(-mF+E)</annotation></semantics></math>
+is globally generated for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>≫</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">m\gg0</annotation></semantics></math> <a
+href="https://stacks.math.columbia.edu/tag/01Q3">[SP, Tag 01Q3]</a>.
+Choose a section that does not vanish at
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>η</mi><mi>E</mi></msub><annotation encoding="application/x-tex">\eta_E</annotation></semantics></math>
+and represent it by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>φ</mi><mo>∈</mo><mi>K</mi><mo stretchy="false" form="prefix">(</mo><mi>X</mi><msup><mo stretchy="false" form="postfix">)</mo><mo>*</mo></msup></mrow><annotation encoding="application/x-tex">\varphi\in K(X)^*</annotation></semantics></math>.
+Then
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mo>:=</mo><msub><mrow><mi mathvariant="normal">div</mi><mo>&#8289;</mo></mrow><mi>Z</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>φ</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mi>m</mi><mi>F</mi><mo>+</mo><mi>E</mi><mo>≥</mo><mn>0</mn><mo>,</mo><mspace width="2.0em"></mspace><msub><mrow><mi mathvariant="normal">coeff</mi><mo>&#8289;</mo></mrow><mi>E</mi></msub><mi>C</mi><mo>=</mo><mn>0</mn><mi>.</mi></mrow><annotation encoding="application/x-tex">C:=\operatorname{div}_Z(\varphi)-mF+E\ge0,
+ \qquad \operatorname{coeff}_E C=0.</annotation></semantics></math>
+Consequently,
+<span id="eq:smallness-negative-coefficient"></span><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow><mi mathvariant="normal">coeff</mi><mo>&#8289;</mo></mrow><mi>E</mi></msub><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">(</mo><msub><mrow><mi mathvariant="normal">div</mi><mo>&#8289;</mo></mrow><mi>Z</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>φ</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mi>m</mi><mi>F</mi><mo minsize="120%" maxsize="120%" stretchy="true" form="postfix">)</mo><mo>=</mo><mi>−</mi><mn>1</mn><mi>.</mi></mrow><annotation encoding="application/x-tex">
+
+ \operatorname{coeff}_E\bigl(\operatorname{div}_Z(\varphi)-mF\bigr)=-1.
+\tag{3}</annotation></semantics></math> Pushing
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math>
+down to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>
+and using
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mo>*</mo></msub><mi>E</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">f_*E=0</annotation></semantics></math>
+gives
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow><mi mathvariant="normal">div</mi><mo>&#8289;</mo></mrow><mi>X</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>φ</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mi>m</mi><mi>D</mi><mo>=</mo><msub><mi>f</mi><mo>*</mo></msub><mi>C</mi><mo>≥</mo><mn>0</mn><mi>.</mi></mrow><annotation encoding="application/x-tex">\operatorname{div}_X(\varphi)-mD=f_*C\ge0.</annotation></semantics></math>
+Therefore
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>φ</mi><mo>∈</mo><msup><mi>H</mi><mn>0</mn></msup><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo>,</mo><msub><mi mathvariant="script">𝒪</mi><mi>X</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>−</mi><mi>m</mi><mi>D</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msup><mi>H</mi><mn>0</mn></msup><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mo>,</mo><msup><mi>J</mi><mi>m</mi></msup><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">\varphi\in H^0(X,\mathcal O_X(-mD))=H^0(X,J^m).</annotation></semantics></math>
+Since
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>J</mi><mi>m</mi></msup><msub><mi mathvariant="script">𝒪</mi><mi>Z</mi></msub><mo>=</mo><msub><mi mathvariant="script">𝒪</mi><mi>Z</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>−</mi><mi>m</mi><mi>F</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">J^m\mathcal O_Z=\mathcal O_Z(-mF)</annotation></semantics></math>,
+it follows that
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow><mi mathvariant="normal">div</mi><mo>&#8289;</mo></mrow><mi>Z</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>φ</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mi>m</mi><mi>F</mi><mo>≥</mo><mn>0</mn><mo>,</mo></mrow><annotation encoding="application/x-tex">\operatorname{div}_Z(\varphi)-mF\ge0,</annotation></semantics></math>
+contradicting <a href="#eq:smallness-negative-coefficient">(3)</a>. Thus
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>
+is small.</p>
+<p>It follows that
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mo>=</mo><msub><mi>D</mi><mi>Z</mi></msub></mrow><annotation encoding="application/x-tex">F=D_Z</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mo>*</mo></msup><mi>H</mi><mo>=</mo><msub><mi>H</mi><mi>Z</mi></msub></mrow><annotation encoding="application/x-tex">f^*H=H_Z</annotation></semantics></math>,
+where subscripts denote strict transforms. The formula for the
+tautological line bundle under twisting now gives
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mo>≃</mo><msub><mi mathvariant="script">𝒪</mi><mi>Z</mi></msub><mo stretchy="false" form="prefix">(</mo><msup><mi>f</mi><mo>*</mo></msup><mi>H</mi><mo>−</mo><mi>F</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi mathvariant="script">𝒪</mi><mi>Z</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>H</mi><mi>Z</mi></msub><mo>−</mo><msub><mi>D</mi><mi>Z</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi mathvariant="script">𝒪</mi><mi>Z</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>r</mi><msub><mi>B</mi><mi>Z</mi></msub><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">L\simeq\mathcal O_Z(f^*H-F)
+ =\mathcal O_Z(H_Z-D_Z)
+ =\mathcal O_Z(rB_Z).</annotation></semantics></math> These local
+identifications are induced by the rational realizations of the sheaves
+and hence glue. Since
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>L</mi><annotation encoding="application/x-tex">L</annotation></semantics></math>
+is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>-ample,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>B</mi><mi>Z</mi></msub><annotation encoding="application/x-tex">B_Z</annotation></semantics></math>
+is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="double-struck">ℚ</mi><annotation encoding="application/x-tex">\mathbb Q</annotation></semantics></math>-Cartier
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>-ample. ◻</p>
+</div></details>
+<div class="thebibliography">
+<p><strong>[SP]</strong> The Stacks Project Authors, <em>The Stacks
+Project</em>, <a
+href="https://stacks.math.columbia.edu/tag/0EGH">Lemma 10.56.2</a> and
+Tags <a href="https://stacks.math.columbia.edu/tag/0B5J">0B5J</a>, <a
+href="https://stacks.math.columbia.edu/tag/02NC">02NC</a>, <a
+href="https://stacks.math.columbia.edu/tag/01OF">01OF</a>, <a
+href="https://stacks.math.columbia.edu/tag/01Q3">01Q3</a>, <a
+href="https://stacks.math.columbia.edu/tag/0D4I">0D4I</a>, <a
+href="https://stacks.math.columbia.edu/tag/02LS">02LS</a>, <a
+href="https://stacks.math.columbia.edu/tag/0AB1">0AB1</a>, <a
+href="https://stacks.math.columbia.edu/tag/0BXR">0BXR</a>, <a
+href="https://stacks.math.columbia.edu/tag/0C6J">0C6J</a>.</p>
+<p><strong>[BGS]</strong> S. Boissière, O. Gabber, and O. Serman, <em>Sur le produit de
+variétés localement factorielles ou
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="double-struck">ℚ</mi><annotation encoding="application/x-tex">\mathbb Q</annotation></semantics></math>-factorielles</em>,
+<a href="https://arxiv.org/abs/1104.1861">arXiv:1104.1861</a>, version 4
+(2019).</p>
+</div>
+</main><aside class="notetoc"><p class="side-label">Contents</p><ul><li><a href="#the-twisting-sheaf-on-proj">0. The twisting sheaf on Proj</a></li><li><a href="#the-isomorphism-locus">1. The isomorphism locus</a></li><li><a href="#normality-of-the-divisorial-proj">2. Normality of the divisorial
+Proj</a></li><li><a href="#smallness">3. Smallness</a></li></ul></aside></div>
+<canvas id="fx" style="position:fixed;inset:0;pointer-events:none;z-index:9998"></canvas>
+<div id="fx-flash" style="position:fixed;inset:0;pointer-events:none;z-index:9997;opacity:0;
+  background:radial-gradient(circle at 50% 42%, rgba(255,246,214,.95) 0%, rgba(255,214,140,.45) 22%,
+  rgba(255,255,255,0) 62%);transition:opacity .5s ease-out"></div>
+<script>
+(function () {
+  var btn = document.getElementById("egg");
+  var cv = document.getElementById("fx");
+  var flash = document.getElementById("fx-flash");
+  if (!btn || !cv) return;
+
+  // 手机/触屏：粒子减半、光晕减一层、不再抖页面
+  var small = window.matchMedia("(max-width: 760px)").matches ||
+              ("ontouchstart" in window && window.innerWidth < 900);
+  var calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var DPR = Math.min(window.devicePixelRatio || 1, 2);
+  var ctx = cv.getContext("2d");
+
+  function size() {
+    cv.width = window.innerWidth * DPR;
+    cv.height = window.innerHeight * DPR;
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  }
+  size();
+  window.addEventListener("resize", size);
+  window.addEventListener("orientationchange", function () { setTimeout(size, 250); });
+
+  var PALETTE = [
+    ["#e0245e", "#ff8fb1"], ["#f4b400", "#ffe98a"], ["#1b6ca8", "#8ec9f0"],
+    ["#7b2ff7", "#cfaeff"], ["#0f9d58", "#9be7bd"], ["#ff6d00", "#ffc48a"]
+  ];
+  var parts = [], rings = [], running = false;
+  var MAX_PARTS = small ? 700 : 2200;
+
+  function burst(x, y, count, power) {
+    if (parts.length > MAX_PARTS) return;
+    var pair = PALETTE[(Math.random() * PALETTE.length) | 0];
+    for (var i = 0; i < count; i++) {
+      var a = (Math.PI * 2 * i) / count + Math.random() * 0.14;
+      var sp = power * (0.3 + Math.random());
+      parts.push({
+        x: x, y: y, px: x, py: y,
+        vx: Math.cos(a) * sp,
+        vy: Math.sin(a) * sp,
+        life: 1,
+        decay: 0.004 + Math.random() * 0.005,
+        c: pair[(Math.random() < 0.75) ? 0 : 1],
+        r: (small ? 1.8 : 2.2) + Math.random() * (small ? 2.2 : 3.2)
+      });
+    }
+    rings.push({ x: x, y: y, r: 8, life: 1, c: pair[0] });
+    if (!small) rings.push({ x: x, y: y, r: 2, life: 1, c: pair[1] });
+  }
+
+  function tick() {
+    var W = window.innerWidth, H = window.innerHeight;
+    ctx.clearRect(0, 0, W, H);
+
+    for (var i = parts.length - 1; i >= 0; i--) {
+      var p = parts[i];
+      p.px = p.x; p.py = p.y;
+      p.x += p.vx; p.y += p.vy;
+      p.vy += 0.05;
+      p.vx *= 0.985;
+      p.vy *= 0.985;
+      p.life -= p.decay;
+      if (p.life <= 0) { parts.splice(i, 1); continue; }
+
+      var alpha = Math.max(p.life, 0);
+
+      if (!small) {
+        ctx.globalAlpha = alpha * 0.18;
+        ctx.strokeStyle = p.c;
+        ctx.lineWidth = p.r * 4.5;
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        ctx.moveTo(p.px, p.py);
+        ctx.lineTo(p.x, p.y);
+        ctx.stroke();
+      }
+
+      ctx.globalAlpha = alpha;
+      ctx.lineWidth = p.r * (small ? 1.1 : 0.5 + 0.5 * alpha);
+      ctx.beginPath();
+      ctx.moveTo(p.px, p.py);
+      ctx.lineTo(p.x, p.y);
+      ctx.stroke();
+    }
+
+    for (var j = rings.length - 1; j >= 0; j--) {
+      var g = rings[j];
+      g.r += small ? 12 : 16;
+      g.life -= 0.045;
+      if (g.life <= 0) { rings.splice(j, 1); continue; }
+      ctx.globalAlpha = g.life * 0.55;
+      ctx.strokeStyle = g.c;
+      ctx.lineWidth = 4 * g.life + 1;
+      ctx.beginPath();
+      ctx.arc(g.x, g.y, g.r, 0, 6.284);
+      ctx.stroke();
+    }
+
+    ctx.globalAlpha = 1;
+    if (parts.length || rings.length) {
+      requestAnimationFrame(tick);
+    } else {
+      running = false;
+      ctx.clearRect(0, 0, W, H);
+    }
+  }
+
+  function shake(px) {
+    if (calm || !document.body.animate) return;
+    document.body.animate(
+      [{ transform: "translate(0,0)" }, { transform: "translate(" + (-px) + "px," + (px * 0.7) + "px)" },
+       { transform: "translate(" + (px * 0.85) + "px," + (-px * 0.55) + "px)" },
+       { transform: "translate(" + (-px * 0.4) + "px," + (px * 0.3) + "px)" },
+       { transform: "translate(0,0)" }],
+      { duration: 340, easing: "ease-out" }
+    );
+  }
+
+  function show() {
+    var cx = window.innerWidth / 2;
+    var cy = window.innerHeight * (small ? 0.34 : 0.4);
+    var k = small ? 0.55 : 1;
+
+    flash.style.opacity = calm ? "0" : "1";
+    setTimeout(function () { flash.style.opacity = "0"; }, 90);
+    if (!calm) shake(small ? 3 : 7);
+
+    burst(cx, cy, Math.round(320 * k), (small ? 11 : 15));
+    setTimeout(function () { burst(cx - 170 * k, cy + 60 * k, Math.round(200 * k), (small ? 8 : 11)); }, 170);
+    setTimeout(function () { burst(cx + 180 * k, cy - 40 * k, Math.round(200 * k), (small ? 8 : 11)); }, 330);
+    setTimeout(function () { burst(cx, cy + 150 * k, Math.round(160 * k), (small ? 7 : 9)); }, 500);
+
+    if (!running) { running = true; requestAnimationFrame(tick); }
+  }
+
+  btn.style.touchAction = "manipulation";
+  btn.addEventListener("click", function (e) { e.preventDefault(); show(); });
+
+  var keys = "";
+  window.addEventListener("keydown", function (e) {
+    keys = (keys + e.key.toLowerCase()).slice(-3);
+    if (keys === "www") show();
+  });
+})();
+</script>
+
+<script src="../assets/katex/katex.min.js" defer></script><script src="../assets/js/math-katex.js" defer></script><script src="../assets/js/back-to-top.js" defer></script><button class="back-to-top" type="button" title="Back to top" aria-label="Back to top" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m6 13 6-6 6 6M12 7v13"/></svg><span>TOP</span></button></body></html>
