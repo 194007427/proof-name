@@ -13,6 +13,7 @@
 \setlength{\parskip}{0.2em}
 \newtheorem{lemma}{Lemma}
 \newtheorem{proposition}[lemma]{Proposition}
+\newtheorem{theorem}[lemma]{Theorem}
 \newtheorem{corollary}[lemma]{Corollary}
 \theoremstyle{definition}
 \newtheorem{remark}[lemma]{Remark}
@@ -110,7 +111,6 @@ Thus $\OO_P(1)$ is the zero sheaf on the nonempty scheme $P$, and is not inverti
 
 \section{The isomorphism locus}
 
-\begin{proposition}\label{prop:isomorphism-locus}
 Let $X$ be a normal integral variety and $B$ an integral Weil divisor on $X$. Assume that $\RR=\RR(X,B)=\bigoplus_{m\ge0}\OO_X(mB)$ is finitely generated, and let
 \[
  f\colon Z=\Proj_X\RR\longrightarrow X.
@@ -123,13 +123,16 @@ is generated in degree one. Identifying $Z$ with $\Proj_X\RR^{(r)}$, Lemma~\ref{
 \[
  L:=\OO_{\Proj_X\RR^{(r)}}(1)
 \]
-is a line bundle on $Z$. For every point $x\in X$, the following conditions are equivalent:
+is a line bundle on $Z$.
+
+\begin{theorem}\label{prop:isomorphism-locus}
+For every point $x\in X$, the following conditions are equivalent:
 \begin{enumerate}
  \item $B$ is $\mathbb Q$-Cartier at $x$;
  \item there is an open neighborhood $V$ of $x$ such that $f^{-1}(V)\to V$ is an isomorphism;
  \item the fiber $f^{-1}(x)$ has dimension zero.
 \end{enumerate}
-\end{proposition}
+\end{theorem}
 
 \begin{proof}
 \textup{(1)}$\Rightarrow$\textup{(2)}. Choose a neighborhood $V$ of $x$ and $q>0$ such that $qB|_V$ is Cartier. Then
@@ -150,7 +153,7 @@ In particular, if
  \operatorname{Iso}_X(f)
  :=\{x\in X\mid f\text{ is an isomorphism over a neighborhood of }x\},
 \]
-then Proposition~\ref{prop:isomorphism-locus} identifies this set with the $\mathbb Q$-Cartier locus of $B$. Its complement is
+then Theorem~\ref{prop:isomorphism-locus} identifies this set with the $\mathbb Q$-Cartier locus of $B$. Its complement is
 \[
  \begin{aligned}
  X\setminus\operatorname{Iso}_X(f)
@@ -158,9 +161,9 @@ then Proposition~\ref{prop:isomorphism-locus} identifies this set with the $\mat
  &=\{x\in X\mid\dim f^{-1}(x)\ge1\}.
  \end{aligned}
 \]
-Since $\operatorname{Iso}_X(f)$ is open by definition, Proposition~\ref{prop:isomorphism-locus} also shows that the non-$\mathbb Q$-Cartier locus of $B$ is closed.
+Since $\operatorname{Iso}_X(f)$ is open by definition, Theorem~\ref{prop:isomorphism-locus} also shows that the non-$\mathbb Q$-Cartier locus of $B$ is closed.
 
-We give a direct proof of this closedness, independent of Proposition~\ref{prop:isomorphism-locus} and of finite generation. Write
+We give a direct proof of this closedness, independent of Theorem~\ref{prop:isomorphism-locus} and of finite generation. Write
 \[
  U_B=\{x\in X\mid B\text{ is Cartier at }x\}.
 \]
@@ -234,7 +237,7 @@ Let $\nu\colon W\to Z$ be the normalization, and set
 \]
 Since $Z$ is a variety, $\nu$ is finite~\href{https://stacks.math.columbia.edu/tag/0BXR}{[SP, Tag~0BXR]}. Hence $g$ is proper, and $L'$ is $g$-ample: over each affine open subset of $X$, it is the pullback of an ample line bundle by a finite morphism.
 
-Let $U=X_{\mathrm{reg}}$ and $j\colon U\hookrightarrow X$ be the inclusion. Over an algebraically closed field, $U$ is the smooth locus. Since $X$ is normal, $X\setminus U$ has codimension at least two. Every Weil divisor on $U$ is Cartier, so Proposition~\ref{prop:isomorphism-locus} identifies $f^{-1}(U)$ with $U$. The normalization is also an isomorphism there. Under these identifications,
+Let $U=X_{\mathrm{reg}}$ and $j\colon U\hookrightarrow X$ be the inclusion. Over an algebraically closed field, $U$ is the smooth locus. Since $X$ is normal, $X\setminus U$ has codimension at least two. Every Weil divisor on $U$ is Cartier, so Theorem~\ref{prop:isomorphism-locus} identifies $f^{-1}(U)$ with $U$. The normalization is also an isomorphism there. Under these identifications,
 \[
  L|_{f^{-1}(U)}\simeq\OO_U(rB),
  \qquad
@@ -299,7 +302,7 @@ Twisting by a line bundle does not change relative Proj~\href{https://stacks.mat
  \simeq\Proj_V(\RR^{(r)}|_V)
  \simeq f^{-1}(V).
 \end{equation}
-By Proposition~\ref{prop:isomorphism-locus}, its non-isomorphism locus is the non-$\mathbb Q$-Cartier locus of $B|_V$.
+By Theorem~\ref{prop:isomorphism-locus}, its non-isomorphism locus is the non-$\mathbb Q$-Cartier locus of $B|_V$.
 
 \Needspace{10\baselineskip}
 \begin{proposition}\label{prop:smallness}
