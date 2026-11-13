@@ -113,27 +113,35 @@ color:var(--muted);text-decoration:none}
 @media(max-width:760px){.pdf-view{height:65vh}}
 @media(max-width:640px){.topnav{padding:.9rem 1.2rem}.topnav nav{gap:.9rem;font-size:.68rem}
 .hero{padding:3.4rem 0 2.4rem}.row .meta{display:none}}
-</style><link rel="stylesheet" href="../assets/katex/katex.min.css"><link rel="stylesheet" href="../assets/css/note-toc.css?v=1"><style>
-.divisorial-note section{padding:0;border:0}
-.divisorial-note h2{scroll-margin-top:6rem}
-.divisorial-note [id]{scroll-margin-top:6rem}
-.divisorial-note .math-source > .katex-display{overflow-x:auto;overflow-y:hidden;padding:.15rem 0}
+</style><link rel="stylesheet" href="../assets/katex/katex.min.css"><link rel="stylesheet" href="../assets/css/note-toc.css?v=1"><style id="divisorial-layout">
+.divisorial-page .notelayout,.divisorial-note{min-width:0}
+.divisorial-note [id]{scroll-margin-top:5rem}
+.divisorial-note .proof{min-width:0}
 .divisorial-note .math-source:has(>.katex-display){display:block;max-width:100%;min-width:0}
-.divisorial-note .lemma,.divisorial-note .proposition,.divisorial-note .corollary{min-width:0}
-.divisorial-note .proof-fold{margin:1rem 0 2rem;border-bottom:1px solid var(--rule)}
-.divisorial-note .proof-fold>summary{display:flex;justify-content:space-between;align-items:center;gap:1rem;list-style:none;cursor:pointer;font:italic 1rem/1.5 Georgia,serif;color:var(--accent);padding:.7rem .15rem;min-height:48px}
-.divisorial-note .proof-fold>summary::-webkit-details-marker{display:none}
-.divisorial-note .proof-fold>summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-.divisorial-note .fold-icon::before{content:'+';font:1.15rem system-ui,sans-serif}
-.divisorial-note .proof-fold[open] .fold-icon::before{content:'−'}
-.divisorial-note .proof-content{padding:.5rem 0 .7rem 1.2rem;border-left:1px solid var(--rule);min-width:0}
-.divisorial-note .proof-overview{margin:.8rem 0 0;color:var(--muted)}
-.divisorial-note ol{padding-left:1.8rem}
-.divisorial-note math[display=block]{max-width:100%;overflow-x:auto}
-.divisorial-note .source-links{font: .8rem/1.6 system-ui,sans-serif;color:var(--muted);margin-bottom:2rem}
-.divisorial-page .back-to-top{left:calc(50% + 34rem)}
-@media(max-width:1150px){.divisorial-page .back-to-top{left:auto;right:.75rem;top:.15rem;transform:none;width:44px;height:44px;border-color:transparent;box-shadow:none;background:transparent}.divisorial-page .back-to-top span{display:none}.divisorial-page.back-to-top-active .topnav nav{padding-right:48px}}
-</style><link rel="stylesheet" href="../assets/css/back-to-top.css"></head><body class="divisorial-page">
+.divisorial-note .math-source>.katex-display{max-width:100%;overflow-x:auto;overflow-y:hidden;padding:.25rem 0}
+.divisorial-note .source-links{font:.8rem/1.6 system-ui,sans-serif;color:var(--muted);margin-bottom:2rem}
+@media(max-width:680px){
+  body.divisorial-page{font-size:16px;line-height:1.7}
+  .divisorial-page .notelayout{display:block;padding:0 1rem}
+  .divisorial-page .notelayout main.article{width:100%;min-width:0;padding-bottom:3rem}
+  .divisorial-page .notetoc{display:none}
+  .divisorial-page .topnav{padding:.8rem 1rem}
+  .divisorial-note .crumb{margin:1.5rem 0 1rem;line-height:1.5}
+  .divisorial-note h1{font-size:1.7rem;line-height:1.25;overflow-wrap:break-word}
+  .divisorial-note h2{font-size:1.18rem;line-height:1.4;margin-top:2rem}
+  .divisorial-note p{text-align:left;overflow-wrap:break-word}
+  .divisorial-note :is(.lemma,.proposition,.theorem,.corollary,.definition,.example,.remark){min-width:0;max-width:100%;padding:.8rem .85rem;margin:1.3rem 0}
+  .divisorial-note .proof{padding-left:.75rem}
+  .divisorial-note ol{padding-left:1.35rem}
+  .divisorial-note .math-source{display:inline-block;max-width:100%;overflow-x:auto;overflow-y:hidden;vertical-align:middle;padding-block:.08rem}
+  .divisorial-note .math-source:has(>.katex-display){display:block}
+  .divisorial-note .katex{font-size:1em}
+  .divisorial-note .math-source>.katex-display{margin:1rem 0;padding:.25rem 0}
+  .divisorial-note .katex-display>.katex{display:table;width:max-content;min-width:100%;box-sizing:border-box}
+  .divisorial-note .katex-display:has(.tag)>.katex{padding-inline:2.4rem}
+  .divisorial-note math[display=block]{display:block;max-width:100%;overflow-x:auto}
+}
+</style></head><body class="divisorial-page">
 <header class="topnav"><nav><a href="../index.html#note">Notes</a><button id="egg" type="button" title="彩蛋" aria-label="彩蛋">???</button></nav></header>
 <div class="notelayout"><main class="article divisorial-note"><p class="crumb"><a href="../index.html#note">Notes</a><span>/</span>Birational Geometry</p><h1 id="page-title">Divisorial Proj</h1><p class="source-links"><a href="../assets/notes/divisorial-proj.pdf">PDF</a> · <a href="../assets/notes/divisorial-proj.tex">LaTeX source</a></p><p>Let
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>
@@ -345,7 +353,7 @@ is an isomorphism;</em></p></li>
 has dimension zero.</em></p></li>
 </ol>
 </div>
-<p class="proof-overview">Compare the tautological line bundle over the isomorphism locus, and use properness to handle zero-dimensional fibers.</p><details class="proof-fold"><summary><span>Proof</span><span class="fold-icon" aria-hidden="true"></span></summary><div class="proof-content"><p><span
+<div class="proof"><p><em>Proof.</em> <span
 class="upright">(1)</span><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>⇒</mo><annotation encoding="application/x-tex">\Rightarrow</annotation></semantics></math><span
 class="upright">(2)</span>. Choose a neighborhood
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>V</mi><annotation encoding="application/x-tex">V</annotation></semantics></math>
@@ -406,7 +414,7 @@ therefore an isomorphism because
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>V</mi><annotation encoding="application/x-tex">V</annotation></semantics></math>
 is normal <a href="https://stacks.math.columbia.edu/tag/0AB1">[SP,
 Tag 0AB1]</a>. ◻</p>
-</div></details>
+</div>
 <p>In particular, if
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow><mi mathvariant="normal">Iso</mi><mo>&#8289;</mo></mrow><mi>X</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>f</mi><mo stretchy="false" form="postfix">)</mo><mo>:=</mo><mo stretchy="false" form="prefix">{</mo><mi>x</mi><mo>∈</mo><mi>X</mi><mo>∣</mo><mi>f</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> is an isomorphism over a neighborhood of </mtext><mspace width="0.333em"></mspace></mrow><mi>x</mi><mo stretchy="false" form="postfix">}</mo><mo>,</mo></mrow><annotation encoding="application/x-tex">\operatorname{Iso}_X(f)
  :=\{x\in X\mid f\text{ is an isomorphism over a neighborhood of }x\},</annotation></semantics></math>
@@ -555,7 +563,7 @@ is normal, and the canonical maps give isomorphisms
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="script">𝒪</mi><mi>X</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>m</mi><mi>r</mi><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mover><mo>→</mo><mrow><mspace width="0.222em"></mspace><mo>∼</mo><mspace width="0.222em"></mspace></mrow></mover><msub><mi>f</mi><mo>*</mo></msub><msup><mi>L</mi><mrow><mi>⊗</mi><mi>m</mi></mrow></msup><mspace width="2.0em"></mspace><mo stretchy="false" form="prefix">(</mo><mi>m</mi><mo>≥</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">\mathcal O_X(mrB)\xrightarrow{\ \sim\ }f_*L^{\otimes m}
  \qquad(m\ge0).</annotation></semantics></math></em></p>
 </div>
-<p class="proof-overview">Compare the section algebras on the normalization and on the big regular open subset, then recover the varieties by relative Proj.</p><details class="proof-fold"><summary><span>Proof</span><span class="fold-icon" aria-hidden="true"></span></summary><div class="proof-content"><p>Let
+<div class="proof"><p><em>Proof.</em> Let
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ν</mi><mo>:</mo><mi>W</mi><mo>→</mo><mi>Z</mi></mrow><annotation encoding="application/x-tex">\nu\colon W\to Z</annotation></semantics></math>
 be the normalization, and set
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo>=</mo><mi>f</mi><mo>∘</mo><mi>ν</mi><mo>:</mo><mi>W</mi><mo>→</mo><mi>X</mi><mo>,</mo><mspace width="2.0em"></mspace><msup><mi>L</mi><mo>′</mo></msup><mo>=</mo><msup><mi>ν</mi><mo>*</mo></msup><mi>L</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">g=f\circ\nu\colon W\to X,
@@ -656,7 +664,7 @@ is an isomorphism and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Z</mi><annotation encoding="application/x-tex">Z</annotation></semantics></math>
 is normal. The asserted direct-image identities were established by the
 same comparison. ◻</p>
-</div></details>
+</div>
 <h2 id="smallness"><span class="header-section-number">3</span>Smallness</h2>
 <p>To prepare for the proof of smallness, we express
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>
@@ -705,7 +713,7 @@ is
 and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>-ample.</em></p>
 </div>
-<p class="proof-overview">Use the blowup presentation to rule out a contracted prime divisor, then identify the tautological line bundle with the strict transform.</p><details class="proof-fold"><summary><span>Proof</span><span class="fold-icon" aria-hidden="true"></span></summary><div class="proof-content"><p>Smallness is local on
+<div class="proof"><p><em>Proof.</em> Smallness is local on
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>,
 so work over an affine open subset and use the blowup presentation
 above. Set
@@ -794,7 +802,8 @@ is
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="double-struck">ℚ</mi><annotation encoding="application/x-tex">\mathbb Q</annotation></semantics></math>-Cartier
 and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>-ample. ◻</p>
-</div></details>
+</div>
+<h2 id="references">References</h2>
 <div class="thebibliography">
 <p><strong>[SP]</strong> The Stacks Project Authors, <em>The Stacks
 Project</em>, <a
@@ -815,7 +824,7 @@ variétés localement factorielles ou
 (2019).</p>
 </div>
 </main><aside class="notetoc"><p class="side-label">Contents</p><ul><li><a href="#the-twisting-sheaf-on-proj">0. The twisting sheaf on Proj</a></li><li><a href="#the-isomorphism-locus">1. The isomorphism locus</a></li><li><a href="#normality-of-the-divisorial-proj">2. Normality of the divisorial
-Proj</a></li><li><a href="#smallness">3. Smallness</a></li></ul></aside></div>
+Proj</a></li><li><a href="#smallness">3. Smallness</a></li><li><a href="#references">References</a></li></ul></aside></div>
 <canvas id="fx" style="position:fixed;inset:0;pointer-events:none;z-index:9998"></canvas>
 <div id="fx-flash" style="position:fixed;inset:0;pointer-events:none;z-index:9997;opacity:0;
   background:radial-gradient(circle at 50% 42%, rgba(255,246,214,.95) 0%, rgba(255,214,140,.45) 22%,
@@ -967,4 +976,4 @@ Proj</a></li><li><a href="#smallness">3. Smallness</a></li></ul></aside></div>
 })();
 </script>
 
-<script src="../assets/katex/katex.min.js" defer></script><script src="../assets/js/math-katex.js" defer></script><script src="../assets/js/back-to-top.js" defer></script><button class="back-to-top" type="button" title="Back to top" aria-label="Back to top" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m6 13 6-6 6 6M12 7v13"/></svg><span>TOP</span></button></body></html>
+<script src="../assets/katex/katex.min.js" defer></script><script src="../assets/js/math-katex.js" defer></script></body></html>
