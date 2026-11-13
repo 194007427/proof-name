@@ -1,4 +1,4 @@
-/* One animation clock for bursts, flashes and content shake. */
+/* Original published artwork and click layering, driven by one frame clock. */
 (function () {
   "use strict";
   var button = document.getElementById("egg");
@@ -7,165 +7,152 @@
   if (!button || !canvas || !flash) return;
   var ctx = canvas.getContext("2d");
   if (!ctx) return;
-
-  var palette = [
-    ["#e0245e", "#ff8fb1"], ["#f4b400", "#ffe98a"],
+  var palette = [["#e0245e", "#ff8fb1"], ["#f4b400", "#ffe98a"],
     ["#1b6ca8", "#8ec9f0"], ["#7b2ff7", "#cfaeff"],
-    ["#0f9d58", "#9be7bd"], ["#ff6d00", "#ffc48a"]
-  ];
-  var schedule = [0, 170, 330, 500];
-  var drag = -Math.log(0.985) * 60;
-  var terminalVelocity = 180 / drag;
-  var particles = [], rings = [], impacts = [], targets = [];
-  var frameId = 0, origin = null, nextBurst = 0;
-  var small = false, reduced = false, targetsRestored = true;
+    ["#0f9d58", "#9be7bd"], ["#ff6d00", "#ffc48a"]];
+  var schedule = [0, 170, 330, 500], frameLength = 1000 / 60;
+  var parts = [], rings = [], scenes = [], targets = [];
+  var frameId = 0, reduced = false, restored = true;
   var originalTransition = flash.style.transition;
 
-  function matches(query) {
-    return window.matchMedia ? window.matchMedia(query).matches : false;
-  }
   function resize() {
-    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var dpr = window.devicePixelRatio || 1;
     canvas.width = Math.round(window.innerWidth * dpr);
     canvas.height = Math.round(window.innerHeight * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
   function restoreTargets() {
-    if (targetsRestored) return;
+    if (restored) return;
     targets.forEach(function (target) {
       target.element.style.transform = target.transform;
       target.element.style.willChange = target.willChange;
     });
-    targetsRestored = true;
+    restored = true;
+  }
+  function prepareTargets() {
+    if (reduced || !restored) return;
+    targets = Array.prototype.map.call(document.querySelectorAll(
+      ".topnav, main.article, .notetoc, .wrap > .hero, .wrap > #note, #fx, #fx-flash"
+    ), function (element) {
+      return {element:element, transform:element.style.transform || "", willChange:element.style.willChange || ""};
+    });
+    targets.forEach(function (target) { target.element.style.willChange = "transform"; });
+    restored = false;
   }
   function stop() {
     if (frameId) window.cancelAnimationFrame(frameId);
     frameId = 0;
+    parts = []; rings = []; scenes = [];
     restoreTargets();
-    particles = []; rings = []; impacts = [];
     flash.style.opacity = "0";
     flash.style.transition = originalTransition;
     ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
   }
   function burst(index, now) {
-    var k = small ? 0.55 : 1;
-    var cx = window.innerWidth / 2;
-    var cy = window.innerHeight * (small ? 0.34 : 0.4);
-    var positions = [[cx, cy], [cx - 170 * k, cy + 60 * k],
-      [cx + 180 * k, cy - 40 * k], [cx, cy + 150 * k]];
-    var count = Math.round([320, 200, 200, 160][index] * k);
-    var power = (small ? [11, 8, 8, 7] : [15, 11, 11, 9])[index];
-    var point = positions[index];
-    var colors = palette[Math.floor(Math.random() * palette.length)];
-    for (var i = 0; i < count; i++) {
+    if (parts.length > 2200) return;
+    var cx = window.innerWidth / 2, cy = window.innerHeight * 0.4;
+    var positions = [[cx,cy],[cx-170,cy+60],[cx+180,cy-40],[cx,cy+150]];
+    var point = positions[index], count = [320,200,200,160][index];
+    var power = [15,11,11,9][index];
+    var pair = palette[Math.floor(Math.random() * palette.length)];
+    for (var i=0;i<count;i++) {
       var angle = Math.PI * 2 * i / count + Math.random() * 0.14;
-      var speed = power * (0.3 + Math.random()) * 60;
-      particles.push({x: point[0], y: point[1], born: now,
-        vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
-        duration: 1000 / ((0.004 + Math.random() * 0.005) * 60),
-        color: colors[Math.random() < 0.75 ? 0 : 1],
-        radius: (small ? 1.8 : 2.2) + Math.random() * (small ? 2.2 : 3.2)});
+      var speed = power * (0.3 + Math.random());
+      parts.push({x:point[0],y:point[1],x0:point[0],y0:point[1],born:now,
+        vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,
+        decay:0.004+Math.random()*0.005,color:pair[Math.random()<0.75?0:1],
+        radius:2.2+Math.random()*3.2,spin:Math.random()*6.28});
     }
-    rings.push({x: point[0], y: point[1], born: now, radius: 8, color: colors[0]});
-    if (!small) rings.push({x: point[0], y: point[1], born: now, radius: 2, color: colors[1]});
-    impacts.push({born: now, strength: (small ? 3 : 7) * (index === 0 ? 1 : 0.8)});
+    rings.push({x:point[0],y:point[1],radius:8,born:now,color:pair[0]});
+    rings.push({x:point[0],y:point[1],radius:2,born:now,color:pair[1]});
   }
-  function position(particle, age) {
-    var t = Math.max(age, 0) / 1000;
-    var distance = (1 - Math.exp(-drag * t)) / drag;
-    return {x: particle.x + particle.vx * distance,
-      y: particle.y + (particle.vy - terminalVelocity) * distance + terminalVelocity * t};
+  function easeOut(value) {
+    if (value<=0) return 0;
+    if (value>=1) return 1;
+    var lo=0,hi=1,t=0;
+    for(var i=0;i<18;i++) {
+      t=(lo+hi)/2;
+      var x=3*(1-t)*t*t*0.58+t*t*t;
+      if(x<value) lo=t; else hi=t;
+    }
+    return 3*(1-t)*t*t+t*t*t;
+  }
+  function flashOpacity(age) {
+    if(age<0 || age>=590) return 0;
+    if(age<=90) return easeOut(age/500);
+    return easeOut(90/500)*(1-easeOut((age-90)/500));
+  }
+  function paintCamera(now) {
+    var latest=scenes.length?scenes[scenes.length-1]:null;
+    var age=latest?now-latest.started:Infinity;
+    var brightness=0;
+    scenes.forEach(function(scene) {brightness=Math.max(brightness,flashOpacity(now-scene.started));});
+    flash.style.opacity=reduced?"0":String(brightness);
+    if(reduced || age>=340) {restoreTargets();return;}
+    var points=[[0,0],[-7,5],[6,-4],[-3,2],[0,0]];
+    var progress=easeOut(age/340)*4, index=Math.min(3,Math.floor(progress));
+    var fraction=progress-index;
+    var dx=points[index][0]+(points[index+1][0]-points[index][0])*fraction;
+    var dy=points[index][1]+(points[index+1][1]-points[index][1])*fraction;
+    targets.forEach(function(target) {
+      var base=target.transform && target.transform!=="none"?target.transform+" ":"";
+      target.element.style.transform=base+"translate3d("+dx+"px,"+dy+"px,0)";
+    });
   }
   function paintParticles(now) {
-    var alive = [];
-    particles.forEach(function (particle) {
-      var age = now - particle.born;
-      var alpha = 1 - age / particle.duration;
-      if (alpha <= 0) return;
-      alive.push(particle);
-      var current = position(particle, age);
-      var previous = position(particle, age - 1000 / 60);
-      ctx.strokeStyle = particle.color;
-      if (!small) {
-        ctx.globalAlpha = alpha * 0.18;
-        ctx.lineWidth = particle.radius * 4.5;
-        ctx.beginPath(); ctx.moveTo(previous.x, previous.y); ctx.lineTo(current.x, current.y); ctx.stroke();
-      }
-      ctx.globalAlpha = alpha;
-      ctx.lineWidth = particle.radius * (small ? 1.1 : 0.5 + 0.5 * alpha);
-      ctx.beginPath(); ctx.moveTo(previous.x, previous.y); ctx.lineTo(current.x, current.y); ctx.stroke();
-    });
-    particles = alive;
-    rings = rings.filter(function (ring) {
-      var age = now - ring.born;
-      var alpha = 1 - age / (1000 / (0.045 * 60));
-      if (alpha <= 0) return false;
-      ctx.globalAlpha = alpha * 0.55; ctx.strokeStyle = ring.color; ctx.lineWidth = 4 * alpha + 1;
-      ctx.beginPath(); ctx.arc(ring.x, ring.y, ring.radius + age * (small ? 12 : 16) * 60 / 1000, 0, Math.PI * 2); ctx.stroke();
-      return true;
-    });
-    ctx.globalAlpha = 1;
-  }
-  function paintImpact(now) {
-    var dx = 0, dy = 0, brightness = 0;
-    impacts = impacts.filter(function (impact) {
-      var age = now - impact.born;
-      if (age >= 140) return false;
-      var strength = impact.strength * Math.pow(1 - age / 140, 2);
-      dx += Math.cos(age * 0.13) * strength;
-      dy += Math.sin(age * 0.17 + 0.8) * strength * 0.65;
-      brightness = Math.max(brightness, 0.85 * Math.max(0, 1 - age / 90));
-      return true;
-    });
-    flash.style.opacity = reduced ? "0" : String(brightness);
-    if (!reduced && !targetsRestored) {
-      var limit = small ? 3 : 7;
-      dx = Math.max(-limit, Math.min(limit, dx));
-      dy = Math.max(-limit, Math.min(limit, dy));
-      targets.forEach(function (target) {
-        var base = target.transform && target.transform !== "none" ? target.transform + " " : "";
-        target.element.style.transform = base + "translate3d(" + dx + "px," + dy + "px,0)";
-      });
+    // Fractional extension of the original 60 Hz recurrence. At 60 Hz this is
+    // the original trajectory, including its first outward step and gravity.
+    for(var i=parts.length-1;i>=0;i--) {
+      var p=parts[i], n=1+(now-p.born)/frameLength;
+      var alpha=1-p.decay*n;
+      if(alpha<=0) {parts.splice(i,1);continue;}
+      var distance=(1-Math.pow(0.985,n))/(1-0.985);
+      var px=p.x,py=p.y;
+      p.x=p.x0+p.vx*distance;
+      p.y=p.y0+p.vy*distance+0.05*0.985/(1-0.985)*(n-distance);
+      ctx.globalAlpha=alpha*0.18;ctx.strokeStyle=p.color;ctx.lineWidth=p.radius*4.5;
+      ctx.lineCap="round";ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(p.x,p.y);ctx.stroke();
+      ctx.globalAlpha=alpha;ctx.lineWidth=p.radius*(0.5+0.5*alpha);
+      ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(p.x,p.y);ctx.stroke();
     }
-    if (nextBurst === schedule.length && impacts.length === 0) restoreTargets();
+    for(var j=rings.length-1;j>=0;j--) {
+      var ring=rings[j], ticks=1+(now-ring.born)/frameLength;
+      var life=1-0.045*ticks;
+      if(life<=0) {rings.splice(j,1);continue;}
+      ctx.globalAlpha=life*0.55;ctx.strokeStyle=ring.color;ctx.lineWidth=4*life+1;
+      ctx.beginPath();ctx.arc(ring.x,ring.y,ring.radius+16*ticks,0,Math.PI*2);ctx.stroke();
+    }
+    ctx.globalAlpha=1;
   }
   function frame(now) {
-    frameId = 0;
-    if (origin === null) origin = now;
-    while (nextBurst < schedule.length && now - origin >= schedule[nextBurst]) {
-      burst(nextBurst++, now);
-    }
-    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-    ctx.lineCap = "round";
-    paintImpact(now);
+    frameId=0;
+    scenes.forEach(function(scene) {
+      if(scene.started===null) scene.started=now;
+      while(scene.next<schedule.length && now-scene.started>=schedule[scene.next]) burst(scene.next++,now);
+    });
+    ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
+    paintCamera(now);
     paintParticles(now);
-    if (nextBurst < schedule.length || particles.length || rings.length || impacts.length) {
-      frameId = window.requestAnimationFrame(frame);
-    } else stop();
+    scenes=scenes.filter(function(scene) {return scene.next<schedule.length || now-scene.started<590;});
+    if(parts.length || rings.length || scenes.length) frameId=window.requestAnimationFrame(frame);
+    else stop();
   }
   function show() {
-    stop();
-    small = matches("(max-width: 760px)") || ("ontouchstart" in window && window.innerWidth < 900);
-    reduced = matches("(prefers-reduced-motion: reduce)");
-    var elements = document.querySelectorAll("main.article, .wrap > .hero, .wrap > #note");
-    targets = Array.prototype.map.call(elements, function (element) {
-      return {element: element, transform: element.style.transform || "", willChange: element.style.willChange || ""};
-    });
-    targetsRestored = reduced;
-    if (!reduced) targets.forEach(function (target) { target.element.style.willChange = "transform"; });
-    flash.style.transition = "none";
-    origin = null; nextBurst = 0;
-    frameId = window.requestAnimationFrame(frame);
+    reduced=window.matchMedia?window.matchMedia("(prefers-reduced-motion: reduce)").matches:false;
+    prepareTargets();
+    flash.style.transition="none";
+    scenes.push({started:null,next:0});
+    if(!frameId) frameId=window.requestAnimationFrame(frame);
   }
   resize();
-  window.addEventListener("resize", resize);
-  document.addEventListener("visibilitychange", function () { if (document.hidden) stop(); });
-  button.style.touchAction = "manipulation";
-  button.addEventListener("click", function (event) { event.preventDefault(); show(); });
-  var keys = "";
-  window.addEventListener("keydown", function (event) {
-    if (event.repeat) return;
-    keys = (keys + event.key.toLowerCase()).slice(-3);
-    if (keys === "www") show();
+  window.addEventListener("resize",resize);
+  document.addEventListener("visibilitychange",function(){if(document.hidden)stop();});
+  button.style.touchAction="manipulation";
+  button.addEventListener("click",function(event){event.preventDefault();show();});
+  var keys="";
+  window.addEventListener("keydown",function(event){
+    if(event.repeat)return;
+    keys=(keys+event.key.toLowerCase()).slice(-3);
+    if(keys==="www")show();
   });
 })();
