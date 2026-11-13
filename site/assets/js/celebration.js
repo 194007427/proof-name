@@ -1,4 +1,4 @@
-/* Full-viewport celebration: layered volleys, luminous comet trails, one clock. */
+/* A bright opening, fine trails and a quiet afterglow, driven by one clock. */
 (function () {
   "use strict";
   var button = document.getElementById("egg");
@@ -10,14 +10,16 @@
   var palette = [["#e0245e", "#ff8fb1"], ["#f4b400", "#ffe98a"],
     ["#1b6ca8", "#8ec9f0"], ["#7b2ff7", "#cfaeff"],
     ["#0f9d58", "#9be7bd"], ["#ff6d00", "#ffc48a"]];
-  var schedule = [0, 130, 270, 430, 650], frameLength = 1000 / 60;
-  var drag = 0.985, gravity = 0.05;
+  var schedule = [0, 210, 420, 660], frameLength = 1000 / 60;
+  var drag = 0.98, gravity = 0.05;
   var parts = [], rings = [], scenes = [], targets = [];
   var frameId = 0, reduced = false, restored = true;
   var originalTransition = flash.style.transition;
 
   function resize() {
     var dpr = window.devicePixelRatio || 1;
+    canvas.style.width = window.innerWidth + "px";
+    canvas.style.height = window.innerHeight + "px";
     canvas.width = Math.round(window.innerWidth * dpr);
     canvas.height = Math.round(window.innerHeight * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -51,24 +53,23 @@
   }
   function burst(scene, index, now) {
     var w=window.innerWidth,h=window.innerHeight;
-    var positions=[[0.5,0.38],[0.23,0.51],[0.78,0.29],[0.43,0.68],[0.65,0.45]];
+    var positions=[[0.5,0.38],[0.37,0.48],[0.66,0.34],[0.54,0.56]];
     var point=[w*(positions[index][0]+scene.offset),h*positions[index][1]];
-    var count=[440,260,260,220,320][index];
-    var power=[23,17,19,15,22][index];
-    var pair=palette[(scene.color+index*2+(index===4?1:0))%palette.length];
+    var count=[240,140,140,200][index];
+    var power=[15.5,10,11,12][index];
+    var pair=palette[index===2?1:scene.color];
     for (var i=0;i<count;i++) {
       var angle = Math.PI * 2 * i / count + Math.random() * 0.14;
       // A fast outer crown and a denser inner bloom, rather than one flat disk.
-      var crown=i%4===0;
+      var crown=i%5===0;
       var speed=power*(crown?0.92+Math.random()*0.38:0.22+Math.random()*0.66);
       parts.push({x:point[0],y:point[1],x0:point[0],y0:point[1],born:now,
         vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,
-        decay:0.0035+Math.random()*0.0045,color:pair[Math.random()<0.7?0:1],
-        radius:crown?1.8+Math.random()*2.4:2.2+Math.random()*3.2,
-        trail:crown?3.3:2.1});
+        decay:0.0045+Math.random()*0.0045,color:pair[Math.random()<0.7?0:1],
+        radius:crown?0.9+Math.random()*0.9:1.1+Math.random()*1.1,
+        trail:crown?1.6:1.0});
     }
-    rings.push({x:point[0],y:point[1],radius:8,born:now,color:pair[0]});
-    rings.push({x:point[0],y:point[1],radius:2,born:now,color:pair[1]});
+    rings.push({x:point[0],y:point[1],radius:6,born:now,color:pair[1]});
   }
   function easeOut(value) {
     if (value<=0) return 0;
@@ -91,10 +92,10 @@
     var age=latest?now-latest.started:Infinity;
     var brightness=0;
     scenes.forEach(function(scene) {brightness=Math.max(brightness,flashOpacity(now-scene.started));});
-    flash.style.opacity=reduced?"0":String(brightness);
-    if(reduced || age>=380) {restoreTargets();return;}
-    var points=[[0,0],[-11,7],[9,-6],[-4,3],[0,0]];
-    var progress=easeOut(age/380)*4, index=Math.min(3,Math.floor(progress));
+    flash.style.opacity=reduced?"0":String(brightness*0.55);
+    if(reduced || age>=300) {restoreTargets();return;}
+    var points=[[0,0],[-4,3],[3,-2],[-1,1],[0,0]];
+    var progress=easeOut(age/300)*4, index=Math.min(3,Math.floor(progress));
     var fraction=progress-index;
     var dx=points[index][0]+(points[index+1][0]-points[index][0])*fraction;
     var dy=points[index][1]+(points[index+1][1]-points[index][1])*fraction;
@@ -116,17 +117,17 @@
       var py=p.y0+p.vy*tailDistance+gravity*drag/(1-drag)*(tailAge-tailDistance);
       p.x=p.x0+p.vx*distance;
       p.y=p.y0+p.vy*distance+gravity*drag/(1-drag)*(n-distance);
-      ctx.globalAlpha=alpha*0.2;ctx.strokeStyle=p.color;ctx.lineWidth=p.radius*4.8;
+      ctx.globalAlpha=alpha*0.12;ctx.strokeStyle=p.color;ctx.lineWidth=p.radius*3.2;
       ctx.lineCap="round";ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(p.x,p.y);ctx.stroke();
-      ctx.globalAlpha=alpha;ctx.lineWidth=p.radius*(0.5+0.5*alpha);
+      ctx.globalAlpha=alpha*0.9;ctx.lineWidth=p.radius*(0.5+0.5*alpha);
       ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(p.x,p.y);ctx.stroke();
     }
     for(var j=rings.length-1;j>=0;j--) {
       var ring=rings[j], ticks=1+(now-ring.born)/frameLength;
-      var life=1-0.045*ticks;
+      var life=1-0.06*ticks;
       if(life<=0) {rings.splice(j,1);continue;}
-      ctx.globalAlpha=life*0.55;ctx.strokeStyle=ring.color;ctx.lineWidth=4*life+1;
-      ctx.beginPath();ctx.arc(ring.x,ring.y,ring.radius+16*ticks,0,Math.PI*2);ctx.stroke();
+      ctx.globalAlpha=life*0.24;ctx.strokeStyle=ring.color;ctx.lineWidth=1.2*life+0.8;
+      ctx.beginPath();ctx.arc(ring.x,ring.y,ring.radius+10*ticks,0,Math.PI*2);ctx.stroke();
     }
     ctx.globalAlpha=1;
   }
@@ -147,7 +148,7 @@
     reduced=window.matchMedia?window.matchMedia("(prefers-reduced-motion: reduce)").matches:false;
     prepareTargets();
     flash.style.transition="none";
-    scenes.push({started:null,next:0,offset:(Math.random()-0.5)*0.12,
+    scenes.push({started:null,next:0,offset:(Math.random()-0.5)*0.06,
       color:Math.floor(Math.random()*palette.length)});
     if(!frameId) frameId=window.requestAnimationFrame(frame);
   }
