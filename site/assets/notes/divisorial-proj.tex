@@ -213,7 +213,6 @@ For a normal variety over an algebraically closed field, both loci are open, by 
 
 We use the isomorphism over the regular locus to prove that $Z$ is normal.
 
-\begin{proposition}\label{prop:normality}
 Let $X$ be a normal integral variety and $B$ an integral Weil divisor such that $\RR(X,B)=\bigoplus_{m\ge0}\OO_X(mB)$ is finitely generated. Set
 \[
  f\colon Z=\Proj_X\RR(X,B)\longrightarrow X.
@@ -222,12 +221,15 @@ Choose $r>0$ such that $\RR(X,B)^{(r)}$ is generated in degree one, and let
 \[
  L:=\OO_{\Proj_X\RR(X,B)^{(r)}}(1)
 \]
-be the tautological line bundle on $Z\simeq\Proj_X\RR(X,B)^{(r)}$. Then $Z$ is normal, and the canonical maps give isomorphisms
+be the tautological line bundle on $Z\simeq\Proj_X\RR(X,B)^{(r)}$.
+
+\begin{theorem}\label{prop:normality}
+The variety $Z$ is normal, and the canonical maps give isomorphisms
 \[
  \OO_X(mrB)\xrightarrow{\ \sim\ }f_*L^{\otimes m}
  \qquad(m\ge0).
 \]
-\end{proposition}
+\end{theorem}
 
 \begin{proof}
 Let $\nu\colon W\to Z$ be the normalization, and set
