@@ -1,0 +1,13 @@
+/* Shared, compact navigation for the note sidebars. */
+.notelayout{grid-template-columns:minmax(0,1fr) 14rem;gap:2.75rem}
+.notetoc{top:5rem;margin-top:3.4rem;padding-top:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:.78rem;line-height:1.55;max-height:calc(100vh - 6.5rem);max-height:calc(100dvh - 6.5rem);overflow-y:auto;overscroll-behavior-y:contain;scrollbar-width:thin;scrollbar-color:var(--rule2) transparent}
+.notetoc .side-label{margin:0 0 .8rem;padding-left:.65rem;font-size:.68rem;font-weight:500;letter-spacing:.04em;text-transform:none;color:var(--muted)}
+.notetoc>ul{border-left:1px solid var(--rule);padding:0 0 0 .35rem;margin:0}
+.notetoc ul ul{border:0;padding:0 0 0 .65rem;margin:.1rem 0 .45rem}
+.notetoc li{margin:.08rem 0;min-width:0}
+.notetoc a{border:0;border-radius:4px;display:block;padding:.32rem .5rem;color:var(--muted);font-weight:400;line-height:1.55;text-decoration:none;overflow-wrap:break-word;hyphens:auto}
+.notetoc>ul>li>a{font-weight:500;color:var(--soft)}
+.notetoc ul ul a{font-size:.74rem;color:var(--muted)}
+.notetoc a:hover{color:var(--ink);background:var(--paper2)}
+.notetoc a:focus-visible{outline:2px solid var(--accent);outline-offset:-1px;background:var(--paper2)}
+@media(max-width:1000px){.notelayout{grid-template-columns:1fr;gap:0}.notetoc{display:none}}
